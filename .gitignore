@@ -17,3 +17,7 @@ venv/
 # os / editor
 .DS_Store
 .vscode/
+
+# entradas e logs do pipeline
+paper_materials/inputs/
+logs/

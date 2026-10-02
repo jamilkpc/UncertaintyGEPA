@@ -1,0 +1,9 @@
+# versoes de onde o pipeline foi desenvolvido e testado (Mac, Python 3.12.2); gepa e fixado de proposito:
+# a API do gepa.optimize muda entre versoes.
+gepa==0.1.4
+numpy>=1.26
+pandas>=2.2
+scipy>=1.12
+requests
+certifi
+datasets>=2.20
