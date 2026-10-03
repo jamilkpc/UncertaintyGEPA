@@ -47,6 +47,20 @@ Sair do tmux sem matar: `Ctrl-b d`. Voltar: `tmux attach -t gepa`.
 - Estágios: `--stages gepa eval paper floor noise`. Só uma condição: `--conditions blind`.
 - Log: `paper_materials/<experiment>/logs/run_*.log`.
 
+### Ajustes do mestre e experimentos separados
+O mestre (LLM 3) raciocina por padrão. Variáveis de ambiente (valem no vLLM; o servidor precisa de `--reasoning-config`):
+
+| Variável | Efeito |
+|---|---|
+| `MASTER_THINKING_BUDGET` | tokens de raciocínio por chamada (ex.: 4000, 8000) |
+| `MASTER_MAX_TOKENS` | teto total da resposta; reduzido sozinho para caber no contexto do servidor (`SERVER_CONTEXT`, padrão 16384) |
+| `MASTER_EFFORT=none` | desliga o raciocínio do mestre |
+
+Cada chamada do mestre é registrada em `<experimento>/work/master_calls.jsonl` (tokens, tempo, se o orçamento
+foi atingido, se caiu para o modo sem raciocínio). Cada experimento guarda suas configurações em
+`experiment_config.json` e **recusa rodar** com configurações diferentes: para testar outro orçamento, use outro
+`--experiment`.
+
 ### 3b. Piso de ruído do assessor
 Mede quanto o hedge varia entre execuções idênticas (mesmo prompt, mesmo item, temperatura 0). Não precisa
 de GEPA nem de codebooks: usa o prompt semente. Pode rodar em outra janela do tmux enquanto o run principal

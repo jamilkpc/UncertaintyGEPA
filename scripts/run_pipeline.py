@@ -62,6 +62,31 @@ def parse_args(argv=None):
     return ap.parse_args(argv)
 
 
+def _design_settings(args):
+    """Tudo que, se mudar, torna dois runs incomparaveis. Fica em <experimento>/experiment_config.json."""
+    return {"backend": args.backend,
+            "modelos": {"vllm": C.VLLM_MODEL, "ollama": C.OLLAMA_MODELS, "openrouter": C.OR_MODELS}.get(args.backend),
+            "master_effort": C.MASTER_EFFORT, "master_thinking_budget": C.MASTER_THINKING_BUDGET,
+            "master_max_tokens": C.MASTER_MAX_TOKENS, "server_context": C.SERVER_CONTEXT,
+            "seed": C.SEED, "R": C.R, "n_train_folds": C.N_TRAIN_FOLDS, "n_val_folds": C.N_VAL_FOLDS,
+            "max_metric_calls": C.MAX_METRIC_CALLS, "coverage_floor": C.COVERAGE_FLOOR, "llm1_tag": args.llm1_tag}
+
+
+def check_experiment_config(base, args):
+    """Recusa misturar configuracoes no mesmo experimento (ex.: budget 4000 e depois 8000)."""
+    import json
+    path = f"{base}/experiment_config.json"; now = _design_settings(args)
+    if os.path.exists(path):
+        old = json.load(open(path))
+        diff = {k: (old.get(k), now[k]) for k in now if old.get(k) != now[k]}
+        if diff:
+            raise SystemExit("este experimento foi criado com outra configuracao (antes -> agora):\n  "
+                             + "\n  ".join(f"{k}: {a} -> {b}" for k, (a, b) in diff.items())
+                             + "\nUse outro --experiment para nao misturar resultados.")
+    else:
+        json.dump(now, open(path, "w"), indent=1, ensure_ascii=False)
+
+
 def stage(name):
     print(f"\n{'=' * 70}\n[{dt.datetime.now():%H:%M:%S}] {name}\n{'=' * 70}", flush=True)
 
@@ -121,6 +146,7 @@ def main(argv=None):
         frames = pipeline.build_frames(data, llm1_tag=args.llm1_tag)
 
     if "gepa" in args.stages:
+        check_experiment_config(base, args)
         stage("GEPA: um codebook por benchmark e condicao")
         codebooks = gepa_search.optimize_codebooks(frames, run, C.CONDITIONS)
 

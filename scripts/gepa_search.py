@@ -9,6 +9,7 @@ import os
 
 import config as C
 import metrics as M
+import llm
 from llm import master_lm, run_assessor
 from prompts import REFLECTION_TEMPLATE, seed_codebook
 
@@ -79,6 +80,7 @@ def optimize_codebooks(frames, run=None, conditions=None):
             if os.path.exists(path):
                 codebooks[key] = open(path, encoding="utf-8").read(); print(f"{key}: cache"); continue
             print(f"\n=== {key} ===")
+            llm.CONTEXT["key"] = key
             res = gepa.optimize(seed_candidate={"codebook": seed_codebook(b, cond)},
                                 trainset=tr, valset=va, adapter=AssessorAdapter(cond, b),
                                 reflection_lm=master_lm, candidate_selection_strategy="pareto",

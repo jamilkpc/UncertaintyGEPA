@@ -60,7 +60,10 @@ VLLM_MODEL = os.environ.get("VLLM_MODEL", "Qwen/Qwen3.5-9B")
 VLLM_URL = os.environ.get("VLLM_URL", "http://localhost:8000/v1/chat/completions")
 
 REQUEST_TIMEOUT = 180      # segundos por chamada (assessor, anotador)
-MASTER_TIMEOUT  = 600      # teto por chamada do mestre (raciocina e escreve codebooks longos); nao e o tempo esperado
+MASTER_TIMEOUT  = int(os.environ.get("MASTER_TIMEOUT", 600))      # teto (s) por chamada do mestre; nao e o tempo esperado
+MASTER_MAX_TOKENS = int(os.environ.get("MASTER_MAX_TOKENS", 8000))  # com raciocinio ligado o Qwen pode gastar mais de 8000 so pensando
+MASTER_THINKING_BUDGET = int(os.environ.get("MASTER_THINKING_BUDGET", 0)) or None   # vLLM: tokens de raciocinio do mestre (exige --reasoning-config no servidor)
+SERVER_CONTEXT = int(os.environ.get("SERVER_CONTEXT", 16384))   # --max-model-len do servidor vLLM; limita o max_tokens do mestre
 MASTER_EFFORT = "high"     # esforco de raciocinio do mestre (a LLM 2 nunca raciocina); $MASTER_EFFORT sobrescreve
 
 # ---- escala de hedges (a ultima linha do prompt do assessor e fixa) ----------------------------
@@ -145,9 +148,12 @@ def chat_payload(role, messages, temperature, max_tokens, reasoning=None):
         return p
     if BACKEND == "vllm":
         # raciocinio por requisicao via chat_template_kwargs (o assessor nunca raciocina; o mestre sim)
-        return {"model": VLLM_MODEL, "messages": messages, "temperature": temperature,
-                "max_tokens": max_tokens, "seed": OR_SEED,
-                "chat_template_kwargs": {"enable_thinking": bool(reasoning)}}
+        p = {"model": VLLM_MODEL, "messages": messages, "temperature": temperature,
+             "max_tokens": max_tokens, "seed": OR_SEED,
+             "chat_template_kwargs": {"enable_thinking": bool(reasoning)}}
+        if reasoning and role == "master" and MASTER_THINKING_BUDGET:
+            p["thinking_token_budget"] = MASTER_THINKING_BUDGET     # campo de topo, nao extra_body
+        return p
     if BACKEND == "ollama":
         # reasoning_effort="none" desliga o raciocinio (Qwen 3.5 pensa por padrao e gasta o max_tokens
         # inteiro antes de escrever o content). Testado no qwen3.5:9b; chat_template_kwargs e ignorado.

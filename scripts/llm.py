@@ -1,5 +1,6 @@
 """Chamadas aos modelos: HTTP com retry, LLM 1 (anotador), LLM 2 (assessor) e LLM 3 (mestre)."""
 import collections
+import json
 import os
 import re
 import time
@@ -175,10 +176,65 @@ def assess_blind_meta(prompt, texts):
 
 
 # ---- LLM 3: mestre ----------------------------------------------------------------------------
+CONTEXT = {"key": None}      # preenchido por gepa_search antes de cada otimizacao (ex.: "ConvAbuse__blind")
+
+
+def _log_master(rec):
+    """Uma linha JSON por chamada do mestre em <experimento>/work/master_calls.jsonl."""
+    try:
+        with open(f"{C.WORKDIR}/master_calls.jsonl", "a", encoding="utf-8") as f:
+            f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+    except OSError:
+        pass
+
+
+def _master_usage(data, t0, prompt, max_tokens, reasoning, fallback, error=None):
+    res = data.get("result", data) if isinstance(data, dict) else {}
+    ch = ((res.get("choices") or [{}])[0] or {}) if isinstance(res, dict) else {}
+    msg = ch.get("message", {}) or {}
+    cot = msg.get("reasoning_content") or msg.get("reasoning") or ""
+    u = res.get("usage", {}) or {} if isinstance(res, dict) else {}
+    return {"ts": time.strftime("%H:%M:%S"), "key": CONTEXT["key"], "seconds": round(time.time() - t0, 1),
+            "fallback_sem_raciocinio": fallback, "raciocinio": bool(reasoning), "budget": C.MASTER_THINKING_BUDGET,
+            "max_tokens": max_tokens, "prompt_chars": len(prompt), "prompt_tokens": u.get("prompt_tokens"),
+            "completion_tokens": u.get("completion_tokens"),
+            "reasoning_tokens": (u.get("completion_tokens_details") or {}).get("reasoning_tokens"),
+            "reasoning_chars": len(cot), "finish_reason": ch.get("finish_reason"),
+            # o servidor injeta esta frase quando o orcamento de raciocinio acaba (--reasoning-config)
+            "budget_atingido": ("directly now" in cot) if cot else None, "erro": error}
+
+
+def _fit_max_tokens(prompt, want):
+    """No vLLM prompt + max_tokens tem de caber no contexto do servidor, senao ha HTTP 400."""
+    if C.BACKEND != "vllm":
+        return want
+    est_prompt = int(len(prompt) / 2.8) + 300          # estimativa conservadora de tokens do prompt
+    return max(2000, min(want, C.SERVER_CONTEXT - est_prompt))
+
+
 def master_lm(prompt):
+    """Chamada do mestre. Primeiro com raciocinio e o teto de tokens grande; se estourar o teto ou
+    falhar por qualquer motivo, repete a MESMA chamada sem raciocinio (curta e confiavel), para
+    uma rodada ruim nao derrubar o GEPA (que roda com raise_on_exception=True).
+    Cada chamada e registrada em work/master_calls.jsonl (tokens usados, se o orcamento foi atingido)."""
     if isinstance(prompt, list):
         prompt = "\n\n".join(m.get("content", "") if isinstance(m, dict) else str(m) for m in prompt)
-    return _content(_post(C.URLS["master"], C.chat_payload(
-        "master", [{"role": "user", "content": prompt}], 1.0, 8000,
-        reasoning=C.MASTER_EFFORT), retries=2, timeout=C.MASTER_TIMEOUT),
-        from_reasoning=True).strip()
+    msgs = [{"role": "user", "content": prompt}]
+    mt = _fit_max_tokens(prompt, C.MASTER_MAX_TOKENS); t0 = time.time(); data = {}
+    try:
+        data = _post(C.URLS["master"], C.chat_payload("master", msgs, 1.0, mt, reasoning=C.MASTER_EFFORT),
+                     retries=2, timeout=C.MASTER_TIMEOUT)
+        out = _content(data, from_reasoning=True).strip()
+        _log_master(_master_usage(data, t0, prompt, mt, C.MASTER_EFFORT, False))
+        return out
+    except RuntimeError as e:
+        _log_master(_master_usage(data, t0, prompt, mt, C.MASTER_EFFORT, False, error=str(e)[:160]))
+        if C.MASTER_EFFORT is None:
+            raise
+        print(f"  [aviso] mestre com raciocinio falhou ({str(e)[:90]}); repetindo sem raciocinio")
+        t1 = time.time(); mt2 = _fit_max_tokens(prompt, 4000)
+        data2 = _post(C.URLS["master"], C.chat_payload("master", msgs, 1.0, mt2, reasoning=None),
+                      retries=2, timeout=C.MASTER_TIMEOUT)
+        out = _content(data2).strip()
+        _log_master(_master_usage(data2, t1, prompt, mt2, None, True))
+        return out
