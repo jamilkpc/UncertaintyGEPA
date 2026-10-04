@@ -1,0 +1,26 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lr}
+\hline
+Method & ConvAbuse \\
+\hline
+\multicolumn{2}{l}{\emph{Label-conditioned}} \\
+single\_hedge & 0.094{\scriptsize\,[0.01, 0.18]} \\
+reclassify & 0.000$^\dagger$ \\
+topk\_wrong & 0.102{\scriptsize\,[0.03, 0.18]} \\
+pros\_cons & 0.049{\scriptsize\,[-0.02, 0.12]} \\
+GEPA & \textbf{0.278}{\scriptsize\,[0.21, 0.35]} \\
+$\rho_{\max}(H{=}3)$ & 0.998 \\
+\hline
+\multicolumn{2}{l}{\emph{Message-only}} \\
+single\_hedge & 0.053{\scriptsize\,[-0.02, 0.12]} \\
+topk\_wrong & 0.152{\scriptsize\,[0.08, 0.23]} \\
+pros\_cons & 0.088{\scriptsize\,[0.01, 0.17]} \\
+GEPA & \textbf{0.173}{\scriptsize\,[0.09, 0.25]} \\
+$\rho_{\max}(H{=}3)$ & 0.998 \\
+\hline
+\end{tabular}
+\caption{Spearman $\rho(h_m,u_m)$ between the emitted hedge and human disagreement on the held-out test split, with 95\% bootstrap intervals. Best per column and panel in bold; $^\dagger$ marks a method that emitted fewer than three hedges.}
+\label{tab:main}
+\end{table}

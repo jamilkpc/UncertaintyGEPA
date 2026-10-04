@@ -47,6 +47,23 @@ Sair do tmux sem matar: `Ctrl-b d`. Voltar: `tmux attach -t gepa`.
 - Estágios: `--stages gepa eval paper floor noise`. Só uma condição: `--conditions blind`.
 - Log: `paper_materials/<experiment>/logs/run_*.log`.
 
+### Experimentos: nomes, benchmarks e comparação
+Um **experimento** é uma configuração (LLM 1, modelos, ajustes do mestre), e não um benchmark. Sem `--experiment`, o
+nome sai da configuração: `<llm1>__<modelo>__<raciocínio>`, ex.: `gpt56luna__qwen3.5-9b__think8k`. Todos os
+benchmarks rodados com a mesma configuração ficam na mesma pasta, cada um com seus próprios arquivos
+(`summary_<bench>.csv`, `per_item_<bench>.csv`, `data_<bench>.csv`, `paired_<bench>.csv`, `codebook_<bench>__*.txt`).
+Rodar um benchmark novo **acrescenta** os arquivos dele e não mexe nos outros. O estágio `paper` reconstrói os
+`.tex` sempre a partir de **todos** os benchmarks que têm resultado no experimento, então as tabelas só crescem.
+Outra configuração (ex.: outro orçamento de raciocínio) vira outra pasta, e a trava recusa misturar.
+
+```bash
+bash scripts/run_think8k.sh ArMIS HSBrexit        # mestre com 8000 tokens de raciocínio, no vLLM já em pé
+python scripts/compare_experiments.py EXP_A EXP_B # lado a lado, em paper_materials/comparison/
+```
+Tabelas geradas em `<experimento>/paper/`: `tab_data`, `tab_main` (rho(h,u) com intervalos, painéis com e sem
+rótulo), `tab_paired` (diferenças pareadas com intervalo), `tab_paired_methods`, `tab_ablation`, `tab_stability`,
+`tab_floor` (se o estágio `floor` rodou), `codebooks` e `macros`. `--stages paper` não precisa de servidor.
+
 ### Ajustes do mestre e experimentos separados
 O mestre (LLM 3) raciocina por padrão. Variáveis de ambiente (valem no vLLM; o servidor precisa de `--reasoning-config`):
 
@@ -88,7 +105,7 @@ e abra `scripts/run.ipynb`.
 paper_materials/
   inputs/llm1/llm1_<tag>_<benchmark>.csv      entrada: rótulo + 20 reamostragens por item
   <experiment>/work/       codebook_<bench>__<cond>.txt, trajectory_*.json, gepa_runs/
-  <experiment>/results/    summary_<bench>.csv, per_item_<bench>.csv, floor_*.csv
+  <experiment>/results/    summary_<bench>.csv, per_item_<bench>.csv, data_<bench>.csv, paired_<bench>.csv, floor_*.csv
   <experiment>/paper/      tab_*.tex, macros.tex, codebooks.tex, results_skeleton.tex
   <experiment>/logs/
 ```

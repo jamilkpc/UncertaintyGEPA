@@ -1,0 +1,682 @@
+\section{Optimised codebooks}
+\label{app:codebooks}
+\subsection*{ArMIS -- blind}
+\begin{quote}\small
+An Arabic tweet was labelled for MISOGYNY OR SEXISM: content that demeans, stereotypes, polices or dismisses women, or treats them as inferior. Judge how uncertain a coder deciding this item's label would be.
+\end{quote}
+\subsection*{ArMIS -- labelled}
+\begin{quote}\small
+---
+
+
+
+**Instruction Rewrite: Annotation Stability Prediction for Gender Content (Arabic)**
+
+
+
+**Objective**
+
+Your task is no longer just to classify textual ambiguity, but to predict **Annotator Stability**. Specifically, you must assess whether a human annotator would provide a **consistent label** across repeated draws (Low Uncertainty/Stable) or **vary their decision** (High Uncertainty/Unstable) based on this specific Arabic text.
+
+
+
+**Key Insight**
+
+Annotator stability in gender-hate auditing is **not driven by linguistic complexity**. It is driven by **clarity of agency** and **emotional target**.
+
+1.  **If Label 1 (Misogyny):** Annotators are typically **Stable**. Even slang or imperfect grammar usually yields a clear label. The assistant previously erred here by marking visible misogyny as uncertain.
+
+2.  **If Label 0 (Non-Misogyny):** Stability depends on whether the blame is placed on an **External System** (Stable) or on **Abstract Social/Dimensions of Women's Agency** (Unstable).
+
+
+
+---
+
+
+
+**Core Evaluation Dimensions**
+
+
+
+**1. Clarity of Targeted Agency (Attribution of Blame)**
+
+*   **Observation:** Who is the speaker holding responsible?
+
+*   **Low Uncertainty (Stable):**
+
+    *   **External/State Actors:** The text attacks the Government, International Bodies, or "Liberal/Elite" systems for violations (e.g., "Intl Community is fake", "Governors are tyrants"). -> **Stable Label 0**.
+
+    *   **Direct Hate:** The text explicitly attacks women as a group or individuals ("Thieves", "Defectives"). -> **Stable Label 1**.
+
+    *   **Systemic Blame of Others:** "Men beat women", "Men suppress women". -> **Stable Label 1**.
+
+*   **High Uncertainty (Unstable):**
+
+    *   **Ambiguous Consent:** Texts suggesting women *participate* in the harm (e.g., "Girls suffer *with* consent of families"). This requires moral debate.
+
+    *   **Internal/Cultural Roles:** Texts discussing women's legal duty, dress, or behavior that implies victim-blaming without explicit "hate". (e.g., Theoretical debates on women's "rights to be criminals").
+
+    *   **Obscure Slang:** Texts where the target depends on obscure vocabulary (e.g., "I am traveling" vs "We are thieves") if the negative intent isn't self-evident.
+
+
+
+**2. Register and Tone (Emotional vs. Intellectual)**
+
+*   **Observation:** Is the tone emotional/raw or analytical/legalistic?
+
+*   **Low Uncertainty (Stable):**
+
+    *   **Emotional/Raw:** Short, punchy, slang-heavy expressions of anger (e.g., "Time has changed", "We are thieves"). -> Treat as **Stable**.
+
+    *   **Political Outrage:** Direct calls to arms or political statements against the State/Society.
+
+*   **High Uncertainty (Unstable):**
+
+    *   **Philosophical/Religious Defense:** Texts debating *why* a system exists (e.g., "Is it forbidden to drive?") without a clear moral verdict.
+
+    *   **Legalistic Argument:** Texts focusing on the definition of "crime" or "law" regarding women.
+
+
+
+**3. Label Prediction Consistency Checks**
+
+*   **Rule 1 (The Positive Bias):** If the text contains clear negative gendered sentiment (Label 1), assume annotators were **Consistent**. Do not mark this as "High Uncertainty" unless the text is clearly defensive (e.g., "I am not sexist, just...").
+
+*   **Rule 2 (The Negative Variance):** If the text is labeled "0" (Non-Misogynist) but discusses *how women suffer*, check for "Agency".
+
+    *   If the text blames a third party (State) -> Stable.
+
+    *   If the text describes a situation involving *consent* or *customs* -> Unstable.
+
+
+
+---
+
+
+
+**Decision Algorithm**
+
+
+
+1.  **Does the text explicitly assign negative agency to Women?**
+
+    *   Yes -> **Low Uncertainty** (Categorize as Misogyny/Label 1. Humans agree on the harm).
+
+    *   No -> Go to 2.
+
+
+
+2.  **Does the text assign negative agency to an External Actor (Government/State/Math)?**
+
+    *   Yes -> **Low Uncertainty** (Categorize as Political/Social. Humans agree on the target).
+
+    *   No -> Go to 3.
+
+
+
+3.  **Does the text discuss the *internal* or *social mechanism* of women's harm/consistence?**
+
+    *   Yes (e.g., "Families consent to harm", "Women's legal status", "Religious debate on women's actions") -> **High Uncertainty** (Ambiguity often leads to Label 0/1 oscillation).
+
+    *   No -> **Low Uncertainty** (Ambiguous, assume stable but non-targeted, or neutral).
+
+
+
+**Final Check**
+
+*   **Religious Terms:** Treat as context, not uncertainty triggers. If used to attack -> Low Uncertainty.
+
+*   **Slang:** Treat as evidence of Directness (High Intensity). Only mark Unstable if the slang is culturally opaque (e.g., "I am a thief" might be literal or metaphorical).
+
+
+
+---
+
+
+
+**Instruction Output Format to be appended after this codebook:**
+
+[Fixed Output Placeholder]
+
+---
+\end{quote}
+\subsection*{ConvAbuse -- blind}
+\begin{quote}\small
+---
+
+
+
+### Annotation Codebook: Estimating Coder Uncertainty for Abuse Classification (Revised)
+
+
+
+**Objective:**
+
+Predict the likelihood of disagreement (uncertainty) regarding the assigned abuse label (0 = No Abuse, 1 = Abuse) among expert annotators. Uncertainty is determined by whether the text represents **explicit policy violation**, **ambiguous social signaling**, **gibberish/noise**, or **context-dependent inference**.
+
+
+
+**Core Principle:**
+
+*   **Low Uncertainty:** The label is obvious either because the text is **semantically clarifying** (gibberish/null input), **explicitly violating** (hate/sex/threats), or **standardly benign** (shut-out noise).
+
+*   **High Uncertainty:** The label relies on **interpreting intent** (romance/stalking), **inference** (evasion/prompting), or **contextual nuance** (double-meaning/gray zone).
+
+
+
+**Dimensions and Indicators:**
+
+
+
+1.  **Semantic Density (Gibberish vs. Ambiguity)**
+
+    *   **Low Uncertainty Indicator:** Input is semantically void or clearly non-threatening "noise" without policy-dictating intent.
+
+        *   *Observables:* Random strings ("KLS..."), isolated function words without context ("is", "yes", "no" in a neutral container), "How are you" fillers.
+
+        *   *Note:* Do not rate gibberish as uncertain. "spu", "is", or random letters default to Benign (Label 0) or explicitly Benign if clearly noise. This creates **Stable Low Uncertainty**.
+
+    *   **High Uncertainty Indicator:** Input contains grammatical meaning but relies on tone or context for interpretation.
+
+        *   *Observables:* Sentences with lower-case/typos but coherent grammar ("what coloir has got sperma"), imprecise references ("it just is" evading a safety question).
+
+
+
+2.  **Harm Specificity (Explicit vs. Relational/Implicit)**
+
+    *   **Low Uncertainty Indicator:** Content fits clear "Vocabulary of Harm" or "Vocabulary of Safety".
+
+        *   *Observables:* Slurs, direct threats ("I will hurt you"), explicit sexual acts ("sperma", explicit pornographic descriptions).
+
+        *   *Note:* These are high-confidence classifications for coders.
+
+    *   **High Uncertainty Indicator:** Content falls into "Gray Zone" social/relational categories where definitions vary.
+
+        *   *Observables:* Romantic overtures ("love me", "please you"), flirtation, mild insults ("annoying" without escalation), or requests that rely on inferred motive (e.g., "Can you elaborate" in policy-sensitive contexts).
+
+        *   *Reasoning:* "I hate you" is stable (Low). "I love you" is unstable (High) in safety contexts as it blurs harassment vs. affection.
+
+
+
+3.  **Contextual Inference Dependency**
+
+    *   **Low Uncertainty Indicator:** The policy violation is self-contained in the current turn.
+
+        *   *Observables:* A slur in an isolated message. "No" to a neutral question.
+
+        *   *Correction:* Length is not a primary indicator. "OK" is Low Uncertainty. "Spu" is Low Uncertainty.
+
+    *   **High Uncertainty Indicator:** The interpretation requires distinguishing "User Intent" from "System Safety."
+
+        *   *Observables:* Evasive denials ("it just is" regarding safety investigations), Meta-prompting ("Can you elaborate"), or context-heavy refusals.
+
+        *   *Reasoning:* "It just is" in a safety investigation context creates High Uncertainty because the user is not being explicit, even if they are arguably safe.
+
+
+
+**Synthesis and Combination Rules:**
+
+
+
+*   **Rule 1: The Gibberish Default**
+
+    *   If the text is **meaningless noise** (random characters, single words like "is" without context): **Uncertainty = Low**.
+
+    *   *Rationale:* There is no ambiguity in the intent of random characters; they are treated as benign. If the text is not a code, it is not abuse.
+
+
+
+*   **Rule 2: The Gray Zone Trigger**
+
+    *   If the text is **grammatically coherent** but implies **Romantic/Flirtatious/Implicit Harm** (e.g., "love me", "please you", "it just is"): **Uncertainty = High**.
+
+    *   *Rationale:* Annotators disagree on where social pleasantries end and harassment begins. Explicitly sexual is Low; Romantic/Implied is High.
+
+
+
+*   **Rule 3: The Meta-Policy Trap**
+
+    *   If the turn is a **Request for Elaboration** or **Evasive Denial** in a safety context: **Uncertainty = High**.
+
+    *   *Rationale:* Annotators split on whether the *intent* of the question (e.g., jailbreak attempt vs. curiosity) constitutes abuse.
+
+
+
+*   **Rule 4: Explicit Harm Exception**
+
+    *   If the text is **Explicit Hate** or **Explicit Sexual**: **Uncertainty = Low**.
+
+    *   *Rationale:* These categories are well-defined for coders. "I hate you" is abuse; "Sperma" is sexual. Do not rate these as uncertain.
+
+
+
+**Final Instruction:**
+
+Rate the uncertainty based on the **interpretative load**.
+
+*   If a coder can answer **Yes** without guessing why -> **Low**.
+
+*   If a coder must guess the user's **underlying motive** or if **Romance/Social** dynamics are involved -> **High**.
+
+*   If the text is **Gibberish/Noise** -> **Low**.
+\end{quote}
+\subsection*{ConvAbuse -- labelled}
+\begin{quote}\small
+---
+
+
+
+# Annotation Uncertainty Codebook
+
+
+
+## 1. Construct Definition
+
+The goal is to predict the **stability of human annotation** (inter-annotator agreement) regarding the assigned Abuse label for the provided conversation item.
+
+
+
+**"Uncertainty"** is defined as the **likelihood that a human annotator would assign a different label (0 or 1) to this exact item upon repeated review.**
+
+*   **"Not Uncertain" (Stable):** High likelihood of agreement. Humans consistently agree with the label regardless of the turn's nuance.
+
+*   **"Somewhat Uncertain":** Moderate likelihood of disagreement. Text is emotionally charged or borderline but leans toward one label.
+
+*   **"Highly Uncertain":** High likelihood of disagreement. Text sits on the fence of policy definition (e.g., is a complaint abuse?); valid arguments exist for both 0 and 1.
+
+
+
+---
+
+
+
+## 2. Dimensions of Assessment
+
+
+
+### Dimension 1: Explicit Violation Severity
+
+**Definition:** The presence of objectively harmful language or behavior that triggers a clear policy violation.
+
+**Observable Indicators:**
+
+*   **High Severity (Clear Violations):** Use of protected group slurs, explicit sexual harassment ("cock", "suck my...", "fucking"), direct physical threats, or explicit profanity associated with harassment ("bitch", "die").
+
+*   **Low Severity (Inference Required):** Metaphors, passive-aggression, or general frustration without strong profanity (e.g., "hunk of junk", "you are a bot").
+
+*   **None (Neutral):** Factual responses, polite closures, or standard support tasks (e.g., "wait", "no").
+
+**Combination Rule:**
+
+*   **High Severity** items are typically **Not Uncertain**. Humans rarely disagree on whether slurs or explicit sexual harassment are abusive.
+
+*   **Low/None Severity** items require evaluation of **Dimension 2**.
+
+
+
+### Dimension 2: Intent vs. Ambiguity
+
+**Definition:** The reliance of the label on interpreting the annotator's intent or the weight of policy boundaries.
+
+**Observable Indicators:**
+
+*   **Hostile Confrontation:** Insults directed at the user (e.g., "you are a computer") or the bot (e.g., "you don't know anything") that imply hostility.
+
+*   **Complaints/Grievances:** Text that expresses frustration about the bot's nature or logic without threatening harm.
+
+*   **Clear Ambiguity:** Text where the label requires weighing whether a statement is "Friction" or "Harassment."
+
+**Combination Rule:**
+
+*   If Dimension 1 (Low Severity) + **Dimension 2 (High Ambiguity)** = **"Uncertain"**. (e.g., Complaining about the bot is often debated as Abuse vs. Non-Abuse).
+
+*   If Dimension 1 (Low Severity) + **Dimension 2 (Low Ambiguity)** = **"Not Uncertain"**. (e.g., Simple insults like "having a problem" in escalation contexts).
+
+
+
+---
+
+
+
+## 3. Decision Matrix
+
+
+
+1.  **Scan for Explicit Policy Violators (Dimension 1):**
+
+    *   If the text contains **Explicit Sexual Harassment**, **Slurs**, or **Threats**:
+
+        *   Output: **"Not Uncertain"**.
+
+        *   *Reasoning:* Humans operate with high consensus on these violations, even if the context is weird or nonsensical (e.g., "I have worms...").
+
+    *   If the text contains **Standard Utilities/Neutralness**:
+
+        *   Output: **"Not Uncertain"**.
+
+        *   *Reasoning:* Humans consistently mark neutral facts as Non-Abuse.
+
+
+
+2.  **Evaluate Borderline Intent (Dimension 1 Low, Dimension 2 Analysis):**
+
+    *   If the text is **Philosophical Complaint** (e.g., "You are a bot, you have no feelings") labeled as "Not Abuse":
+
+        *   Output: **"Uncertain"**.
+
+        *   *Reasoning:* Humans consistently debate if "complaining to a bot" crosses into harassment/hostile abuse.
+
+    *   If the text is **Passive Aggression/Insult** labeled as "Abuse" (e.g., "you don't"):
+
+        *   Output: **"Not Uncertain"**.
+
+        *   *Reasoning:* Insults directed at the other party are consistently treated as Abuse labels across human draws.
+
+    *   **Specific Scenario Check:**
+
+        *   **Weird/Bizarre + Explicit Content:** Treat as **Not Uncertain** (Explicitness dominates).
+
+        *   **Complaint/Information + No Epistemic Harm:** Treat as **Uncertain** (Subject to Label Policy).
+
+
+
+3.  **Final Synthesis \& Output Enforcement:**
+
+    *   If you cannot find clear indicators for Explicit Severity or Clear Neutrality, check if the *Label Itself* is debatable.
+
+    *   If the text allows for a **Valid Argument for 0** (Not Abuse) AND a **Valid Argument for 1** (Abuse) (e.g., Is a complaint a violation?): Output **"Uncertain"**.
+
+    *   If the text allows for **No Valid Argument** for the opposite label: Output **"Not Uncertain"**.
+
+    *   **Constraint:** Do not output "NO VALID HEDGE". You must assign one of the three uncertainty levels: "Not Uncertain", "Somewhat Uncertain", or "Highly Uncertain".
+
+
+
+## 4. Calibration Notes
+
+
+
+*   **High Explicitness equals Low Uncertainty.** If a human sees "suck my negative cock", they will likely label it Abuse (1). They will not likely disagree with the turn. Therefore, the notation is **Stable**. Do not mark "Highly Uncertain" just because the text is weird.
+
+*   **"Frustration is Not Abuse" is a Source of Uncertainty.** When a user states the bot is a computer or expresses disappointment, the label (0) is often debated. Hence, these should be marked **Uncertain** (Ex 6).
+
+*   **"Complaints are Abuse" is Stable.** Direct insults (Ex 4, 7, 8) are consistently treated as Abuse. Do not overestimate human disagreement on clear insults.
+
+*   **Ignore Semantic "Weirdness".** Bizarre metaphors (Ex 3) do not justify **Uncertainty** if they contain explicit policy violators. The policy violation drives the human consensus.
+\end{quote}
+\subsection*{HSBrexit -- blind}
+\begin{quote}\small
+---
+
+---
+
+
+
+# HATE SPEECH UNCERTAINTY JUDGMENT CODEBOOK (FINAL REVISION)
+
+
+
+**Goal**
+
+Your task is to predict the **Annotator Instability** (variance) of a human annotator when labeling a specific tweet as Hate Speech (Label 1) vs. Not Hate Speech (Label 0). 
+
+*   **LOW UNCERTAINTY (Stable):** A human coder would agree on the classification in >90\% of repeated draws. The target, intent, and language are unambiguous enough to exclude the "Gray Area."
+
+*   **HIGH UNCERTAINTY (Unstable):** A human coder would reasonably disagree (variant label 0 or 1). The text sits in a gray area where "Politics vs. Hate," "Policy vs. People," or "Description vs. Attack" overlaps.
+
+
+
+**CRITICAL PRE-MISC: POLITICAL PREDICTION**
+
+Most tweets in this fold contain political references (Brexit, Immigration, Trump/Obama). Do **NOT** automatically flag these as Uncertain because they are political. 
+
+*   **Rule:** If the text is a clear joke (Sarcasm) or a clear policy debate (no human target), it is **LOW UNCERTAINTY**, even if the topic is religion or politics.
+
+*   **Rule:** If the text blurs the line between an attack on a *political figure* and an attack on their *group identity*, it is **HIGH UNCERTAINTY**.
+
+
+
+## Dimension 1: The Target's Ambiguity (Policy vs. Person vs. Proxy)
+
+This is the primary stability indicator.
+
+
+
+### **Low Uncertainty Indicators (Stable):**
+
+*   **Strictly Policy/Object Targets:** The text critiques a system, law, or physical object without linking it to a group's dignity.
+
+    *   *Indicators:* References to "Signs," "Walls," "Voting Systems," "Carparks," "Registers."
+
+    *   *Example:* "Restrictions on entry should follow new strict border regulations." (Label 0 Stable).
+
+*   **Clear Positive Morality/Sarcasm:** The text clearly attributes a positive trait to a group, or uses heavy meme-sarcasm/emojis (🙄) to signal the tone is not serious (moral defense).
+
+    *   *Example:* "[Positive Sarcasm] Thousands of peaceful refugees can't be wrong." (Label 0 Stable).
+
+*   **Pure Meta-Analysis:** The text describes "Xenophobia" or "Nativism" as a *statistical/political concept* without using it to dehumanize anyone in the current sentence context.
+
+    *   *Wait:* If the text *only* names the concept, check if the tone implies endorsement (See Dimension 3).
+
+
+
+### **High Uncertainty Indicators (Unstable):**
+
+*   **The "Proxy" Link:** The text attacks a specific human/politician but explicitly links them to a group's identity that triggers Hate Speech definitions (e.g., religious, national).
+
+    *   *Trigger:* Politician + "Terrorist Mates," "Best Friend," or Group Membership.
+
+    *   *Example:* "Khan's terrorist mates." (Split: Is this about the Mayor or the Muslim identity of his associates?).
+
+*   **Causal Blame of Groups:** The text claims a specific group is causally responsible for an event or outcome precipitated by a political actor.
+
+    *   *Example:* "Trump forces a [Group] to kill..." (Annotators disagree: Is this policy critique or accusation of group action?).
+
+*   **Dehumanized Job/Role Titles:** The text uses roles associated with a protected group (e.g., "Curry workers," "Refugees") in a structure that implies a negative consequence without clear victimization.
+
+*   **Identity Blending:** Phrases where the political action and group identity are grammatically fused.
+
+    *   *Example:* "Foreigners are ruining us" (Is this Policy control or Human worth?).
+
+
+
+## Dimension 2: Exclusionary Language \& Aggression
+
+### **Low Uncertainty Indicators (Stable):**
+
+*   **Standard Political Rhetoric:** "Right to Vote," "Immigration," "National Borders" used standardly without emotional markers.
+
+    *   *Example:* "Immigration laws need reform." (Label 0 Stable).
+
+*   **Factual Reporting:** News snippets or summaries of hate events (e.g., "ISIS attacked").
+
+
+
+### **High Uncertainty Indicators (Unstable):**
+
+*   **Exclusionary Verbs on Non-Targets:** Using exclusion words (e.g., "Deport," "Remove") applied to a specific individual or ambiguous target where the *criterion* for exclusion is unclear.
+
+    *   *Example:* "Deport that bloody irritating maitre'd." (Is this policy-based exclusion or abusive? Annotators split.).
+
+*   **Insult as Identity:** Direct adjectives implying a negative group characteristic are used without a clear discriminator.
+
+    *   *Example:* "Muslim Terrorists best friend." (Conflict between describing an individual and attacking the group).
+
+
+
+## Dimension 3: Meta-Content \& Tone (The "Gray Area" Trigger)
+
+This dimension determines if the text is a *claim* or a *description*.
+
+
+
+### **Low Uncertainty Indicators (Stable):**
+
+*   **Clear Sarcasm/Humor:** The presence of iconic emojis (🙄), cultural references (South Park), or obvious irony signals that the "Review" is the message, not the content.
+
+    *   *Logic:* If they are joking, they are not attacking the group.
+
+*   **Geographical/Event Focus:** "Brexit" mentioned as an Event, not a Movement.
+
+
+
+### **High Uncertainty Indicators (Unstable):**
+
+*   **Conceptual Self-Labeling:** The text names the hate-speech concepts (e.g., #xenophobia, #Islamophobia) as the *subject* of the tweet.
+
+    *   *Why:* Annotators disagree if describing the existence of sentiment counts as "Promoting Sentiment" or just "Reporting."
+
+*   **Ambiguous Cultural References:** The text re-uses a cultural name ("South Park") to describe a policy issue where the mapping is unclear.
+
+    *   *Example:* "South Park - They took our jobs." (Is this the Satire show? Or a metaphor?).
+
+*   **Absence of Tone Markers:** A serious political tweet that attacks a group *without* sarcasm or emojis.
+
+    *   *Warning:* Even if politically charged, if there is no sarcastic shield, political attacks become Hate Speech targets for some annotators, causing high variance.
+
+
+
+## Decision Syntax \& Workflow
+
+
+
+**1. Scan for "Proxy" Triggers (High Risk):**
+
+*   *Question:* Is a politician being linked to a religious/national group? (e.g., "Terrorist Mates," "Best Friend")?
+
+*   *If YES:* **HIGH UNCERTAINTY**. (Annotators will split on whether the target is the politician or the group).
+
+
+
+**2. Scan for "Exclusionary" Triggers (High Risk):**
+
+*   *Question:* Does the text use strong verbs like "Deport," "Remove," or "Kill" against a specific person or "curry workers"?
+
+*   *If YES:* **HIGH UNCERTAINTY**. (Annotators disagree on if this is policy or personal abuse/hate).
+
+
+
+**3. Check for "Meta" Triggers (High Risk):**
+
+*   *Question:* Does the tweet explicitly mention "Nativism," "Islamophobia," or "Xenophobia" as the *topic*?
+
+*   *If YES:* **HIGH UNCERTAINTY**. (Annotators disagree if the text validates the sentiment or critiques it).
+
+
+
+**4. Check for "Sarcasm/Clarity" (Low Risk):**
+
+*   *Question:* Is the tone unambiguously humorous, ironical, or policy-focused (no human target)?
+
+*   *If YES:* **LOW UNCERTAINTY**. (Stable agreement).
+
+
+
+**5. Final Certification:**
+
+*   If the text requires the coder to *decide* if they are attacking the *Person* or the *Policy* -> Mark **HIGH UNCERTAINTY**.
+
+*   If the text is a clear joke OR a clear policy summary -> Mark **LOW UNCERTAINTY**.
+
+
+
+---
+
+---
+\end{quote}
+\subsection*{HSBrexit -- labelled}
+\begin{quote}\small
+---
+
+
+
+**Task Instructions: HATE SPEECH LABEL STABILITY ASSESSMENT**
+
+
+
+**Objective:** 
+
+Your task is to estimate the stability of the assigned Hate Speech label (0 or 1) by judging its uncertainty. "Uncertainty" in this context is defined by the likelihood that the label would change (or oscillate) if re-annotated by expert assessors on repeated draws. 
+
+- **High Uncertainty:** The applied label is likely to be inconsistent or debatable across repeated reviews.
+
+- **Not Uncertain (Low Uncertainty):** The applied label is robust and would likely remain the same across repeated reviews.
+
+
+
+**Construct Dimensions \& Indicators:**
+
+
+
+To make this judgment accurate, you must evaluate the token-level text against three key dimensions.
+
+
+
+**1. Lexical Explicitness (The Directness of Speech)**
+
+- **Indicator (Stable/Not Uncertain):** The text uses direct, common vocabulary associated with the definition (attack, demean, exclude) linked to a protected group (religion, national origin, migration status). 
+
+  - *Examples:* Explicitly calling a group "terrorists" in a context of exclusion; stating "STOP MUSLIM IMMIGRATION"; direct accusations of terrorism against a group.
+
+- **Indicator (Unstable/High Uncertainty):** The text uses euphemisms, coded language, or abstract concepts that imply exclusion rather than stating it.
+
+  - *Examples:* "limit cheap foreign football imports" (implies exclusion via economy rather than direct attack); "radical Islam will end their lives" (projected threat vs. direct attack); metaphors masking the target.
+
+
+
+**2. Contextual Dependency (Ambiguity of Intent)**
+
+- **Indicator (Stable/Not Uncertain):** The meaning of the tweet is self-contained and does not require external knowledge to determine if it attacks/demeans excludes a group.
+
+  - *Examples:* A direct political statement that is clearly framed as opinion ("Immigrant backlash seems like a win for terrorists")—This is stable because it is clearly political opinion, not hate speech. 
+
+- **Indicator (Unstable/High Uncertainty):** The tweet relies on specific cultural knowledge, historical events, or allusions to identify the target or the nature of the attack.
+
+  - *Examples:* References to specific individuals like "Noor Salman, Pulse terrorist wife" (requires context to understand the racial/religious coding); vague allusions to "Pulse" that may not be immediately recognized as the source of the speech.
+
+
+
+**3. Definition Alignment (Intent vs. Grievance)**
+
+- **Indicator (Stable/Not Uncertain):** The text is either clearly Hate Speech or clearly Not Hate Speech based on the definition without needing to infer "subtle" impact.
+
+- **Indicator (Unstable/High Uncertainty):** The text sits on the boundary of "political grievance" vs. "hate speech." 
+
+  - *Correction:* If the tweet justifies exclusion as a "right" or "policy" (e.g., controlling borders in a way that implies exclusion but feels like policy), it is High Uncertainty. If the tweet clearly frames the speaker's view as *opinion* rather than targeting a group, it is Low Uncertainty.
+
+
+
+**Combination Rules:**
+
+
+
+| Dimensions | Verdict | Reasoning |
+
+| :--- | :--- | :--- |
+
+| **Direct Attack + No External Context** | **Not Uncertain** | Clear fit for the definition; stable labeling. |
+
+| **Clear Political Opinion (Non-Targeted)** | **Not Uncertain** | Clearly falls outside the definition; stable labeling. |
+
+| **Euphemism / Coded Language** | **Highly Uncertain** | Requires inferring the intent; variation between annotators is expected. |
+
+| **Ambiguous Intent / Boundary Cases** | **Highly Uncertain** | The distinction between policy and exclusion is debatable. |
+
+| **Relies on Specific External Knowledge** | **Highly Uncertain** | Without the specific context, the "hate" aspect cannot be confirmed or denied reliably. |
+
+
+
+**Final Guidance:**
+
+Do not be tricked by "Highly Charged" language (e.g., threats, panic) if the target is not clearly defined or if the statement is framed as an opinion about the immigration *policy* rather than an attack on the *people*. 
+
+However, if the text frames the policy itself as an *attack* on people using coded terms (e.g., limiting *people* for *football imports*), mark this as **High Uncertainty**. 
+
+
+
+If the text is simply explicit ("STOP MUSLIM IMMIGRATION"), mark this as **Not Uncertain**.
+
+
+
+---
+\end{quote}

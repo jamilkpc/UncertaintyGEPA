@@ -1,8 +1,9 @@
-"""Escreve os .tex do paper em `paper_materials/paper/`. Os numeros do texto entram por macro
+"""Escreve os .tex do paper em `<experimento>/paper/`. Os numeros do texto entram por macro
 (`macros.tex`), entao reexecutar atualiza o paper inteiro sem edicao manual.
 
-`write_all` so precisa de `summary` (results/summary.csv), dos `frames` (texto, g_m, u_m do LLM 1
-em cache) e dos codebooks (work/codebook_*.txt). Nenhuma chamada a LLM."""
+As tabelas sao SEMPRE reconstruidas a partir de tudo o que existe em disco para o experimento (todos os
+benchmarks com `results/summary_<bench>.csv`), e nao so dos benchmarks da execucao atual: rodar um
+benchmark novo acrescenta uma coluna/linha, nunca apaga os outros. Nenhuma chamada a LLM."""
 import glob
 import math
 import os
@@ -12,7 +13,6 @@ import zipfile
 import pandas as pd
 
 import config as C
-import metrics as M
 from benchmarks import RUN
 
 METHOD_ORDER = ["single_hedge", "reclassify", "topk_wrong", "pros_cons", "GEPA"]
@@ -20,8 +20,17 @@ METHOD_ORDER = ["single_hedge", "reclassify", "topk_wrong", "pros_cons", "GEPA"]
 
 def esc(s): return str(s).replace("_", r"\_").replace("&", r"\&").replace("%", r"\%")
 def fmt(x, d=3): return "--" if (x is None or (isinstance(x, float) and math.isnan(x))) else f"{x:.{d}f}"
+def sfmt(x, d=3): return "--" if (x is None or (isinstance(x, float) and math.isnan(x))) else f"{x:+.{d}f}"
 def mac(name): return "".join(w.capitalize() for w in re.split(r"[^A-Za-z]+", name) if w)
 def _write(fname, lines): open(f"{C.PAPERDIR}/{fname}", "w").write("\n".join(lines))
+def _nan(x): return x is None or (isinstance(x, float) and math.isnan(x))
+
+
+# ---- leitura do que existe em disco -----------------------------------------------------------
+def benchmarks_on_disk():
+    """Benchmarks com summary no experimento, na ordem padrao de RUN."""
+    found = {os.path.basename(p)[len("summary_"):-4] for p in glob.glob(f"{C.RESDIR}/summary_*.csv")}
+    return [b for b in RUN if b in found] + sorted(found - set(RUN))
 
 
 def load_summary():
@@ -41,16 +50,42 @@ def load_codebooks():
     return out
 
 
-def table_data(frames, run):
+def load_floor():
+    parts = sorted(glob.glob(f"{C.RESDIR}/floor_summary_*.csv"))
+    return pd.concat([pd.read_csv(p) for p in parts], ignore_index=True) if parts else None
+
+
+def load_data_stats(run, frames=None):
+    """results/data_<bench>.csv; se faltar e houver `frames`, calcula e grava."""
+    import evaluation
+    rows = []
+    for b in run:
+        p = f"{C.RESDIR}/data_{b}.csv"
+        if os.path.exists(p):
+            rows.append(pd.read_csv(p).iloc[0].to_dict())
+        elif frames is not None and b in frames:
+            rows.append(evaluation.data_stats(frames, b))
+        else:
+            print(f"aviso: sem estatisticas de dados para {b} (rode o estagio paper com --llm1-tag para gera-las)")
+    return pd.DataFrame(rows)
+
+
+def load_paired(run):
+    import evaluation
+    parts = [evaluation.ensure_paired(b) for b in run if os.path.exists(f"{C.RESDIR}/per_item_{b}.csv")]
+    return pd.concat(parts, ignore_index=True) if parts else None
+
+
+# ---- tabelas ------------------------------------------------------------------------------------
+def table_data(stats):
     L = [r"\begin{table}[t]", r"\centering", r"\small",
          r"\begin{tabular}{lrrrrrr}", r"\hline",
          r"Benchmark & Items & Ann./item & \%\,$u_m{=}0$ & $K_u$ & \%\,$g_m{=}0$ & $\rho(g_m,u_m)$ \\",
          r"\hline"]
-    for b in run:
-        f = frames[b]; K, _ = M.rho_max_discrete(f.u_m)
-        na = f.n_ann.min() if f.n_ann.nunique() == 1 else f"{f.n_ann.min()}--{f.n_ann.max()}"
-        L.append(f"{esc(b)} & {len(f)} & {na} & {(f.u_m == 0).mean() * 100:.1f} & {K} & "
-                 f"{(f.g_m == 0).mean() * 100:.1f} & {fmt(M.spearman(f.g_m, f.u_m))} \\\\")
+    for _, r in stats.iterrows():
+        na = int(r.ann_min) if r.ann_min == r.ann_max else f"{int(r.ann_min)}--{int(r.ann_max)}"
+        L.append(f"{esc(r.benchmark)} & {int(r['items'])} & {na} & {r.pct_um0:.1f} & {int(r.K_u)} & "
+                 f"{r.pct_gm0:.1f} & {fmt(r.rho_gu)} \\\\")
     L += [r"\hline", r"\end{tabular}",
           r"\caption{Benchmarks. $u_m$ is human disagreement, $g_m$ the variance of the $R=20$ "
           r"annotator draws, $K_u$ the number of distinct values $u_m$ takes.}",
@@ -58,26 +93,41 @@ def table_data(frames, run):
     _write("tab_data.tex", L)
 
 
-def table_main(summary, run, cond, fname, cap):
-    """rho_u por benchmark x metodo; melhor por coluna em negrito."""
-    piv = (summary[summary.condition == cond].pivot(index="method", columns="benchmark", values="rho_u"))
-    order = [m for m in METHOD_ORDER if m in piv.index]
-    piv = piv.loc[order, [b for b in run if b in piv.columns]]
-    L = [r"\begin{table}[t]", r"\centering", r"\small",
-         r"\begin{tabular}{l" + "r" * len(piv.columns) + "}", r"\hline",
-         "Method & " + " & ".join(esc(c) for c in piv.columns) + r" \\", r"\hline"]
-    for m in piv.index:
-        cells = []
-        for c in piv.columns:
-            v = piv.loc[m, c]
-            cells.append((r"\textbf{" + fmt(v) + "}") if v == piv[c].max() else fmt(v))
-        L.append(esc(m) + " & " + " & ".join(cells) + r" \\")
-    ceil_row = [fmt(summary[(summary.condition == cond) & (summary.benchmark == c)].ceil_u.iloc[0])
-                for c in piv.columns]
-    L += [r"\hline", r"$\rho_{\max}(H{=}3)$ & " + " & ".join(ceil_row) + r" \\",
-          r"\hline", r"\end{tabular}", r"\caption{" + cap + r"}",
-          r"\label{tab:main-" + cond + r"}", r"\end{table}"]
-    _write(fname, L)
+def _cell(r, best):
+    if r is None or _nan(r.rho_u): return "--"
+    s = fmt(r.rho_u)
+    if best: s = r"\textbf{" + s + "}"
+    if not _nan(r.ci_lo): s += r"{\scriptsize\,[" + fmt(r.ci_lo, 2) + ", " + fmt(r.ci_hi, 2) + "]}"
+    if r.levels_used < C.H: s += r"$^\dagger$"
+    return s
+
+
+def table_main(summary, run):
+    """rho(h, u) no teste, por metodo e benchmark, com intervalo de 95%: painel com rotulo e painel so com
+    a mensagem. Melhor por coluna e painel em negrito; † marca metodo que emitiu menos que os H hedges."""
+    cols = [b for b in run if b in set(summary.benchmark)]
+    L = [r"\begin{table}[t]", r"\centering", r"\small", r"\begin{tabular}{l" + "r" * len(cols) + "}", r"\hline",
+         "Method & " + " & ".join(esc(c) for c in cols) + r" \\", r"\hline"]
+    for cond, title in (("labelled", "Label-conditioned"), ("blind", "Message-only")):
+        sub = summary[summary.condition == cond]
+        if sub.empty: continue
+        L.append(r"\multicolumn{%d}{l}{\emph{%s}} \\" % (len(cols) + 1, title))
+        for m in [m for m in METHOD_ORDER if m in set(sub.method)]:
+            cells = []
+            for b in cols:
+                r = sub[(sub.benchmark == b) & (sub.method == m)]
+                r = r.iloc[0] if len(r) else None
+                best = r is not None and not _nan(r.rho_u) and r.rho_u == sub[sub.benchmark == b].rho_u.max()
+                cells.append(_cell(r, best))
+            L.append(esc(m) + " & " + " & ".join(cells) + r" \\")
+        ceil = [fmt(sub[sub.benchmark == b].ceil_u.iloc[0]) if (sub.benchmark == b).any() else "--" for b in cols]
+        L += [r"$\rho_{\max}(H{=}3)$ & " + " & ".join(ceil) + r" \\", r"\hline"]
+    L += [r"\end{tabular}",
+          r"\caption{Spearman $\rho(h_m,u_m)$ between the emitted hedge and human disagreement on the held-out test "
+          r"split, with 95\% bootstrap intervals. Best per column and panel in bold; $^\dagger$ marks a method that "
+          r"emitted fewer than three hedges.}",
+          r"\label{tab:main}", r"\end{table}"]
+    _write("tab_main.tex", L)
 
 
 def table_ablation(summary, run):
@@ -95,12 +145,14 @@ def table_ablation(summary, run):
     _write("tab_ablation.tex", L)
 
 
-def table_stability(summary):
+def table_stability(summary, run):
     L = [r"\begin{table}[t]", r"\centering", r"\small", r"\begin{tabular}{llrrr}", r"\hline",
          r"Benchmark & Method & Levels & Modal share & Coverage \\", r"\hline"]
-    for _, r_ in summary[summary.condition == "blind"].iterrows():
-        L.append(f"{esc(r_.benchmark)} & {esc(r_.method)} & {int(r_.levels_used)} & "
-                 f"{fmt(r_.modal_share, 2)} & {fmt(r_.coverage, 2)} \\\\")
+    s = summary[summary.condition == "blind"]
+    for b in run:
+        for _, r_ in s[s.benchmark == b].iterrows():
+            L.append(f"{esc(r_.benchmark)} & {esc(r_.method)} & {int(r_.levels_used)} & "
+                     f"{fmt(r_.modal_share, 2)} & {fmt(r_.coverage, 2)} \\\\")
     L += [r"\hline", r"\end{tabular}",
           r"\caption{Use of the hedge scale. Levels is how many of the $H=3$ hedges a method ever "
           r"emits; modal share is the fraction of items receiving the most common one. A method that "
@@ -109,9 +161,51 @@ def table_stability(summary):
     _write("tab_stability.tex", L)
 
 
-def load_floor():
-    parts = sorted(glob.glob(f"{C.RESDIR}/floor_summary_*.csv"))
-    return pd.concat([pd.read_csv(p) for p in parts], ignore_index=True) if parts else None
+def _dcell(r):
+    if r is None or len(r) == 0: return "--"
+    r = r.iloc[0]
+    return f"{sfmt(r.delta)}" + r"{\scriptsize\,[" + sfmt(r.ci_lo, 2) + ", " + sfmt(r.ci_hi, 2) + "]}"
+
+
+def table_paired(paired, summary, run):
+    """Diferencas pareadas de rho(h, u) nos mesmos itens de teste, com intervalo bootstrap sobre os itens:
+    codebook menos hedge unico (por condicao), hedge menos o proprio alvo g_m (na condicao em que o codebook foi
+    melhor) e rotulo menos sem rotulo (codebook)."""
+    L = [r"\begin{table}[t]", r"\centering", r"\small", r"\begin{tabular}{lrrrr}", r"\hline",
+         r"Benchmark & \multicolumn{2}{c}{codebook $-$ single hedge} & hedge $-$ $g_m$ & label $-$ no label \\",
+         r" & message-only & label-cond. & (as predictors of $u_m$) & (codebook) \\", r"\hline"]
+    for b in run:
+        P = paired[paired.benchmark == b]
+        if P.empty: continue
+        g = summary[(summary.benchmark == b) & (summary.method == "GEPA")]
+        best = g.sort_values("rho_u").condition.iloc[-1] if len(g) else "blind"
+        c1 = P[(P.kind == "method_vs_seed") & (P.condition == "blind") & (P.method == "GEPA")]
+        c2 = P[(P.kind == "method_vs_seed") & (P.condition == "labelled") & (P.method == "GEPA")]
+        c3 = P[(P.kind == "hedge_vs_g") & (P.condition == best)]
+        c4 = P[(P.kind == "label_effect") & (P.method == "GEPA")]
+        L.append(f"{esc(b)} & {_dcell(c1)} & {_dcell(c2)} & {_dcell(c3)} & {_dcell(c4)} \\\\")
+    L += [r"\hline", r"\end{tabular}",
+          r"\caption{Paired differences in $\rho(\cdot,u_m)$, bootstrapped over test items (4,000 resamples, common "
+          r"seed), with 95\% percentile intervals; positive favours the first term. The third column compares the "
+          r"hedge with the instability target it was trained on, in whichever condition the codebook scored higher.}",
+          r"\label{tab:paired}", r"\end{table}"]
+    _write("tab_paired.tex", L)
+
+
+def table_paired_methods(paired, run):
+    """Todos os metodos contra o hedge unico (comparador fixado de antemao), por benchmark e condicao."""
+    L = [r"\begin{table}[t]", r"\centering", r"\small", r"\begin{tabular}{lllr}", r"\hline",
+         r"Benchmark & Condition & Method & $\Delta\rho(h_m,u_m)$ vs single hedge \\", r"\hline"]
+    for b in run:
+        P = paired[(paired.benchmark == b) & (paired.kind == "method_vs_seed")]
+        for cond in ("blind", "labelled"):
+            for m in [m for m in METHOD_ORDER if m in set(P.method)]:
+                r = P[(P.condition == cond) & (P.method == m)]
+                if len(r): L.append(f"{esc(b)} & {esc(cond)} & {esc(m)} & {_dcell(r)} \\\\")
+    L += [r"\hline", r"\end{tabular}",
+          r"\caption{Each method against the single unoptimised hedge, paired over test items, with 95\% intervals.}",
+          r"\label{tab:paired-methods}", r"\end{table}"]
+    _write("tab_paired_methods.tex", L)
 
 
 def table_floor(floor):
@@ -139,66 +233,74 @@ def appendix_codebooks(codebooks):
     _write("codebooks.tex", L)
 
 
-def macros(summary, frames, run):
+def macros(summary, stats, paired):
     Mx = [r"% gerado por scripts/paper.py -- nao editar a mao"]
     for _, r_ in summary.iterrows():
         base = mac(r_.benchmark) + mac(r_.condition) + mac(r_.method)
         Mx.append(r"\providecommand{\rhoU" + base + "}{" + fmt(r_.rho_u) + "}")
         Mx.append(r"\providecommand{\ciU" + base + "}{[" + fmt(r_.ci_lo, 2) + ", " + fmt(r_.ci_hi, 2) + "]}")
-    for b in run:
-        f = frames[b]
-        Mx += [r"\providecommand{\n" + mac(b) + "}{" + str(len(f)) + "}",
-               r"\providecommand{\accLLMone" + mac(b) + "}{" + fmt((f.llm1_label == f.consensus).mean()) + "}",
-               r"\providecommand{\gzero" + mac(b) + "}{" + f"{(f.g_m == 0).mean() * 100:.1f}" + "}",
-               r"\providecommand{\rhoGU" + mac(b) + "}{" + fmt(M.spearman(f.g_m, f.u_m)) + "}"]
-    Mx += [r"\providecommand{\Rdraws}{" + str(C.R) + "}",
-           r"\providecommand{\nHedges}{" + str(C.H) + "}"]
+    for _, r_ in stats.iterrows():
+        b = mac(r_.benchmark)
+        Mx += [r"\providecommand{\n" + b + "}{" + str(int(r_["items"])) + "}",
+               r"\providecommand{\accLLMone" + b + "}{" + fmt(r_.acc_llm1) + "}",
+               r"\providecommand{\gzero" + b + "}{" + f"{r_.pct_gm0:.1f}" + "}",
+               r"\providecommand{\rhoGU" + b + "}{" + fmt(r_.rho_gu) + "}"]
+    if paired is not None:
+        for _, r_ in paired[(paired.kind == "method_vs_seed") & (paired.method == "GEPA")].iterrows():
+            base = mac(r_.benchmark) + mac(r_.condition)
+            Mx.append(r"\providecommand{\dGepaSeed" + base + "}{" + sfmt(r_.delta) + "}")
+            Mx.append(r"\providecommand{\ciGepaSeed" + base + "}{[" + sfmt(r_.ci_lo, 2) + ", " + sfmt(r_.ci_hi, 2) + "]}")
+    Mx += [r"\providecommand{\Rdraws}{" + str(C.R) + "}", r"\providecommand{\nHedges}{" + str(C.H) + "}"]
     _write("macros.tex", Mx)
 
 
 def results_skeleton(run):
+    b = mac(run[0])
     sk = [r"% \input{paper/macros} no preambulo",
           r"\section{Results}", "",
           r"Table~\ref{tab:data} describes the benchmarks. \textbf{[TODO: uma frase sobre a faixa de "
           r"$\rho(g_m,u_m)$ e o que ela implica.]}", "",
           r"\input{paper/tab_data}", "",
-          r"Table~\ref{tab:main-blind} reports the headline association. On "
-          + esc(run[0]) + r" the optimised codebook reaches $\rho = \rhoU"
-          + mac(run[0]) + r"BlindGepa$ (\ciU" + mac(run[0]) + r"BlindGepa), against "
-          r"$\rhoU" + mac(run[0]) + r"BlindSingleHedge$ for a single unoptimised hedge. "
+          r"Table~\ref{tab:main} reports the headline association. On " + esc(run[0])
+          + r" the optimised codebook reaches $\rho = \rhoU" + b + r"BlindGepa$ (\ciU" + b + r"BlindGepa) in the "
+          r"message-only condition, against $\rhoU" + b + r"BlindSingleHedge$ for a single unoptimised hedge. "
           r"\textbf{[TODO: o padrao se mantem nos demais? onde quebra?]}", "",
           r"\input{paper/tab_main}", "",
-          r"\paragraph{Assessor input.} \textbf{[TODO: ler a coluna $\Delta$ da Tabela~"
-          r"\ref{tab:ablation}. Se $\Delta<0$ de forma consistente, o rotulo atrapalha e a Secao~4 "
-          r"precisa ser reescrita nesse ponto.]}", "",
+          r"Table~\ref{tab:paired} gives the paired differences. \textbf{[TODO: ler as colunas e os intervalos.]}", "",
+          r"\input{paper/tab_paired}", "",
+          r"\paragraph{Assessor input.} \textbf{[TODO: ler a coluna $\Delta$ da Tabela~\ref{tab:ablation} e a "
+          r"ultima coluna da Tabela~\ref{tab:paired}.]}", "",
           r"\input{paper/tab_ablation}", "",
           r"\paragraph{Use of the scale.} Table~\ref{tab:stability} reports how much of the "
           r"three-level scale each method actually uses. \textbf{[TODO: comentar se os baselines "
-          r"colapsam a escala, e se a vantagem do codebook vem de ordenar melhor ou de usar a "
-          r"escala inteira.]}", "",
+          r"colapsam a escala.]}", "",
           r"\input{paper/tab_stability}"]
     _write("results_skeleton.tex", sk)
 
 
-def write_all(frames, summary=None, codebooks=None, run=None):
-    """Escreve todos os .tex. `summary` e `codebooks` caem para o que esta em disco."""
+def write_all(frames=None, summary=None, codebooks=None, run=None):
+    """Escreve todos os .tex a partir do que existe em disco para o experimento (todos os benchmarks).
+    `frames` so e usado para gerar estatisticas de dados que ainda nao estejam em results/data_<bench>.csv."""
     summary = load_summary() if summary is None else summary
     codebooks = load_codebooks() if codebooks is None else codebooks
-    run = run or [b for b in RUN if b in frames]
-    table_data(frames, run)
-    table_main(summary, run, "blind", "tab_main.tex",
-               r"Spearman $\rho(h_m,u_m)$ on held-out test items, message-only condition. "
-               r"Best per column in bold.")
+    run = run or benchmarks_on_disk()
+    stats = load_data_stats(run, frames)
+    paired = load_paired(run)
+    table_data(stats)
+    table_main(summary, run)
     table_ablation(summary, run)
-    table_stability(summary)
+    table_stability(summary, run)
+    if paired is not None:
+        table_paired(paired, summary, run)
+        table_paired_methods(paired, run)
     appendix_codebooks(codebooks)
     floor = load_floor()
     if floor is not None:
         table_floor(floor)
-    macros(summary, frames, run)
+    macros(summary, stats, paired)
     results_skeleton(run)
     written = sorted(os.listdir(C.PAPERDIR))
-    print("escritos:", written)
+    print("benchmarks:", run, "\nescritos:", written)
     return written
 
 

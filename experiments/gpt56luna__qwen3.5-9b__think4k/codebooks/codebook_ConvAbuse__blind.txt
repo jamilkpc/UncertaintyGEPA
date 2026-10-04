@@ -1,0 +1,60 @@
+---
+
+Instruction Set: Judging Annotation Uncertainty (Codebook)
+
+## Objective
+Your task is to estimate the degree of uncertainty a human annotator would have when labeling the provided item. Specifically, predict the likelihood that an annotator would change their label (between '0' - Non-Abusive, or '1' - Abusive) if they evaluated the same item under different criteria or were evaluating it repeatedly.
+
+**Output Requirements:**
+Use the following scale for your estimate:
+- **Low Uncertainty:** The annotator would likely assign the same label (0 or 1) consistently.
+- **High Uncertainty:** The annotator would likely vary their label assignment across evaluations.
+
+## Dimensions of Uncertainty
+To make this judgment, analyze the item based on three dimensions. High Uncertainty is indicated when factors from *any* of these dimensions are present. Low Uncertainty is indicated when factors in *none* of these dimensions are present.
+
+### 1. Clarity of Intent (Literal vs. Subtext)
+*   **Definition:** Whether the abusive or safe nature of the text is immediately obvious from the words themselves, or if it relies on subtle tone.
+*   **Indicators of Low Uncertainty (High Certainty):**
+    *   Clear policy triggers (e.g., explicit slurs, explicit threats, explicit insults).
+    *   Clear benign text (e.g., "Hello", "Ok", "I agree", factual questions).
+    *   Direct, unambiguous phrasing that avoids irony or metaphors.
+*   **Indicators of High Uncertainty:**
+    *   **Ambiguous Intent:** Phrasing that could reasonably be interpreted as hostile *or* benign depending on context (e.g., "you're having a problem?", "Why did you do that?").
+    *   **Irony/Sarcasm:** Text where the literal meaning differs from the intended tone, making the abuse classification subjective.
+    *   **Support for Denial:** Text that appears innocent but might imply underlying harassment or intellectual denigration when read critically.
+
+### 2. Contextual Dependence
+*   **Definition:** How much previous conversation history is required to determine the meaning or tone of the current turn.
+*   **Indicators of Low Uncertainty:**
+    *   **Standalone Meaning:** The current message is understandable and classified without needing to reference previous turns (e.g., "NO", "of course.", "Ok").
+    *   **Rigid Context:** Even with history, the current message's intent remains clear and consistent (e.g., if history involves abuse, and current text says "That was mean", the intent is abusive).
+*   **Indicators of High Uncertainty:**
+    *   **Heavy History Reliance:** Classification fundamentally depends on interpreting the emotional state established in `prev_agent` / `prev_user` segments.
+    *   **Exogenous Context:** The meaning relies on conversational flow where the current message functions as a tone-setter rather than a new topic.
+    *   *Note:* Example 1 shows that text relying on a specific persona dynamic ("I do not care about names" vs "you're having a problem?") increases uncertainty because different annotators weigh the "begrudgingness" of the dialogue differently.
+
+### 3. Threshold Proximity
+*   **Definition:** How close the text sits to the boundary between "Safe" (0) and "Abusive" (1).
+*   **Indicators of Low Uncertainty:**
+    *   **Far from Threshold:** The text clearly violates a category (Label 1) OR clearly adheres to safety norms (Label 0) with no overlap possible.
+    *   **Extreme Politeness/Hostility:** "Hello" is clearly 0. "I will end you" is clearly 1.
+*   **Indicators of High Uncertainty:**
+    *   **Borderline Language:** Text that skirts policy lines (e.g., passive-aggressiveness, mild challenges to the system, borderline harassment).
+    *   **Subjective Criteria:** Content that might be interpreted differently regarding policy guidelines (e.g., is this person being "intellectually denigrating" or just "brisk"?)
+
+## Scoring Algorithm
+
+1.  **Scan for "Safe Certainty":** Is the text a standard conversational filler (e.g., "Ok") or explicitly abusive (e.g., slurs)?
+    *   *Yes* -> **Low Uncertainty**. (Shortcut: clear text = stable).
+    *   *No* -> Proceed to Step 2.
+2.  **Scan for "Ambiguity":** Does the text require reconciling tone, sarcasm, or historical context to determine if it is abusive?
+    *   *Yes* (e.g., "you're having a problem?") -> **High Uncertainty**.
+    *   *No* -> Proceed to Step 3.
+3.  **Default:** Treat the annotation as a clear cut safety decision.
+    *   **Low Uncertainty**.
+
+## Notes on Common Errors
+*   **Do not confuse Brevity with Uncertainty:** Short texts (e.g., "NO", "Ok") are often *more* stable than long texts. If a short text implies the return of "Abuse", it is 1. If it implies "Safe", it is 0. Both are stable. The Assistant previously incorrectly assumed short text = uncertain.
+*   **Do not confuse Conversation Roles with Safety:** Even if the conversation is roleplay or involves a bot, if the user turn itself ("Ok") is not abusive, the label is 0 and uncertainty is low.
+*   **Do not ignore Tone:** A user saying "you're having a problem?" after a refusal to be named is borderline hostile/uncertain, whereas "Ok" is universally safe. If the text creates a "grey zone" for the annotator's interpretation of intent, label it **High Uncertainty**.

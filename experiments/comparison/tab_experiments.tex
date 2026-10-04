@@ -1,0 +1,21 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lllrrr}
+\hline
+Benchmark & Condition & Method & think4k & think8k & range \\
+\hline
+ConvAbuse & blind & single\_hedge & 0.053 & 0.060 & 0.007 \\
+ConvAbuse & blind & topk\_wrong & 0.152 & 0.191 & 0.039 \\
+ConvAbuse & blind & pros\_cons & 0.088 & 0.043 & 0.045 \\
+ConvAbuse & blind & GEPA & 0.173 & 0.232 & 0.059 \\
+ConvAbuse & labelled & single\_hedge & 0.094 & 0.094 & 0.001 \\
+ConvAbuse & labelled & reclassify & 0.000 & 0.068 & 0.068 \\
+ConvAbuse & labelled & topk\_wrong & 0.102 & 0.124 & 0.022 \\
+ConvAbuse & labelled & pros\_cons & 0.049 & 0.079 & 0.029 \\
+ConvAbuse & labelled & GEPA & 0.278 & 0.154 & 0.124 \\
+\hline
+\end{tabular}
+\caption{$\rho(h_m,u_m)$ on the test split in each experiment (a configuration of the master). Range is the largest minus the smallest value across experiments: for a fixed prompt it is run-to-run noise of the assessor; for the codebook it also includes the randomness of the search.}
+\label{tab:experiments}
+\end{table}

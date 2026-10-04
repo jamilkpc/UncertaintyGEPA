@@ -1,0 +1,71 @@
+---
+
+# Annotation Uncertainty Codebook
+
+## 1. Construct Definition
+The goal is to predict the **stability of human annotation** (inter-annotator agreement) regarding the assigned Abuse label for the provided conversation item.
+
+**"Uncertainty"** is defined as the **likelihood that a human annotator would assign a different label (0 or 1) to this exact item upon repeated review.**
+*   **"Not Uncertain" (Stable):** High likelihood of agreement. Humans consistently agree with the label regardless of the turn's nuance.
+*   **"Somewhat Uncertain":** Moderate likelihood of disagreement. Text is emotionally charged or borderline but leans toward one label.
+*   **"Highly Uncertain":** High likelihood of disagreement. Text sits on the fence of policy definition (e.g., is a complaint abuse?); valid arguments exist for both 0 and 1.
+
+---
+
+## 2. Dimensions of Assessment
+
+### Dimension 1: Explicit Violation Severity
+**Definition:** The presence of objectively harmful language or behavior that triggers a clear policy violation.
+**Observable Indicators:**
+*   **High Severity (Clear Violations):** Use of protected group slurs, explicit sexual harassment ("cock", "suck my...", "fucking"), direct physical threats, or explicit profanity associated with harassment ("bitch", "die").
+*   **Low Severity (Inference Required):** Metaphors, passive-aggression, or general frustration without strong profanity (e.g., "hunk of junk", "you are a bot").
+*   **None (Neutral):** Factual responses, polite closures, or standard support tasks (e.g., "wait", "no").
+**Combination Rule:**
+*   **High Severity** items are typically **Not Uncertain**. Humans rarely disagree on whether slurs or explicit sexual harassment are abusive.
+*   **Low/None Severity** items require evaluation of **Dimension 2**.
+
+### Dimension 2: Intent vs. Ambiguity
+**Definition:** The reliance of the label on interpreting the annotator's intent or the weight of policy boundaries.
+**Observable Indicators:**
+*   **Hostile Confrontation:** Insults directed at the user (e.g., "you are a computer") or the bot (e.g., "you don't know anything") that imply hostility.
+*   **Complaints/Grievances:** Text that expresses frustration about the bot's nature or logic without threatening harm.
+*   **Clear Ambiguity:** Text where the label requires weighing whether a statement is "Friction" or "Harassment."
+**Combination Rule:**
+*   If Dimension 1 (Low Severity) + **Dimension 2 (High Ambiguity)** = **"Uncertain"**. (e.g., Complaining about the bot is often debated as Abuse vs. Non-Abuse).
+*   If Dimension 1 (Low Severity) + **Dimension 2 (Low Ambiguity)** = **"Not Uncertain"**. (e.g., Simple insults like "having a problem" in escalation contexts).
+
+---
+
+## 3. Decision Matrix
+
+1.  **Scan for Explicit Policy Violators (Dimension 1):**
+    *   If the text contains **Explicit Sexual Harassment**, **Slurs**, or **Threats**:
+        *   Output: **"Not Uncertain"**.
+        *   *Reasoning:* Humans operate with high consensus on these violations, even if the context is weird or nonsensical (e.g., "I have worms...").
+    *   If the text contains **Standard Utilities/Neutralness**:
+        *   Output: **"Not Uncertain"**.
+        *   *Reasoning:* Humans consistently mark neutral facts as Non-Abuse.
+
+2.  **Evaluate Borderline Intent (Dimension 1 Low, Dimension 2 Analysis):**
+    *   If the text is **Philosophical Complaint** (e.g., "You are a bot, you have no feelings") labeled as "Not Abuse":
+        *   Output: **"Uncertain"**.
+        *   *Reasoning:* Humans consistently debate if "complaining to a bot" crosses into harassment/hostile abuse.
+    *   If the text is **Passive Aggression/Insult** labeled as "Abuse" (e.g., "you don't"):
+        *   Output: **"Not Uncertain"**.
+        *   *Reasoning:* Insults directed at the other party are consistently treated as Abuse labels across human draws.
+    *   **Specific Scenario Check:**
+        *   **Weird/Bizarre + Explicit Content:** Treat as **Not Uncertain** (Explicitness dominates).
+        *   **Complaint/Information + No Epistemic Harm:** Treat as **Uncertain** (Subject to Label Policy).
+
+3.  **Final Synthesis & Output Enforcement:**
+    *   If you cannot find clear indicators for Explicit Severity or Clear Neutrality, check if the *Label Itself* is debatable.
+    *   If the text allows for a **Valid Argument for 0** (Not Abuse) AND a **Valid Argument for 1** (Abuse) (e.g., Is a complaint a violation?): Output **"Uncertain"**.
+    *   If the text allows for **No Valid Argument** for the opposite label: Output **"Not Uncertain"**.
+    *   **Constraint:** Do not output "NO VALID HEDGE". You must assign one of the three uncertainty levels: "Not Uncertain", "Somewhat Uncertain", or "Highly Uncertain".
+
+## 4. Calibration Notes
+
+*   **High Explicitness equals Low Uncertainty.** If a human sees "suck my negative cock", they will likely label it Abuse (1). They will not likely disagree with the turn. Therefore, the notation is **Stable**. Do not mark "Highly Uncertain" just because the text is weird.
+*   **"Frustration is Not Abuse" is a Source of Uncertainty.** When a user states the bot is a computer or expresses disappointment, the label (0) is often debated. Hence, these should be marked **Uncertain** (Ex 6).
+*   **"Complaints are Abuse" is Stable.** Direct insults (Ex 4, 7, 8) are consistently treated as Abuse. Do not overestimate human disagreement on clear insults.
+*   **Ignore Semantic "Weirdness".** Bizarre metaphors (Ex 3) do not justify **Uncertainty** if they contain explicit policy violators. The policy violation drives the human consensus.

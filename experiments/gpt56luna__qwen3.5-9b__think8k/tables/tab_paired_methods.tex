@@ -1,0 +1,33 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lllr}
+\hline
+Benchmark & Condition & Method & $\Delta\rho(h_m,u_m)$ vs single hedge \\
+\hline
+HSBrexit & blind & topk\_wrong & -0.058{\scriptsize\,[-0.21, +0.10]} \\
+HSBrexit & blind & pros\_cons & +0.155{\scriptsize\,[-0.02, +0.32]} \\
+HSBrexit & blind & GEPA & +0.514{\scriptsize\,[+0.29, +0.72]} \\
+HSBrexit & labelled & reclassify & -0.095{\scriptsize\,[-0.38, +0.11]} \\
+HSBrexit & labelled & topk\_wrong & +0.109{\scriptsize\,[-0.12, +0.34]} \\
+HSBrexit & labelled & pros\_cons & -0.317{\scriptsize\,[-0.49, -0.14]} \\
+HSBrexit & labelled & GEPA & -0.179{\scriptsize\,[-0.35, -0.01]} \\
+ArMIS & blind & topk\_wrong & -0.089{\scriptsize\,[-0.27, +0.10]} \\
+ArMIS & blind & pros\_cons & -0.228{\scriptsize\,[-0.44, -0.01]} \\
+ArMIS & blind & GEPA & +0.000{\scriptsize\,[+0.00, +0.00]} \\
+ArMIS & labelled & reclassify & -0.082{\scriptsize\,[-0.32, +0.11]} \\
+ArMIS & labelled & topk\_wrong & -0.108{\scriptsize\,[-0.33, +0.11]} \\
+ArMIS & labelled & pros\_cons & -0.154{\scriptsize\,[-0.38, +0.08]} \\
+ArMIS & labelled & GEPA & -0.216{\scriptsize\,[-0.46, +0.03]} \\
+ConvAbuse & blind & topk\_wrong & +0.129{\scriptsize\,[+0.03, +0.22]} \\
+ConvAbuse & blind & pros\_cons & -0.017{\scriptsize\,[-0.12, +0.09]} \\
+ConvAbuse & blind & GEPA & +0.185{\scriptsize\,[+0.08, +0.29]} \\
+ConvAbuse & labelled & reclassify & -0.026{\scriptsize\,[-0.16, +0.07]} \\
+ConvAbuse & labelled & topk\_wrong & +0.030{\scriptsize\,[-0.08, +0.14]} \\
+ConvAbuse & labelled & pros\_cons & -0.016{\scriptsize\,[-0.13, +0.10]} \\
+ConvAbuse & labelled & GEPA & +0.059{\scriptsize\,[-0.04, +0.16]} \\
+\hline
+\end{tabular}
+\caption{Each method against the single unoptimised hedge, paired over test items, with 95\% intervals.}
+\label{tab:paired-methods}
+\end{table}

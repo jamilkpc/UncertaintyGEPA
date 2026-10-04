@@ -1,0 +1,24 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{llrrr}
+\hline
+Benchmark & Method & labelled & message-only & $\Delta$ \\
+\hline
+HSBrexit & single\_hedge & 0.247 & -0.159 & 0.406 \\
+HSBrexit & topk\_wrong & 0.355 & -0.217 & 0.573 \\
+HSBrexit & pros\_cons & -0.071 & -0.004 & -0.067 \\
+HSBrexit & GEPA & 0.067 & 0.357 & -0.289 \\
+ArMIS & single\_hedge & 0.192 & 0.165 & 0.026 \\
+ArMIS & topk\_wrong & 0.083 & 0.076 & 0.007 \\
+ArMIS & pros\_cons & 0.037 & -0.062 & 0.100 \\
+ArMIS & GEPA & -0.015 & 0.165 & -0.180 \\
+ConvAbuse & single\_hedge & 0.094 & 0.060 & 0.034 \\
+ConvAbuse & topk\_wrong & 0.124 & 0.191 & -0.067 \\
+ConvAbuse & pros\_cons & 0.079 & 0.043 & 0.035 \\
+ConvAbuse & GEPA & 0.154 & 0.232 & -0.078 \\
+\hline
+\end{tabular}
+\caption{Assessor input ablation. $\Delta>0$ means the assigned label helped.}
+\label{tab:ablation}
+\end{table}

@@ -21,3 +21,6 @@ venv/
 # entradas e logs do pipeline
 paper_materials/inputs/
 logs/
+
+# todas as entradas e saidas dos experimentos
+paper_materials/

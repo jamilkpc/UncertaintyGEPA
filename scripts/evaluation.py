@@ -156,3 +156,75 @@ def floor_summary(bench):
     out = pd.DataFrame(rows)
     if len(out): out.to_csv(f"{C.RESDIR}/floor_summary_{bench}.csv", index=False)
     return out
+
+
+# ---- estatisticas do benchmark e comparacoes pareadas (lidas depois pelo estagio paper) --------
+def data_stats(frames, bench):
+    """Resumo do benchmark como o pipeline o viu; fica em results/data_<bench>.csv para o estagio
+    paper nao precisar recarregar os dados."""
+    f = frames[bench]; K, _ = M.rho_max_discrete(f.u_m)
+    row = {"benchmark": bench, "items": len(f), "ann_min": int(f.n_ann.min()), "ann_max": int(f.n_ann.max()),
+           "pct_um0": float((f.u_m == 0).mean() * 100), "K_u": int(K), "pct_gm0": float((f.g_m == 0).mean() * 100),
+           "rho_gu": M.spearman(f.g_m, f.u_m), "acc_llm1": float((f.llm1_label == f.consensus).mean()),
+           "acc_majority": float(f.consensus.value_counts(normalize=True).max()),
+           "n_train": int((f.split_orig == "train").sum()), "n_dev": int((f.split_orig == "dev").sum()),
+           "n_test": int((f.split_orig == "test").sum())}
+    pd.DataFrame([row]).to_csv(f"{C.RESDIR}/data_{bench}.csv", index=False)
+    return row
+
+
+def _rho(h, u):
+    ok = ~(np.isnan(h) | np.isnan(u))
+    if ok.sum() < 3 or len(set(h[ok])) < 2 or len(set(u[ok])) < 2:
+        return 0.0
+    r = M.spearman(list(h[ok]), list(u[ok])); return r
+
+
+def _paired(a, b, u, n_boot, rng):
+    """rho(a,u) - rho(b,u) nos itens validos de ambos, com intervalo bootstrap percentil sobre os itens."""
+    ok = ~(np.isnan(a) | np.isnan(b) | np.isnan(u)); a, b, u = a[ok], b[ok], u[ok]; n = len(u)
+    delta = _rho(a, u) - _rho(b, u)
+    B = []
+    for _ in range(n_boot):
+        ix = rng.integers(0, n, n); B.append(_rho(a[ix], u[ix]) - _rho(b[ix], u[ix]))
+    lo, hi = np.percentile(B, [2.5, 97.5])
+    return delta, float(lo), float(hi)
+
+
+def paired_comparisons(bench, n_boot=4000):
+    """Lê results/per_item_<bench>.csv e grava results/paired_<bench>.csv com diferencas pareadas de
+    rho(h, u) e seus intervalos (bootstrap sobre itens, semente fixa):
+      method_vs_seed: cada metodo contra o single_hedge, por condicao;
+      label_effect:   o mesmo metodo com rotulo menos sem rotulo;
+      hedge_vs_g:     rho(h,u) menos rho(g,u), o hedge contra o proprio alvo de treino, para o GEPA."""
+    d = pd.read_csv(f"{C.RESDIR}/per_item_{bench}.csv"); d["h"] = d.hedge.map(C.HEDGE_TO_ORD)
+    items = sorted(d.item_id.unique()); ix = {k: i for i, k in enumerate(items)}
+    base = d.drop_duplicates("item_id").set_index("item_id").loc[items]
+    u = base.u_m.to_numpy(float); g = base.g_m.to_numpy(float)
+    H = {}
+    for (c, m), grp in d.groupby(["condition", "method"]):
+        v = np.full(len(items), np.nan); v[[ix[k] for k in grp.item_id]] = grp.h.to_numpy(float); H[(c, m)] = v
+    rng = np.random.default_rng(C.SEED); rows = []
+    def add(kind, cond, method, a, b, A, B_, U=u):
+        dl, lo, hi = _paired(A, B_, U, n_boot, rng)
+        rows.append({"benchmark": bench, "kind": kind, "condition": cond, "method": method, "a": a, "b": b,
+                     "delta": dl, "ci_lo": lo, "ci_hi": hi, "n": int((~(np.isnan(A) | np.isnan(B_))).sum())})
+    for (c, m), v in H.items():
+        if m != "single_hedge" and (c, "single_hedge") in H:
+            add("method_vs_seed", c, m, f"{m}", "single_hedge", v, H[(c, "single_hedge")])
+    for m in sorted({m for (_, m) in H}):
+        if ("labelled", m) in H and ("blind", m) in H:
+            add("label_effect", "both", m, f"{m} labelled", f"{m} blind", H[("labelled", m)], H[("blind", m)])
+    for c in ("blind", "labelled"):
+        if (c, "GEPA") in H:
+            add("hedge_vs_g", c, "GEPA", "hedge", "g_m", H[(c, "GEPA")], g)
+    out = pd.DataFrame(rows); out.to_csv(f"{C.RESDIR}/paired_{bench}.csv", index=False)
+    return out
+
+
+def ensure_paired(bench):
+    """Gera paired_<bench>.csv se faltar ou se o per_item for mais novo."""
+    pi, pr = f"{C.RESDIR}/per_item_{bench}.csv", f"{C.RESDIR}/paired_{bench}.csv"
+    if not os.path.exists(pr) or os.path.getmtime(pr) < os.path.getmtime(pi):
+        print(f"{bench}: calculando comparacoes pareadas ..."); return paired_comparisons(bench)
+    return pd.read_csv(pr)

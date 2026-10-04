@@ -1,0 +1,16 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{llrrr}
+\hline
+Benchmark & Method & labelled & message-only & $\Delta$ \\
+\hline
+ConvAbuse & single\_hedge & 0.094 & 0.053 & 0.040 \\
+ConvAbuse & topk\_wrong & 0.102 & 0.152 & -0.050 \\
+ConvAbuse & pros\_cons & 0.049 & 0.088 & -0.039 \\
+ConvAbuse & GEPA & 0.278 & 0.173 & 0.105 \\
+\hline
+\end{tabular}
+\caption{Assessor input ablation. $\Delta>0$ means the assigned label helped.}
+\label{tab:ablation}
+\end{table}

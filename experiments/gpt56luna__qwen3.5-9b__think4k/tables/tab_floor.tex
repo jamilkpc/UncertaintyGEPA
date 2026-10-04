@@ -1,0 +1,13 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lllrrrr}
+\hline
+Benchmark & Condition & Method & Runs & Items changing & $\max|\Delta\rho|$ & 95\% interval \\
+\hline
+ConvAbuse & blind & single\_hedge & 3 & 27.3\% & 0.053 & [-0.12, 0.02] \\
+\hline
+\end{tabular}
+\caption{Run-to-run noise of the assessor at temperature 0 on the test split. Items changing is the share of items whose hedge differs across identical runs; $\max|\Delta\rho|$ is the largest difference in $\rho(h_m,u_m)$ between two runs, with a bootstrap interval over items.}
+\label{tab:floor}
+\end{table}

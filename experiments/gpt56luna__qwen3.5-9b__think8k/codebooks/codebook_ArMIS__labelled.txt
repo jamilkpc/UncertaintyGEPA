@@ -1,0 +1,67 @@
+---
+
+**Instruction Rewrite: Annotation Stability Prediction for Gender Content (Arabic)**
+
+**Objective**
+Your task is no longer just to classify textual ambiguity, but to predict **Annotator Stability**. Specifically, you must assess whether a human annotator would provide a **consistent label** across repeated draws (Low Uncertainty/Stable) or **vary their decision** (High Uncertainty/Unstable) based on this specific Arabic text.
+
+**Key Insight**
+Annotator stability in gender-hate auditing is **not driven by linguistic complexity**. It is driven by **clarity of agency** and **emotional target**.
+1.  **If Label 1 (Misogyny):** Annotators are typically **Stable**. Even slang or imperfect grammar usually yields a clear label. The assistant previously erred here by marking visible misogyny as uncertain.
+2.  **If Label 0 (Non-Misogyny):** Stability depends on whether the blame is placed on an **External System** (Stable) or on **Abstract Social/Dimensions of Women's Agency** (Unstable).
+
+---
+
+**Core Evaluation Dimensions**
+
+**1. Clarity of Targeted Agency (Attribution of Blame)**
+*   **Observation:** Who is the speaker holding responsible?
+*   **Low Uncertainty (Stable):**
+    *   **External/State Actors:** The text attacks the Government, International Bodies, or "Liberal/Elite" systems for violations (e.g., "Intl Community is fake", "Governors are tyrants"). -> **Stable Label 0**.
+    *   **Direct Hate:** The text explicitly attacks women as a group or individuals ("Thieves", "Defectives"). -> **Stable Label 1**.
+    *   **Systemic Blame of Others:** "Men beat women", "Men suppress women". -> **Stable Label 1**.
+*   **High Uncertainty (Unstable):**
+    *   **Ambiguous Consent:** Texts suggesting women *participate* in the harm (e.g., "Girls suffer *with* consent of families"). This requires moral debate.
+    *   **Internal/Cultural Roles:** Texts discussing women's legal duty, dress, or behavior that implies victim-blaming without explicit "hate". (e.g., Theoretical debates on women's "rights to be criminals").
+    *   **Obscure Slang:** Texts where the target depends on obscure vocabulary (e.g., "I am traveling" vs "We are thieves") if the negative intent isn't self-evident.
+
+**2. Register and Tone (Emotional vs. Intellectual)**
+*   **Observation:** Is the tone emotional/raw or analytical/legalistic?
+*   **Low Uncertainty (Stable):**
+    *   **Emotional/Raw:** Short, punchy, slang-heavy expressions of anger (e.g., "Time has changed", "We are thieves"). -> Treat as **Stable**.
+    *   **Political Outrage:** Direct calls to arms or political statements against the State/Society.
+*   **High Uncertainty (Unstable):**
+    *   **Philosophical/Religious Defense:** Texts debating *why* a system exists (e.g., "Is it forbidden to drive?") without a clear moral verdict.
+    *   **Legalistic Argument:** Texts focusing on the definition of "crime" or "law" regarding women.
+
+**3. Label Prediction Consistency Checks**
+*   **Rule 1 (The Positive Bias):** If the text contains clear negative gendered sentiment (Label 1), assume annotators were **Consistent**. Do not mark this as "High Uncertainty" unless the text is clearly defensive (e.g., "I am not sexist, just...").
+*   **Rule 2 (The Negative Variance):** If the text is labeled "0" (Non-Misogynist) but discusses *how women suffer*, check for "Agency".
+    *   If the text blames a third party (State) -> Stable.
+    *   If the text describes a situation involving *consent* or *customs* -> Unstable.
+
+---
+
+**Decision Algorithm**
+
+1.  **Does the text explicitly assign negative agency to Women?**
+    *   Yes -> **Low Uncertainty** (Categorize as Misogyny/Label 1. Humans agree on the harm).
+    *   No -> Go to 2.
+
+2.  **Does the text assign negative agency to an External Actor (Government/State/Math)?**
+    *   Yes -> **Low Uncertainty** (Categorize as Political/Social. Humans agree on the target).
+    *   No -> Go to 3.
+
+3.  **Does the text discuss the *internal* or *social mechanism* of women's harm/consistence?**
+    *   Yes (e.g., "Families consent to harm", "Women's legal status", "Religious debate on women's actions") -> **High Uncertainty** (Ambiguity often leads to Label 0/1 oscillation).
+    *   No -> **Low Uncertainty** (Ambiguous, assume stable but non-targeted, or neutral).
+
+**Final Check**
+*   **Religious Terms:** Treat as context, not uncertainty triggers. If used to attack -> Low Uncertainty.
+*   **Slang:** Treat as evidence of Directness (High Intensity). Only mark Unstable if the slang is culturally opaque (e.g., "I am a thief" might be literal or metaphorical).
+
+---
+
+**Instruction Output Format to be appended after this codebook:**
+[Fixed Output Placeholder]
+---

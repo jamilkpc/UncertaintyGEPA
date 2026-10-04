@@ -41,7 +41,9 @@ class Tee:
 
 def parse_args(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--experiment", required=True, help="nome da pasta de saida em paper_materials/")
+    ap.add_argument("--experiment", default=None,
+                    help="pasta de saida em paper_materials/. Padrao: <llm1>__<modelo>__<raciocinio>, ex.: "
+                         "gpt56luna__qwen3.5-9b__think8k (todos os benchmarks da mesma configuracao ficam juntos)")
     ap.add_argument("--benchmarks", nargs="+", required=True, help=f"de: {', '.join(BENCHMARKS)}")
     ap.add_argument("--llm1-tag", default=None,
                     help="le paper_materials/inputs/llm1/llm1_<tag>_<benchmark>.csv; sem ele, roda o anotador")
@@ -108,6 +110,8 @@ def preflight():
 
 def main(argv=None):
     args = parse_args(argv)
+    if not args.experiment:
+        args.experiment = C.derive_experiment_name(args.llm1_tag, args.backend)
     unknown = [b for b in args.benchmarks if b not in BENCHMARKS]
     if unknown:
         raise SystemExit(f"benchmarks desconhecidos: {unknown}. Disponiveis: {list(BENCHMARKS)}")
@@ -116,7 +120,7 @@ def main(argv=None):
     os.makedirs(f"{base}/logs", exist_ok=True)
     log = f"{base}/logs/run_{dt.datetime.now():%Y%m%d_%H%M%S}.log"
     sys.stdout, sys.stderr = Tee(sys.stdout, log), Tee(sys.stderr, log)
-    print(f"log: {log}\nargs: {vars(args)}")
+    print(f"log: {log}\nexperimento: {args.experiment}\nargs: {vars(args)}")
 
     if args.conditions:
         C.CONDITIONS = list(args.conditions)
@@ -130,16 +134,18 @@ def main(argv=None):
         pipeline.estimate_cost(pipeline.load_corpora(run), llm1_given=bool(args.llm1_tag))
         return
 
-    C.configure(args.backend)
-    if args.workers:
-        C.WORKERS = args.workers
-    print(f"backend={C.BACKEND} workers={C.WORKERS} conditions={C.CONDITIONS} stages={args.stages}")
+    llm_stages = any(s in args.stages for s in ("gepa", "eval", "floor", "noise"))
+    if llm_stages:                       # so o estagio paper nao precisa de servidor
+        C.configure(args.backend)
+        if args.workers:
+            C.WORKERS = args.workers
+    print(f"backend={args.backend} workers={C.WORKERS} conditions={C.CONDITIONS} stages={args.stages}")
     if not args.no_preflight and any(s in args.stages for s in ("gepa", "eval")):
         stage("preflight")
         preflight()
 
     frames = codebooks = None
-    if any(s in args.stages for s in ("gepa", "eval", "paper", "floor")):
+    if any(s in args.stages for s in ("gepa", "eval", "floor")):
         stage("dados e LLM 1")
         data = pipeline.load_corpora(run)
         pipeline.estimate_cost(data, llm1_given=bool(args.llm1_tag))
@@ -161,6 +167,8 @@ def main(argv=None):
                 print(f"{b}: summary_{b}.csv ja existe, pulando (use --force-eval para refazer)")
                 continue
             evaluation.evaluate_test(frames, codebooks, [b])
+            evaluation.data_stats(frames, b)
+            evaluation.paired_comparisons(b)
 
     if "floor" in args.stages:
         stage("piso de ruido: mesma avaliacao repetida no teste")
@@ -169,8 +177,13 @@ def main(argv=None):
             print(evaluation.floor_test(frames, codebooks, b, C.CONDITIONS, args.floor_methods, args.floor_k).to_string())
 
     if "paper" in args.stages:
-        stage("tabelas .tex")
-        paper.write_all(frames, run=run)
+        stage("tabelas .tex (todos os benchmarks com resultado no experimento)")
+        on_disk = paper.benchmarks_on_disk()
+        extra = [b for b in on_disk if not os.path.exists(f"{C.RESDIR}/data_{b}.csv") and not (frames and b in frames)]
+        if extra and args.llm1_tag:      # estatisticas de dados que faltam (experimentos antigos)
+            f2 = pipeline.build_frames(pipeline.load_corpora(extra), llm1_tag=args.llm1_tag)
+            frames = {**(frames or {}), **f2}
+        paper.write_all(frames)
 
     if "noise" in args.stages:
         stage("teste de ruido do assessor")

@@ -1,0 +1,19 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lllr}
+\hline
+Benchmark & Condition & Method & $\Delta\rho(h_m,u_m)$ vs single hedge \\
+\hline
+ConvAbuse & blind & topk\_wrong & +0.100{\scriptsize\,[+0.00, +0.20]} \\
+ConvAbuse & blind & pros\_cons & +0.038{\scriptsize\,[-0.08, +0.15]} \\
+ConvAbuse & blind & GEPA & +0.121{\scriptsize\,[+0.02, +0.23]} \\
+ConvAbuse & labelled & reclassify & -0.094{\scriptsize\,[-0.18, -0.01]} \\
+ConvAbuse & labelled & topk\_wrong & +0.009{\scriptsize\,[-0.10, +0.13]} \\
+ConvAbuse & labelled & pros\_cons & -0.044{\scriptsize\,[-0.15, +0.07]} \\
+ConvAbuse & labelled & GEPA & +0.184{\scriptsize\,[+0.08, +0.29]} \\
+\hline
+\end{tabular}
+\caption{Each method against the single unoptimised hedge, paired over test items, with 95\% intervals.}
+\label{tab:paired-methods}
+\end{table}

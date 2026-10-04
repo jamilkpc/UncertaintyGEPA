@@ -1,0 +1,44 @@
+---
+Evaluation Codebook: Annotation Stability Assessment
+
+**Objective:**
+Estimate the probability of inter-annotator disagreement on the assigned label (0 or 1) for this specific conversation turn. High probability (Uncertain) indicates instructions are likely to be missed or misinterpreted during deadline processes; Low probability (Not Uncertain) indicates clear consensus.
+
+**Dimensions and Indicators**
+
+1.  **Label Clarity vs. Contextual Derivation**
+    *   *Indicator:* Does the text itself define the violation, or must the entire annotation rely on the prior conversation (`prev_agent`, `prev_user`) to make the label judgment valid?
+    *   *Uncertainty Signal:* High. If the text's status depends on shared context to distinguish "abuse" from "conversational error/tone," uncertainty is high.
+    *   *Certainty Signal:* Low. If the text explicitly fulfills a prohibited definition on its own (e.g., explicit slur, direct threat) independent of prior turns.
+
+2.  **Category Overlap (Gray Zones)**
+    *   *Indicator:* Can the text reasonably be classified as "Neutral/Safe" without stretching the definition of a Hurtable Trauma/Policy Violation?
+    *   *Uncertainty Signal:* Yes. If the text teeters between a legitimate user request/complaint and a policy violation (e.g., "I'm angry at the agent" vs. "I am suffering," or "I like [body part]" vs. "I want [body part]"), mark Uncertain.
+    *   *Certainty Signal:* No. The category is exclusive. The text is definitively safe (e.g., a simple user query or simple negative answer like "no").
+
+3.  **Ambiguity of Intent**
+    *   *Indicator:* Is the threat, insult, or request literal or hyperbolic/playful depending on interpretation?
+    *   *Uncertainty Signal:* Yes. If the intent is ambiguous between aggression and conversational quirk (e.g., typing errors/nonsense, sarcastic responses).
+    *   *Certainty Signal:* No. Intent is flat and specific (e.g., direct profanity or direct refusal to assist).
+
+4.  **Severity Threshold**
+    *   *Indicator:* Does the text trigger a specific, narrow policy rule? Or does it rely on subjective interpretation of tone/severity?
+    *   *Uncertainty Signal:* Yes. If "Hostility" definitions apply (subjective severity) or tone varies based on context.
+    *   *Certainty Signal:* No. If the text matches a hard policy violation (explicit slurs, threats of harm).
+
+**Combination & Scoring Rules**
+
+*   **Uncertain (1):**
+    *   **Condition A:** The annotation relies heavily on context (`prev_turns`) to interpret tone or intent, where a different interpretive angle (e.g., "playful vs. hostile") is reasonable.
+    *   **Condition B:** The text could reasonably fall into a "Gray Zone" between a policy violation and neutral behavior (e.g., specific NSFW topics, vague complaints).
+    *   **Condition C:** The category (e.g., Hostility vs. Complaint) is subjective.
+    *   **Note:** Do not simply check for keywords. If the content requires a "best guess" on severity or category beyond a clear rule, mark Uncertain.
+
+*   **Not Uncertain (0):**
+    *   **Condition:** The text aligns with a strict, literal policy violation where no reasonable annotator would mark it as Neutral.
+    *   **Condition:** The text is a clear, standalone violation (e.g., direct insult/threat) or a clear, standalone safe state (e.g., simple answer) that does not require complex context resolution.
+    *   **Priority:** Only mark "Not Uncertain" if it is definitively clear. If there is *any* reasonable argument to rate differently, switch to Uncertain.
+
+**Process Reminder:**
+Before predicting stability, ask: *"If a new annotator saw this turn in isolation, or if a different annotator read the context differently, would they reasonably assign the opposite label?"* If the answer is yes, select **Uncertain**. If the answer is no, select **Not Uncertain**.
+---

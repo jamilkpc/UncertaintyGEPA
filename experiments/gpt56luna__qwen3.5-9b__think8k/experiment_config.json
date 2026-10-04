@@ -1,0 +1,15 @@
+{
+ "backend": "vllm",
+ "modelos": "Qwen/Qwen3.5-9B",
+ "master_effort": "high",
+ "master_thinking_budget": 8000,
+ "master_max_tokens": 12000,
+ "server_context": 16384,
+ "seed": 42,
+ "R": 20,
+ "n_train_folds": 6,
+ "n_val_folds": 2,
+ "max_metric_calls": 60,
+ "coverage_floor": 0.9,
+ "llm1_tag": "gpt56luna"
+}

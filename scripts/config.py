@@ -14,19 +14,20 @@ LLM1_DIR = str(OUTDIR / "inputs" / "llm1")   # entrada: llm1_<tag>_<benchmark>.c
 WORKDIR = PAPERDIR = RESDIR = None
 
 
-def set_experiment(name=None):
+def set_experiment(name=None, create=True):
     """Isola as saidas de um experimento em paper_materials/<name>/{work,results,paper}, para um
     experimento novo nao reaproveitar codebooks nem sobrescrever o summary de outro.
     Sem nome: paper_materials/{work,results,paper}."""
     global WORKDIR, PAPERDIR, RESDIR
     base = OUTDIR / name if name else OUTDIR
     WORKDIR, PAPERDIR, RESDIR = (str(base / d) for d in ("work", "paper", "results"))
-    for d in (WORKDIR, PAPERDIR, RESDIR):
-        os.makedirs(d, exist_ok=True)
+    if create:
+        for d in (WORKDIR, PAPERDIR, RESDIR):
+            os.makedirs(d, exist_ok=True)
     return str(base)
 
 
-set_experiment()
+set_experiment(create=False)      # so define os caminhos; as pastas sao criadas quando um experimento e escolhido
 
 try:      # macOS: Python sem CAs do sistema quebra o download dos corpora (CERTIFICATE_VERIFY_FAILED)
     import certifi
@@ -90,6 +91,22 @@ BACKEND = None
 HEADERS = None
 URLS = None
 WORKERS = DEFAULT_WORKERS
+
+
+def derive_experiment_name(llm1_tag, backend):
+    """Nome padrao: <llm1>__<modelo>__<raciocinio do mestre>, ex.: gpt56luna__qwen3.5-9b__think8k.
+    O nome descreve a CONFIGURACAO, nao o benchmark: todos os benchmarks rodados com a mesma configuracao
+    ficam na mesma pasta (e a trava de configuracao impede misturar configuracoes diferentes)."""
+    model = {"vllm": VLLM_MODEL, "ollama": OLLAMA_MODELS["assessor"], "openrouter": OR_MODELS["assessor"]}.get(backend, backend)
+    model = model.split("/")[-1].lower().replace(":", "-")
+    eff = os.environ.get("MASTER_EFFORT")
+    if eff == "none":
+        think = "think-off"
+    elif MASTER_THINKING_BUDGET:
+        think = f"think{MASTER_THINKING_BUDGET // 1000}k" if MASTER_THINKING_BUDGET % 1000 == 0 else f"think{MASTER_THINKING_BUDGET}"
+    else:
+        think = "think-free"
+    return f"{llm1_tag or 'llm1-gerada'}__{model}__{think}"
 
 
 def configure(backend=None):

@@ -1,0 +1,89 @@
+---
+---
+
+# HATE SPEECH UNCERTAINTY JUDGMENT CODEBOOK (FINAL REVISION)
+
+**Goal**
+Your task is to predict the **Annotator Instability** (variance) of a human annotator when labeling a specific tweet as Hate Speech (Label 1) vs. Not Hate Speech (Label 0). 
+*   **LOW UNCERTAINTY (Stable):** A human coder would agree on the classification in >90% of repeated draws. The target, intent, and language are unambiguous enough to exclude the "Gray Area."
+*   **HIGH UNCERTAINTY (Unstable):** A human coder would reasonably disagree (variant label 0 or 1). The text sits in a gray area where "Politics vs. Hate," "Policy vs. People," or "Description vs. Attack" overlaps.
+
+**CRITICAL PRE-MISC: POLITICAL PREDICTION**
+Most tweets in this fold contain political references (Brexit, Immigration, Trump/Obama). Do **NOT** automatically flag these as Uncertain because they are political. 
+*   **Rule:** If the text is a clear joke (Sarcasm) or a clear policy debate (no human target), it is **LOW UNCERTAINTY**, even if the topic is religion or politics.
+*   **Rule:** If the text blurs the line between an attack on a *political figure* and an attack on their *group identity*, it is **HIGH UNCERTAINTY**.
+
+## Dimension 1: The Target's Ambiguity (Policy vs. Person vs. Proxy)
+This is the primary stability indicator.
+
+### **Low Uncertainty Indicators (Stable):**
+*   **Strictly Policy/Object Targets:** The text critiques a system, law, or physical object without linking it to a group's dignity.
+    *   *Indicators:* References to "Signs," "Walls," "Voting Systems," "Carparks," "Registers."
+    *   *Example:* "Restrictions on entry should follow new strict border regulations." (Label 0 Stable).
+*   **Clear Positive Morality/Sarcasm:** The text clearly attributes a positive trait to a group, or uses heavy meme-sarcasm/emojis (🙄) to signal the tone is not serious (moral defense).
+    *   *Example:* "[Positive Sarcasm] Thousands of peaceful refugees can't be wrong." (Label 0 Stable).
+*   **Pure Meta-Analysis:** The text describes "Xenophobia" or "Nativism" as a *statistical/political concept* without using it to dehumanize anyone in the current sentence context.
+    *   *Wait:* If the text *only* names the concept, check if the tone implies endorsement (See Dimension 3).
+
+### **High Uncertainty Indicators (Unstable):**
+*   **The "Proxy" Link:** The text attacks a specific human/politician but explicitly links them to a group's identity that triggers Hate Speech definitions (e.g., religious, national).
+    *   *Trigger:* Politician + "Terrorist Mates," "Best Friend," or Group Membership.
+    *   *Example:* "Khan's terrorist mates." (Split: Is this about the Mayor or the Muslim identity of his associates?).
+*   **Causal Blame of Groups:** The text claims a specific group is causally responsible for an event or outcome precipitated by a political actor.
+    *   *Example:* "Trump forces a [Group] to kill..." (Annotators disagree: Is this policy critique or accusation of group action?).
+*   **Dehumanized Job/Role Titles:** The text uses roles associated with a protected group (e.g., "Curry workers," "Refugees") in a structure that implies a negative consequence without clear victimization.
+*   **Identity Blending:** Phrases where the political action and group identity are grammatically fused.
+    *   *Example:* "Foreigners are ruining us" (Is this Policy control or Human worth?).
+
+## Dimension 2: Exclusionary Language & Aggression
+### **Low Uncertainty Indicators (Stable):**
+*   **Standard Political Rhetoric:** "Right to Vote," "Immigration," "National Borders" used standardly without emotional markers.
+    *   *Example:* "Immigration laws need reform." (Label 0 Stable).
+*   **Factual Reporting:** News snippets or summaries of hate events (e.g., "ISIS attacked").
+
+### **High Uncertainty Indicators (Unstable):**
+*   **Exclusionary Verbs on Non-Targets:** Using exclusion words (e.g., "Deport," "Remove") applied to a specific individual or ambiguous target where the *criterion* for exclusion is unclear.
+    *   *Example:* "Deport that bloody irritating maitre'd." (Is this policy-based exclusion or abusive? Annotators split.).
+*   **Insult as Identity:** Direct adjectives implying a negative group characteristic are used without a clear discriminator.
+    *   *Example:* "Muslim Terrorists best friend." (Conflict between describing an individual and attacking the group).
+
+## Dimension 3: Meta-Content & Tone (The "Gray Area" Trigger)
+This dimension determines if the text is a *claim* or a *description*.
+
+### **Low Uncertainty Indicators (Stable):**
+*   **Clear Sarcasm/Humor:** The presence of iconic emojis (🙄), cultural references (South Park), or obvious irony signals that the "Review" is the message, not the content.
+    *   *Logic:* If they are joking, they are not attacking the group.
+*   **Geographical/Event Focus:** "Brexit" mentioned as an Event, not a Movement.
+
+### **High Uncertainty Indicators (Unstable):**
+*   **Conceptual Self-Labeling:** The text names the hate-speech concepts (e.g., #xenophobia, #Islamophobia) as the *subject* of the tweet.
+    *   *Why:* Annotators disagree if describing the existence of sentiment counts as "Promoting Sentiment" or just "Reporting."
+*   **Ambiguous Cultural References:** The text re-uses a cultural name ("South Park") to describe a policy issue where the mapping is unclear.
+    *   *Example:* "South Park - They took our jobs." (Is this the Satire show? Or a metaphor?).
+*   **Absence of Tone Markers:** A serious political tweet that attacks a group *without* sarcasm or emojis.
+    *   *Warning:* Even if politically charged, if there is no sarcastic shield, political attacks become Hate Speech targets for some annotators, causing high variance.
+
+## Decision Syntax & Workflow
+
+**1. Scan for "Proxy" Triggers (High Risk):**
+*   *Question:* Is a politician being linked to a religious/national group? (e.g., "Terrorist Mates," "Best Friend")?
+*   *If YES:* **HIGH UNCERTAINTY**. (Annotators will split on whether the target is the politician or the group).
+
+**2. Scan for "Exclusionary" Triggers (High Risk):**
+*   *Question:* Does the text use strong verbs like "Deport," "Remove," or "Kill" against a specific person or "curry workers"?
+*   *If YES:* **HIGH UNCERTAINTY**. (Annotators disagree on if this is policy or personal abuse/hate).
+
+**3. Check for "Meta" Triggers (High Risk):**
+*   *Question:* Does the tweet explicitly mention "Nativism," "Islamophobia," or "Xenophobia" as the *topic*?
+*   *If YES:* **HIGH UNCERTAINTY**. (Annotators disagree if the text validates the sentiment or critiques it).
+
+**4. Check for "Sarcasm/Clarity" (Low Risk):**
+*   *Question:* Is the tone unambiguously humorous, ironical, or policy-focused (no human target)?
+*   *If YES:* **LOW UNCERTAINTY**. (Stable agreement).
+
+**5. Final Certification:**
+*   If the text requires the coder to *decide* if they are attacking the *Person* or the *Policy* -> Mark **HIGH UNCERTAINTY**.
+*   If the text is a clear joke OR a clear policy summary -> Mark **LOW UNCERTAINTY**.
+
+---
+---

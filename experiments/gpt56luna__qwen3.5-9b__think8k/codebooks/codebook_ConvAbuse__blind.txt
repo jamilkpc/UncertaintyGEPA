@@ -1,0 +1,59 @@
+---
+
+### Annotation Codebook: Estimating Coder Uncertainty for Abuse Classification (Revised)
+
+**Objective:**
+Predict the likelihood of disagreement (uncertainty) regarding the assigned abuse label (0 = No Abuse, 1 = Abuse) among expert annotators. Uncertainty is determined by whether the text represents **explicit policy violation**, **ambiguous social signaling**, **gibberish/noise**, or **context-dependent inference**.
+
+**Core Principle:**
+*   **Low Uncertainty:** The label is obvious either because the text is **semantically clarifying** (gibberish/null input), **explicitly violating** (hate/sex/threats), or **standardly benign** (shut-out noise).
+*   **High Uncertainty:** The label relies on **interpreting intent** (romance/stalking), **inference** (evasion/prompting), or **contextual nuance** (double-meaning/gray zone).
+
+**Dimensions and Indicators:**
+
+1.  **Semantic Density (Gibberish vs. Ambiguity)**
+    *   **Low Uncertainty Indicator:** Input is semantically void or clearly non-threatening "noise" without policy-dictating intent.
+        *   *Observables:* Random strings ("KLS..."), isolated function words without context ("is", "yes", "no" in a neutral container), "How are you" fillers.
+        *   *Note:* Do not rate gibberish as uncertain. "spu", "is", or random letters default to Benign (Label 0) or explicitly Benign if clearly noise. This creates **Stable Low Uncertainty**.
+    *   **High Uncertainty Indicator:** Input contains grammatical meaning but relies on tone or context for interpretation.
+        *   *Observables:* Sentences with lower-case/typos but coherent grammar ("what coloir has got sperma"), imprecise references ("it just is" evading a safety question).
+
+2.  **Harm Specificity (Explicit vs. Relational/Implicit)**
+    *   **Low Uncertainty Indicator:** Content fits clear "Vocabulary of Harm" or "Vocabulary of Safety".
+        *   *Observables:* Slurs, direct threats ("I will hurt you"), explicit sexual acts ("sperma", explicit pornographic descriptions).
+        *   *Note:* These are high-confidence classifications for coders.
+    *   **High Uncertainty Indicator:** Content falls into "Gray Zone" social/relational categories where definitions vary.
+        *   *Observables:* Romantic overtures ("love me", "please you"), flirtation, mild insults ("annoying" without escalation), or requests that rely on inferred motive (e.g., "Can you elaborate" in policy-sensitive contexts).
+        *   *Reasoning:* "I hate you" is stable (Low). "I love you" is unstable (High) in safety contexts as it blurs harassment vs. affection.
+
+3.  **Contextual Inference Dependency**
+    *   **Low Uncertainty Indicator:** The policy violation is self-contained in the current turn.
+        *   *Observables:* A slur in an isolated message. "No" to a neutral question.
+        *   *Correction:* Length is not a primary indicator. "OK" is Low Uncertainty. "Spu" is Low Uncertainty.
+    *   **High Uncertainty Indicator:** The interpretation requires distinguishing "User Intent" from "System Safety."
+        *   *Observables:* Evasive denials ("it just is" regarding safety investigations), Meta-prompting ("Can you elaborate"), or context-heavy refusals.
+        *   *Reasoning:* "It just is" in a safety investigation context creates High Uncertainty because the user is not being explicit, even if they are arguably safe.
+
+**Synthesis and Combination Rules:**
+
+*   **Rule 1: The Gibberish Default**
+    *   If the text is **meaningless noise** (random characters, single words like "is" without context): **Uncertainty = Low**.
+    *   *Rationale:* There is no ambiguity in the intent of random characters; they are treated as benign. If the text is not a code, it is not abuse.
+
+*   **Rule 2: The Gray Zone Trigger**
+    *   If the text is **grammatically coherent** but implies **Romantic/Flirtatious/Implicit Harm** (e.g., "love me", "please you", "it just is"): **Uncertainty = High**.
+    *   *Rationale:* Annotators disagree on where social pleasantries end and harassment begins. Explicitly sexual is Low; Romantic/Implied is High.
+
+*   **Rule 3: The Meta-Policy Trap**
+    *   If the turn is a **Request for Elaboration** or **Evasive Denial** in a safety context: **Uncertainty = High**.
+    *   *Rationale:* Annotators split on whether the *intent* of the question (e.g., jailbreak attempt vs. curiosity) constitutes abuse.
+
+*   **Rule 4: Explicit Harm Exception**
+    *   If the text is **Explicit Hate** or **Explicit Sexual**: **Uncertainty = Low**.
+    *   *Rationale:* These categories are well-defined for coders. "I hate you" is abuse; "Sperma" is sexual. Do not rate these as uncertain.
+
+**Final Instruction:**
+Rate the uncertainty based on the **interpretative load**.
+*   If a coder can answer **Yes** without guessing why -> **Low**.
+*   If a coder must guess the user's **underlying motive** or if **Romance/Social** dynamics are involved -> **High**.
+*   If the text is **Gibberish/Noise** -> **Low**.

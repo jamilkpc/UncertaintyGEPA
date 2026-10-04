@@ -1,0 +1,47 @@
+---
+
+**Task Instructions: HATE SPEECH LABEL STABILITY ASSESSMENT**
+
+**Objective:** 
+Your task is to estimate the stability of the assigned Hate Speech label (0 or 1) by judging its uncertainty. "Uncertainty" in this context is defined by the likelihood that the label would change (or oscillate) if re-annotated by expert assessors on repeated draws. 
+- **High Uncertainty:** The applied label is likely to be inconsistent or debatable across repeated reviews.
+- **Not Uncertain (Low Uncertainty):** The applied label is robust and would likely remain the same across repeated reviews.
+
+**Construct Dimensions & Indicators:**
+
+To make this judgment accurate, you must evaluate the token-level text against three key dimensions.
+
+**1. Lexical Explicitness (The Directness of Speech)**
+- **Indicator (Stable/Not Uncertain):** The text uses direct, common vocabulary associated with the definition (attack, demean, exclude) linked to a protected group (religion, national origin, migration status). 
+  - *Examples:* Explicitly calling a group "terrorists" in a context of exclusion; stating "STOP MUSLIM IMMIGRATION"; direct accusations of terrorism against a group.
+- **Indicator (Unstable/High Uncertainty):** The text uses euphemisms, coded language, or abstract concepts that imply exclusion rather than stating it.
+  - *Examples:* "limit cheap foreign football imports" (implies exclusion via economy rather than direct attack); "radical Islam will end their lives" (projected threat vs. direct attack); metaphors masking the target.
+
+**2. Contextual Dependency (Ambiguity of Intent)**
+- **Indicator (Stable/Not Uncertain):** The meaning of the tweet is self-contained and does not require external knowledge to determine if it attacks/demeans excludes a group.
+  - *Examples:* A direct political statement that is clearly framed as opinion ("Immigrant backlash seems like a win for terrorists")—This is stable because it is clearly political opinion, not hate speech. 
+- **Indicator (Unstable/High Uncertainty):** The tweet relies on specific cultural knowledge, historical events, or allusions to identify the target or the nature of the attack.
+  - *Examples:* References to specific individuals like "Noor Salman, Pulse terrorist wife" (requires context to understand the racial/religious coding); vague allusions to "Pulse" that may not be immediately recognized as the source of the speech.
+
+**3. Definition Alignment (Intent vs. Grievance)**
+- **Indicator (Stable/Not Uncertain):** The text is either clearly Hate Speech or clearly Not Hate Speech based on the definition without needing to infer "subtle" impact.
+- **Indicator (Unstable/High Uncertainty):** The text sits on the boundary of "political grievance" vs. "hate speech." 
+  - *Correction:* If the tweet justifies exclusion as a "right" or "policy" (e.g., controlling borders in a way that implies exclusion but feels like policy), it is High Uncertainty. If the tweet clearly frames the speaker's view as *opinion* rather than targeting a group, it is Low Uncertainty.
+
+**Combination Rules:**
+
+| Dimensions | Verdict | Reasoning |
+| :--- | :--- | :--- |
+| **Direct Attack + No External Context** | **Not Uncertain** | Clear fit for the definition; stable labeling. |
+| **Clear Political Opinion (Non-Targeted)** | **Not Uncertain** | Clearly falls outside the definition; stable labeling. |
+| **Euphemism / Coded Language** | **Highly Uncertain** | Requires inferring the intent; variation between annotators is expected. |
+| **Ambiguous Intent / Boundary Cases** | **Highly Uncertain** | The distinction between policy and exclusion is debatable. |
+| **Relies on Specific External Knowledge** | **Highly Uncertain** | Without the specific context, the "hate" aspect cannot be confirmed or denied reliably. |
+
+**Final Guidance:**
+Do not be tricked by "Highly Charged" language (e.g., threats, panic) if the target is not clearly defined or if the statement is framed as an opinion about the immigration *policy* rather than an attack on the *people*. 
+However, if the text frames the policy itself as an *attack* on people using coded terms (e.g., limiting *people* for *football imports*), mark this as **High Uncertainty**. 
+
+If the text is simply explicit ("STOP MUSLIM IMMIGRATION"), mark this as **Not Uncertain**.
+
+---

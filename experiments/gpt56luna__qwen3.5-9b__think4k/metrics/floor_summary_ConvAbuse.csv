@@ -1,0 +1,2 @@
+benchmark,condition,method,k,n_items,rho_mean,rho_sd,rho_range,items_flip,max_abs_diff,diff_ci_lo,diff_ci_hi
+ConvAbuse,blind,single_hedge,3,838,0.1036180799567416,0.02791057146665569,0.05314332747026308,0.2732696897374702,0.05314332747026308,-0.12053257028951157,0.016863999243172247
