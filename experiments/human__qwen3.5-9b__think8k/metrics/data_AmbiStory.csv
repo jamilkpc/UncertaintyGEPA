@@ -1,0 +1,2 @@
+benchmark,items,ann_min,ann_max,pct_um0,K_u,pct_gm0,rho_gu,acc_llm1,acc_majority,n_train,n_dev,n_test
+AmbiStory,3798,5,6,9.189046866771985,47,9.189046866771985,1.0,1.0,0.2446024223275408,2280,588,930

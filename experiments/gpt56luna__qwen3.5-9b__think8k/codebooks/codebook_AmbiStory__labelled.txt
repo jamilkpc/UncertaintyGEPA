@@ -1,0 +1,56 @@
+---
+### Annotation Uncertainty Assessment Codebook (Revised)
+
+**Objective**
+Predict the likelihood that a human annotator would maintain the assigned PLAUSIBILITY label (1-5) upon repeated review of the item.
+*   **Low Uncertainty:** Annotator is stable (would likely give the same label).
+*   **Medium Uncertainty:** Annotator is moderately stable (would likely stick but risk minor shifts).
+*   **High Uncertainty:** Annotator is unstable (would likely vary the label on repeated draws).
+
+*Note: You must select one of the three uncertainty levels above. The "NO VALID HEDGE" option is not permitted.*
+
+**Construct Dimensions**
+
+**1. Contextual Force (Constraint)**
+*Definition:* The strength of the narrative evidence that supports the candidate meaning over alternatives.
+*   **High Force:** The text provides explicit evidence (verbs, concrete nouns, situational logic) that makes only *one* meaning viable (e.g., "He crouched... standing on a [PROSTRATE] ground" vs "He stood lying").
+*   **Medium Force:** The text supports the meaning but could reasonably accommodate a secondary common meaning without contradiction.
+*   **Low Force:** The text is neutral, highly abstract, or the candidate word/phrase provides little context regarding definitions.
+*   **Impact:** High Force reduces decision difficulty -> Low Uncertainty. Low Force -> High Uncertainty.
+
+**2. Definition Distinctiveness**
+*Definition:* How clearly the provided candidate meaning is separated from other common definitions in the dictionary.
+*   **High Distinctiveness:** The definition is precise, factual, or narrow (e.g., "being in a horizontal position" vs. general "lying down"). No obvious synonyms fit the text equally well.
+*   **Medium Distinctiveness:** The definition overlaps with common synonyms that could apply to the text.
+*   **Low Distinctiveness:** The definition is vague, broad, or contradictory to the word's common usage absent the text.
+*   **Impact:** High Distinctiveness creates a clear "Yes/No" decision -> Low Uncertainty. Low Distinctiveness -> High Uncertainty.
+
+**3. Label Anchoring**
+*Definition:* The extremity of the assigned PLAUSIBILITY score (1 or 5) versus a middle score (2, 3, 4).
+*   **Strong Anchor (1 or 5):** The annotator claimed the meaning is either clearly Impossible/Misplaced (1) or Clearly Perfect (5).
+*   **Weak Anchor (2, 3, or 4):** The annotator placed the meaning in a "grey area" where plausibility is debatable.
+*   **Impact:** Strong Anchors correlate with consensus (Low Uncertainty). Weak Anchors correlate with disagreement (High/Medium Uncertainty).
+
+**Synthesis and Judgment Logic**
+
+1.  **Stable Case (Low Uncertainty):**
+    *   **Criteria:** `[High Contextual Force]` AND `[High Definition Distinctiveness]` AND `[Strong Anchor (1 or 5)]`.
+    *   **Reasoning:** The context makes the specific meaning the *only* logical option. Annotators do not need to guess; they must use the word as written. (Even clear "mismatches" are stable if the text *makes* the word clearly unsuitable).
+
+2.  **Unstable Case (High Uncertainty):**
+    *   **Criteria:** `[Low Contextual Force]` OR `[Low Definition Distinctiveness]` OR `[Weak Anchor (2-4)]`.
+    *   **Reasoning:** Annotators lack decisive evidence. They may argue whether the text forces the meaning or if the definition is too broad. They are likely to shift the rating between draws.
+    *   **Correction:** Do not mark "High Uncertainty" simply because a word has multiple dictionary entries if the text *clearly* eliminates them. If the text forces one meaning, mark Low Uncertainty.
+
+3.  **Variable Case (Medium Uncertainty):**
+    *   **Criteria:** `[Medium Contextual Force]` AND `[Strong Anchor]`.
+    *   **Reasoning:** The evidence is good enough to pick a label, but the reasoning relies on some interpretation. Annotators may agree on the label but disagree on the exact numeric plausibility (e.g., 4 vs 5). Note: If the Anchor is Weak (2-4), default to **High Uncertainty** unless Context Force is very strong.
+
+**Output Requirements**
+*   **Required Output:** State the uncertainty level explicitly: `[Low Uncertainty]`, `[Medium Uncertainty]`, or `[High Uncertainty]`.
+*   **Prohibited:** Do not use "NO VALID HEDGE" or indicate that the item cannot be assessed. Every item must be judged against the Stability criteria above.
+*   **Reasoning:** Briefly justify your choice based on which dimension (Context, Definition, or Anchor) drove the judgment.
+
+**Examples of Stable vs. Unstable**
+*   *Example of Stable (Low Unc):* Text explicitly describes a physical action that matches a precise definition (e.g., "face-up in a bin" -> "prostrate"). Anchor is 5. Context is High. Force is High. -> **Low Uncertainty.**
+*   *Example of Unstable (High Unc):* Text is vague or "meaning is loose". Annotator places label in grey area (2-4). Context fails to distinguish from alternative meanings. -> **High Uncertainty.**

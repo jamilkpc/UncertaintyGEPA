@@ -1,0 +1,4 @@
+benchmark,kind,condition,method,a,b,delta,ci_lo,ci_hi,n
+HSBrexit,method_vs_seed,blind,GEPA,GEPA,single_hedge,0.5728954377847554,0.3523928046511247,0.7756138721582496,167
+HSBrexit,method_vs_seed,blind,pros_cons,pros_cons,single_hedge,0.020062924912658375,-0.18146066320158039,0.21978540218867848,168
+HSBrexit,method_vs_seed,blind,topk_wrong,topk_wrong,single_hedge,-0.14649962232915342,-0.32307860400742694,0.022805437535646542,168

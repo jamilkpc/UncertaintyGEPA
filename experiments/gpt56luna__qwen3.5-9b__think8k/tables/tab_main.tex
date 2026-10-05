@@ -1,24 +1,24 @@
 \begin{table}[t]
 \centering
 \small
-\begin{tabular}{lrrr}
+\begin{tabular}{lrrrrr}
 \hline
-Method & HSBrexit & ArMIS & ConvAbuse \\
+Method & HSBrexit & ArMIS & ConvAbuse & MDAgreement & AmbiStory \\
 \hline
-\multicolumn{4}{l}{\emph{Label-conditioned}} \\
-single\_hedge & 0.247{\scriptsize\,[0.08, 0.40]} & \textbf{0.192}{\scriptsize\,[0.02, 0.36]} & 0.094{\scriptsize\,[0.02, 0.18]} \\
-reclassify & 0.151{\scriptsize\,[0.14, 0.29]}$^\dagger$ & 0.110{\scriptsize\,[0.09, 0.21]}$^\dagger$ & 0.068{\scriptsize\,[0.06, 0.13]}$^\dagger$ \\
-topk\_wrong & \textbf{0.355}{\scriptsize\,[0.19, 0.51]}$^\dagger$ & 0.083{\scriptsize\,[-0.08, 0.24]} & 0.124{\scriptsize\,[0.04, 0.20]} \\
-pros\_cons & -0.071{\scriptsize\,[-0.15, 0.05]} & 0.037{\scriptsize\,[-0.12, 0.20]} & 0.079{\scriptsize\,[0.00, 0.16]} \\
-GEPA & 0.067{\scriptsize\,[-0.08, 0.22]} & -0.015{\scriptsize\,[-0.17, 0.16]} & \textbf{0.154}{\scriptsize\,[0.08, 0.23]} \\
-$\rho_{\max}(H{=}3)$ & 0.996 & 1.000 & 0.998 \\
+\multicolumn{6}{l}{\emph{Label-conditioned}} \\
+single\_hedge & 0.247{\scriptsize\,[0.08, 0.40]} & \textbf{0.192}{\scriptsize\,[0.02, 0.36]} & 0.094{\scriptsize\,[0.02, 0.18]} & 0.183{\scriptsize\,[0.15, 0.22]} & 0.185{\scriptsize\,[0.12, 0.25]} \\
+reclassify & 0.151{\scriptsize\,[0.14, 0.29]}$^\dagger$ & 0.110{\scriptsize\,[0.09, 0.21]}$^\dagger$ & 0.068{\scriptsize\,[0.06, 0.13]}$^\dagger$ & 0.015{\scriptsize\,[-0.02, 0.05]} & -0.016{\scriptsize\,[-0.07, 0.05]}$^\dagger$ \\
+topk\_wrong & \textbf{0.355}{\scriptsize\,[0.19, 0.51]}$^\dagger$ & 0.083{\scriptsize\,[-0.08, 0.24]} & 0.124{\scriptsize\,[0.04, 0.20]} & 0.040{\scriptsize\,[0.00, 0.08]} & 0.068{\scriptsize\,[0.00, 0.13]} \\
+pros\_cons & -0.071{\scriptsize\,[-0.15, 0.05]} & 0.037{\scriptsize\,[-0.12, 0.20]} & 0.079{\scriptsize\,[0.00, 0.16]} & 0.123{\scriptsize\,[0.09, 0.16]} & 0.121{\scriptsize\,[0.06, 0.18]} \\
+GEPA & 0.067{\scriptsize\,[-0.08, 0.22]} & -0.015{\scriptsize\,[-0.17, 0.16]} & \textbf{0.154}{\scriptsize\,[0.08, 0.23]} & \textbf{0.208}{\scriptsize\,[0.17, 0.24]} & \textbf{0.214}{\scriptsize\,[0.15, 0.27]} \\
+$\rho_{\max}(H{=}3)$ & 0.996 & 1.000 & 0.998 & 1.000 & 0.946 \\
 \hline
-\multicolumn{4}{l}{\emph{Message-only}} \\
-single\_hedge & -0.159{\scriptsize\,[-0.27, -0.04]} & \textbf{0.165}{\scriptsize\,[-0.02, 0.34]}$^\dagger$ & 0.060{\scriptsize\,[-0.01, 0.13]} \\
-topk\_wrong & -0.217{\scriptsize\,[-0.35, -0.07]} & 0.076{\scriptsize\,[-0.08, 0.23]} & 0.191{\scriptsize\,[0.11, 0.26]} \\
-pros\_cons & -0.004{\scriptsize\,[-0.15, 0.15]} & -0.062{\scriptsize\,[-0.21, 0.10]} & 0.043{\scriptsize\,[-0.03, 0.12]} \\
-GEPA & \textbf{0.357}{\scriptsize\,[0.20, 0.51]} & \textbf{0.165}{\scriptsize\,[-0.02, 0.34]}$^\dagger$ & \textbf{0.232}{\scriptsize\,[0.15, 0.31]} \\
-$\rho_{\max}(H{=}3)$ & 0.996 & 1.000 & 0.998 \\
+\multicolumn{6}{l}{\emph{Message-only}} \\
+single\_hedge & -0.159{\scriptsize\,[-0.27, -0.04]} & \textbf{0.165}{\scriptsize\,[-0.02, 0.34]}$^\dagger$ & 0.060{\scriptsize\,[-0.01, 0.13]} & -0.035{\scriptsize\,[-0.07, -0.00]} & 0.120{\scriptsize\,[0.06, 0.18]} \\
+topk\_wrong & -0.217{\scriptsize\,[-0.35, -0.07]} & 0.076{\scriptsize\,[-0.08, 0.23]} & 0.191{\scriptsize\,[0.11, 0.26]} & 0.045{\scriptsize\,[0.01, 0.08]} & 0.160{\scriptsize\,[0.10, 0.22]} \\
+pros\_cons & -0.004{\scriptsize\,[-0.15, 0.15]} & -0.062{\scriptsize\,[-0.21, 0.10]} & 0.043{\scriptsize\,[-0.03, 0.12]} & 0.076{\scriptsize\,[0.04, 0.11]} & \textbf{0.167}{\scriptsize\,[0.11, 0.23]} \\
+GEPA & \textbf{0.357}{\scriptsize\,[0.20, 0.51]} & \textbf{0.165}{\scriptsize\,[-0.02, 0.34]}$^\dagger$ & \textbf{0.232}{\scriptsize\,[0.15, 0.31]} & \textbf{0.169}{\scriptsize\,[0.13, 0.20]} & 0.113{\scriptsize\,[0.05, 0.18]} \\
+$\rho_{\max}(H{=}3)$ & 0.996 & 1.000 & 0.998 & 1.000 & 0.946 \\
 \hline
 \end{tabular}
 \caption{Spearman $\rho(h_m,u_m)$ between the emitted hedge and human disagreement on the held-out test split, with 95\% bootstrap intervals. Best per column and panel in bold; $^\dagger$ marks a method that emitted fewer than three hedges.}

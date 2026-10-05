@@ -1,0 +1,74 @@
+---
+
+# Annotation Codebook: Label Uncertainty Assessment
+
+**Objective**
+Estimate the likelihood that a second coder, applying the standard Offensiveness guidelines to the provided text, would assign a **different label** than the primary coder. Your judgment must reflect **annotator variability**, not your own subjective feeling about the text.
+
+**Construct: Uncertainty**
+This construct measures the stability of the label assignment across the human population of coders. 
+*   **Low Uncertainty:** Near-universal agreement (≥90% confidence). A second coder would almost certainly assign the same label.
+*   **Medium Uncertainty:** Significant agreement, but some reasonable doubt exists (50-89% confidence).
+*   **High Uncertainty:** Significant disagreement expected (<49% confidence). A second coder would likely disagree based on reasonable interpretation.
+
+**Dimensions of Measurement**
+
+### 1. Definitiveness (Violation vs. Non-Violation)
+*   **Definition:** Does the text explicitly fit a clear "Offensive" category (Profanity, Hate Speech, Threats) or a clear "Safe" category?
+*   **Observable Indicators:**
+    *   **Definitive:** Explicit slurs ("n****r"), hard profanity ("f***ing"), direct threats, or clear safety signals ("God bless you", "Thank you").
+    *   **Non-Definitive:** Text relies on sarcasm, metaphor, cultural memes, or typos where the intent or target of the insult is unclear.
+*   **Rule:** Definitive content = **Low Uncertainty**. Non-definitive content = **Medium/High Uncertainty**.
+
+### 2. Safety Consensus (Deviant Contnet)
+*   **Definition:** If the text is clearly *not* offensive (e.g., #Anonymous We're all), do other annotators typically disagree?
+*   **Observable Indicators:**
+    *   **Safe & Recognizable:** Text contains no profanity, threats, slurs, or fighting words. Even if the text is short, cryptic, or hashtag-heavy without deep meaning, if it does not objectively violate the guidelines.
+*   **Rule:** Clear Safe Text (Label 0) usually = **Low Uncertainty**. Second coders will generally agree a text is safe even if it is vague.
+
+### 3. Guideline Ambiguity (Borderline Cases)
+*   **Definition:** Does the text sit on the boundary where a coder could reasonably apply "0" (Safe) OR "1" (Offensive)?
+*   **Observable Indicators:**
+    *   **Borderline:** Containing mild insults, domain-specific slang, sarcasm where the target is unclear (e.g., "Great job... 💀"), or mixed sentiment (political slogan vs. personal attack).
+    *   **Debatable:** Requires external knowledge (culture/regime) to understand if it is a threat.
+*   **Rule:** Borderline text = **Medium Uncertainty**. Only use **High Uncertainty** if the text could be interpreted as offensive by a significant portion of coders but not the majority (high disagreement risk).
+
+**Scoring Logic (Decision Tree)**
+
+1.  **Check for Definitive Violations:** If the text contains hard profanity, hate slurs, or explicit threats, classify as **Low Uncertainty** regardless of tone. Reference to "UNIVERSAL VIOLATION".
+2.  **Check for Safe Consensus:** If the text does not contain any offensive features (profanity, harm, hate), even if it is cryptic or minimal (e.g., hashtags, random numbers), classify as **Low Uncertainty**. (Note: "Anonymous We're all" is Low, not High, because no reasonable annotator sees the tags as a threat).
+3.  **Check for Sarcasm/Ambiguity:** Does the offensiveness depend entirely on tone, irony, or slang that isn't explicit?
+    *   If Yes: Assign **High Uncertainty**.
+    *   If Somewhat: Assign **Medium Uncertainty**.
+4.  **Verify Output Format:** See constraints below.
+
+**Output Scale (Strict Constraint)**
+*   You **MUST** choose exactly one of the following three labels.
+*   **Correct Labels:** "Low Uncertainty", "Medium Uncertainty", "High Uncertainty".
+*   **FORBIDDEN Phrases:** "NO VALID HEDGE", "Uncertain", "Highly Uncertain" (unless mapping to High Uncertainty exactly), "N/A". **These will result in task failure.**
+
+**Example Evaluation**
+
+*   *Input:* "#Anonymous We're all"
+*   *Logic:* No profanity, no threat. Safe consensus expected.
+*   *Output:* **Low Uncertainty**.
+*   *Input:* "holy fucking shit detectives"
+*   *Logic:* Explicit profanity.
+*   *Output:* **Low Uncertainty**.
+*   *Input:* "This is unreal 🙌🏻"
+*   *Logic:* Clear non-violation.
+*   *Output:* **Low Uncertainty**.
+*   *Input:* "Clap you stupid bastards" (Euphemized or mixed context)
+*   *Logic:* Clear aggression/insult often triggers "1".
+*   *Output:* **Low Uncertainty**.
+*   *Input:* "fact 💪🏾... #racism #bthis..."
+*   *Logic:* Signs of debate (slogans/emojis mixed).
+*   *Output:* **Medium Uncertainty**.
+*   *Input:* "God less you and your staff 🙏🙏"
+*   *Logic:* Clearly positive intent despite typo.
+*   *Output:* **Low Uncertainty**.
+
+---
+
+**Final Warning**
+Do not hallucinate invalid outputs like "NO VALID HEDGE". If you must judge ambiguity based on conflicting evidence, pick "Medium" or "High". If the text is clearly safe/unsafe, pick "Low". Alignment with the text's *objective*违建 (guideline clarity) is more important than the presence of typos or emojis.

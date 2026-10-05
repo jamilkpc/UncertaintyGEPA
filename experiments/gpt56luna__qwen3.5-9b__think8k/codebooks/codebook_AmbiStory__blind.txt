@@ -1,0 +1,46 @@
+---
+# Annotation Codebook: Annotator Variance Estimation
+
+## Task Definition
+Your goal is to estimate the **Likelihood of Annotator Variance** (Uncertainty) for a specific item. You are assessing how **stable professional annotators** would be when rating the **PLAUSIBILITY of the Candidate Meaning** against the narrative.
+
+**Output Requirement:** You **MUST** generate exactly one of the following two labels: **"LOW UNCERTAINTY"** or **"HIGH UNCERTAINTY"**.
+*   **CRITICAL COMPLIANCE:** You are **FORBIDDEN** from outputting "NO VALID HEDGE", "INVALID", "N/A", or any other string. If you find the text is missing or unclear, analyze the provided text for ambiguity and estimate the variance **or** output **"HIGH UNCERTAINTY"** (ambiguous text leads to uncertain labels).
+
+## Core Construct Dimensions
+
+### 1. Polysemy Presence (Word Flexibility)
+*   **Observable Indicator:** Does the AMBIGUOUS WORD have at least two common definitions that fit the context? (e.g., "Pupils" = Students vs. Eyes; "Palms" = Trees vs. Hands).
+    *   **Low Variance (Low Uncertainty):** The text forces one definition by providing strong clues (e.g., "Park", "Trees" forces "Palms" to Trees).
+    *   **High Uncertainty (High Variance):** The text allows both definitions to exist simultaneously without contradiction (e.g., "Pupils changed" in school vs. PE discusses "pupil dilation" or "students reacting").
+
+### 2. Contextual Resolution (Disambiguation Strength)
+*   **Observable Indicator:** Does the surrounding narrative actively constrain the meaning to exclude the Candidate?
+    *   **Low Variance:** The context makes the Candidate Meaning impossible to justify (e.g., "Hotel" + "Lice" [Zoo context] vs "Hotel" + "Lousy" [Bad]). If the text makes the Candidate Meaning *absurd*, variance is low.
+    *   **High Uncertainty:** The context does **not** make the Candidate Meaning impossible. If the text is emotionally charged or vague enough that the Candidate Meaning is *maybe* intended but also *maybe* not, variance is high. (e.g., "Then, it struck her" - "It" could be a lightbulb, a thought, or the sun. If the text is just "It" with weak context, annotators argue).
+
+### 3. Label Boundary (Edge cases)
+*   **Observable Indicator:** If the Assigned Label suggests "Implausible" (1) or "Certain" (5), is that match **Hard** or **Soft**?
+    *   **Low Variance:** **Hard Mismatch.** The connection is logically or physically broken (e.g., candidate is "Knife", context is "Bread" [Aim? No] -> "Sword" + "Staff". A knife cannot be a staff). If everyone agrees it is impossible, Variance is Low.
+    *   **High Uncertainty:** **Soft Mismatch.** The connection is debatable. A professional coder might stretch the meaning to justify a higher label (3 or 4) that others would see as invalid (1). (e.g., Candidate meaning is "Hand", text mentions "Grasping a grip" -> Some say "Grasping", others say "Weaponry". If the word matches an action loosely, annotate variance exists).
+
+## Combination Logic & Decision Matrix
+
+**1. Rating: LOW UNCERTAINTY (Stable)**
+*   **Condition:** **High Contextual Resolution** + **Low Polysemy**.
+*   **Logic:** The text provides enough evidence that *every* competent annotator would arrive at the same label, regardless of their nuance. Whether they all agree the meaning is Valid or Invalid, they agreed via separate paths (Low Uncertainty).
+*   **Example:** Text: "The park has [palms]." Candidate: "Hand". Context implies trees. All annotators will reject "Hand". Uncertainty = Low.
+
+**2. Rating: HIGH UNCERTAINTY (Variable)**
+*   **Condition:** **Low Contextual Resolution** (Ambiguity exists) **OR** **High Polysemy** (Two meanings fit).
+*   **Logic:** The text permits multiple interpretations where a professional annotator could reasonably look at the Candidate Meaning and assign a *different* label (e.g., Some say Label 1, others say Label 3).
+*   **Example:** Text: "The crowd demanded a [change]." Candidate: "Coins". Context implies "money" but "change" can be "substitution". Some see valid, some see invalid. Uncertainty = High.
+
+**3. Rating: HIGH UNCERTAINTY (Edge Case Check)**
+*   **Condition:** **Soft Mismatch** (See Label Boundary).
+*   **Logic:** If the text is contextually vague enough that the "Implausible" label could be argued as "Plausible" (or vice versa) based on a "loose" reading, Variance is High. Do not mark Low Uncertainty unless the mismatch is logically impossible.
+
+## Final Instruction Summary
+*   **Priority:** Textual Ambiguity drives Variance. If the text is clear, Output "LOW UNCERTAINTY". If the text allows reasonable argumentation for different labels, Output "HIGH UNCERTAINTY".
+*   **Compliance:** Do **NOT** use the phrase "NO VALID HEDGE". If the input looks anomalous, treat it as "HIGH UNCERTAINTY" (Default to High if unsure).
+---

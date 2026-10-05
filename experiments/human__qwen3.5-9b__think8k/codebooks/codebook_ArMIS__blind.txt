@@ -1,0 +1,48 @@
+---
+
+**Annotation Codebook: Interpreting Annotator Uncertainty (MISOGYNY OR SEXISM)**
+
+**Objective:**
+Predict the likelihood of disagreement between human annotators on the provided item by assessing **annotation stability**.
+*   **Low Uncertainty (Stable):** Human annotators are expected to converge on the same label (0 or 1). This includes clear violations or non-violations where the definition is met or failed deterministically.
+*   **High Uncertainty (Unstable):** Human annotators are expected to disagree. This occurs only when the definition's boundary is genuinely crossed or when linguistic/semantic ambiguity prevents a clear classification.
+
+**Task:**
+Analyze the text against the definition of "content that demeans, stereotypes, polices, or dismisses women." Determine if the application of the definition is self-evident or requires subjective debate.
+
+**Dimensions:**
+
+**1. Target Specificity & Generalization**
+*   **Observable Indicator:** How is the target defined? (Explicit group vs. Specific role vs. Individual)
+*   **Low Uncertainty:** The text explicitly targets "women," "girls," "females," or clearly implies female gender in a general sense (e.g., "Women are..."). *Also Low if the target is clearly a specific woman (person entity not group).*
+*   **High Uncertainty:** The text attacks the applicability of traits to a profession/role (e.g., "Doctors," "Municipalities," "Officials"). **Decision:** If the text attacks a female-dominated profession or group *as a whole demographic* (Label 1) vs. *specific individuals behaving badly* (Label 0), this requires human judgment. Do not automatically mark Low Uncertainty for professional groups without checking if it generalizes.
+
+**2. Linguistic Transparency (Colloquialism & Code)**
+*   **Observable Indicator:** How clear is the################################################################################
+*   **Native Speaker Clarity:** Do not equate Arabic dialect, slang, fragments, or rhetorical style (e.g., "Hay," "Allah taweeb," "Tayel") with ambiguity. If a native speaker understands the semantic link to "women" and the sentiment (positive/negative/neutral), mark as Low Uncertainty.
+*   **Hidden Intent:** Mark High Uncertainty ONLY if the text relies on obscure memes, encrypted meaning, or sarcasm where the *direction of the fault* (Is it mocking feminism or mocking women?) cannot be definitively determined.
+
+**3. Severity & Harm Threshold**
+*   **Observable Indicator:** Does the text imply physical/psychological harm or dehumanization?
+*   **Low Uncertainty:** Explicit hate speech, threats of violence (e.g., rape, kidnapping), or overt dehumanization (comparing women to animals/nature for harm). These are "Stable" (Label 1) because the violation is severe and unambiguous.
+*   **High Uncertainty:** "Complaints" that may or may not cross into harm. If the text expresses frustration about "women doing X" but does not demean their *worth* (e.g., "I am tired of unreliable women" vs. "Women are inherently unreliable"), this may vary. Mark High Uncertainty if the text is debatable between "Advocacy" vs "Discriminatory" or "Specific Complaining" vs "Gender Sdiornee."
+
+**Decision Rules:**
+
+**Output "Low Uncertainty" (Stable):**
+*   **Rule A (Clarity):** If the text targets the group "Women" directly with descriptive or derogatory claims, regardless of dialect/colloquialism.
+*   **Rule B (Violence):** If the text includes explicit dehumanization or threats of severe harm against women (e.g., Ex: Rape, Death, "Green/Dry" metaphors used sexually).
+*   **Rule C (Administrative/Neutral):** If the text is a neutral statement about rights, or a complaint about a specific individual without generalizing to women's demographics.
+*   **Rule D (Religious/Quotation):** If the text is presenting text/verses without commentary (e.g., Ex 2, 5) or where the text itself is not inherently discriminatory without added hate.
+
+**Output "High Uncertainty" (Unstable/Hedge):**
+*   **Rule X (Role Generalization):** If the text attacks a role (Politicians/Doctors) and the gender link requires interpretation of whether it is "Hates these roles" or "Hates Women in these roles."
+*   **Rule Y (Ambiguous Intent):** If the text could be read as a "Cultural Observation" OR a "Rule Enforcement" (Policing) where both readings carry equal weight but imply different labels.
+*   **Rule Z (Hidden Context):** If you must access external context (meme knowledge, specific cultural sub-events) to resolve if women are the target.
+
+**Calibration Requirement:**
+*   **Do Not Hedge on Dialect:** If the meaning of the Arabic dialect is clear to a native speaker regarding the gender target, do not mark as Uncertainty.
+*   **Do Not Hedge on Hate:** Extreme negativity is rarely ambiguous. If a text explicitly praises hate or attacks women as a demographic, it is Stable (1), even if phrased aggressively or colloquially.
+*   **Do Hedge on "Borderline":** If the text involves a mix of social commentary and potential discrimination (e.g., Dowry, Cultural Norms) where the annotator distinction between "Complaint" and "Discrimination" is active, assume uncertainty exists.
+
+---

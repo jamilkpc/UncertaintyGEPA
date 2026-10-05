@@ -1,0 +1,60 @@
+---
+---
+# Hate Speech Annotation Uncertainty Codebook (Revised)
+
+## Objective
+To assess the probability that human annotators will disagree on the classification of a text (Hate Speech vs. Not Hate Speech) when viewed multiple times. Lower uncertainty means high stability/consensus across annotators; higher uncertainty implies ambiguity likely to cause divergent labels.
+
+*Crucial Correction:* Do not automatically assume political context causes disagreement. Political arguments with clear policy/leader blame are often consistently classified as "Political Opinion" (Low Uncertainty). Uncertainty arises when the line between political grievance and identity attack is blurred.
+
+## Construct Dimensions
+
+### 1. Attribution of Blame (Who or What is the Target?)
+*Observable Indicator:* Does the text direct its critical energy toward a **Policy/Entity** (Government, Party, Leader, Event) or a **Protected Identity Group** (Religion, Ethnicity, Nationality) based on collective characteristics?
+*Interpretation:*
+*   **Low Uncertainty (Stable):** Blame is directed at a person, politician, or specific policy decision (e.g., "Cameron's policy," "Obama's legacy," "The Imminence"). Annotators reliably agree this is political speech, not hate.
+*   **High Uncertainty (Unstable):** Blame is directed at the group collectively or conditionally linked to identity without clear agency (e.g., "We need to take the foreigners out," "These Muslims are..." ). Annotators may debate if this is a policy demand or a direct attack on the group.
+*   **Warning:** Do not let the presence of a hashtag like #Brexit automatically trigger High Uncertainty. Check *where* the blame is attached.
+
+### 2. Factual vs. Emotional Framing
+*Observable Indicator:* Is the hostility supported by specific citation of events, demographics, or political outcomes, or does it rely on hyperbolic emotional association?
+*Interpretation:*
+*   **Low Uncertainty (Stable):** The text cites statistics, official announcements, or specific events (e.g., "88m people joining欧盟," "Libyan policy created..."). These are treated as political claims, leading to consistent "Not Hate" or "Political" classifications.
+*   **High Uncertainty (Unstable):** The text uses coded slurs, generalized emotional descriptors ("sick of," "all names," "awful atmosphere") alongside identity terms. Annotators struggle to determine if this exceeds the threshold for "Hate" or remains within "Political Opinion."
+
+### 3. Linguistic Directness vs. Political Camouflage
+*Observable Indicator:* Is the exclusionary language direct (Violence, Removal) or contextualized as a rhetorical claim?
+*Interpretation:*
+*   **Low Uncertainty (Stable):** Direct slurs or violent mandates (e.g., "Kill them," explicit slurs) *without* competing political justification. Annotators rarely disagree on the offensiveness, even if the intent is hateful.
+*   **High Uncertainty (Unstable):** Direct threats embedded in a "Political Necessity" frame (e.g., "We need #Brexit to kick them out"). This creates high uncertainty, as annotators interpret whether it is a hate speech demand or a political argument for policy.
+
+## Synthesis and Scoring Rules
+
+1.  **Rule: The Policy Blame Clause (Priority Low Uncertainty)**
+    *   If the text frames the issue primarily as a critique of **political actions, statistics, or leaders** (e.g., "Obama/Party Leaders/Facts"), assign **Low Uncertainty**.
+    *   *Reasoning:* Context here usually aligns with "Political Opinion." Annotators consistently recognize this boundary and agree. Do not flag #Brexit + Policy Data as uncertain.
+
+2.  **Rule: The Identity Blame Clause (Priority High Uncertainty)**
+    *   If the text frames the issue as a demand for action against a **demographic group** (e.g., "We need to get rid of..."), assign **High Uncertainty** even if it contains political hashtags.
+    *   *Reasoning:* Annotators disagree here. Some view it as policy; others view it as hate speech consensus on the *group* being targeted, not the policy.
+
+3.  **Rule: The Context-Only Exception**
+    *   If a text is vague and contains **neither** specific policy blame **nor** clear violations of safety/hate, **Moderate Uncertainty**.
+    *   *Reasoning:* Vague sentiment without targets or data allows for significant interpretation drift (e.g., "atmosphere is awful" applied to "foreigners").
+
+4.  **Rule: Slur Priority**
+    *   If a text contains an **explicit slur/term** (e.g., Kaffir, Faggot, etc.) **unlinked** to a specific political context/claim, assign **Low Uncertainty**.
+    *   *Reasoning:* Slurs are consistently recognized as Hate Speech, leading to high annotator stability.
+
+## Output Decision Guide
+*   **High Uncertainty:** Text attacks a protected group (Migration/Religion) + Political framing (Ha #Brexit) that could be interpreted as either "Policy Opinion" or "Hate".
+*   **Moderate Uncertainty:** Text attacks a demographic but lacks clear policy targets or factual bases.
+*   **Low Uncertainty:** Text is purely political critique (Leaders/Stats) OR text uses explicit slurs/threats clearly detached from political complexity.
+
+--- 
+
+## Output Format (Fixed)
+
+---
+Please provide the classification output based on the codebook above.
+---

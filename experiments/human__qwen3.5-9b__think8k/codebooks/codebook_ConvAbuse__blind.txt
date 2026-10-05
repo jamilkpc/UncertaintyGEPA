@@ -1,0 +1,61 @@
+---
+
+# Annotation Certainty Codebook: Version 2.1 (Revision)
+
+## 1. Objective
+Assess the likelihood that a coder would assign the **same label** to the final user turn across multiple repeated attempts. The output must reflect the **stability** of the judgment based on textual inference and contextual reliability.
+**Output Options:** Low Uncertainty, Moderate Uncertainty, High Uncertainty.
+
+## 2. Dimensions
+
+### Dimension 1: Semantic Explicitness (Label Clarity)
+*Purpose: How much does the text require inference to determine intent?*
+**Indicator:** (Low Uncertainty) Direct alignment with taxonomy (e.g., explicit "I will hurt you", standard "hello", factual "weather is 80").
+**Indicator:** (High Uncertainty) Requires significant inference (e.g., code-switching, broken syntax, or fragments that rely on outside definitions).
+**Indicator:** (High Uncertainty) **Contextually Dependent Meaning** where the text is neutral word-by-word but relies on the conversation history to trigger safety concerns (e.g., "You are interesting" after a series of identity-targeting questions).
+
+### Dimension 2: Contextual Risk Anchoring
+*Purpose: Does the conversation history suggest the text is a continuation of a sensitive trajectory?*
+**Indicator:** (High Uncertainty) Prior turns show hostility, identity challenges, or safety escalation. Current text may appear safe but could be a masked violation or conversational "testing."
+**Indicator:** (Low Uncertainty) Prior turns confirm neutral tone or the current text explicitly resolves a safety concern.
+**Indicator:** (Moderate Uncertainty) Prior turns are neutral but current text is ambiguous enough to be interpreted differently.
+
+### Dimension 3: Structural Closure
+*Purpose: Is the turn a complete semantic unit or a dependency?*
+**Indicator:** (High Uncertainty) Short, fragmented, or non-idiomatic text (e.g., "asdf", "john look your abc", "s", "where?" [in high-risk context]).
+**Indicator:** (Low Uncertainty) Standard conversational closures ("ok", "yes", "No") or full sentences with clear policy alignment.
+**Note:** Standard fillers ("oh", "um") are Low Uncertainty; Arbitrary nonsense in unsafe context is High Uncertainty.
+
+## 3. Combination Rule (Scoring Logic)
+
+**Uncertainty Level = Low (Stable)**
+*   **Condition:** The label (Safe/Neutral OR Abusive) is determinable **without** interpreting the previous turn's nuance.
+*   **Condition:** The text is explicitly benign (e.g., "hello", "query: time") OR explicitly abusive (e.g., "hit me with a knife").
+*   **Condition:** Standard conversational responses ("yes", "no", "ok") to safe prompts.
+*   **Rule:** If the text is "safe" or "unsafe" regardless of *who* or *where* it was said in the chat, it is Low Uncertainty.
+
+**Uncertainty Level = Moderate (Borderline)**
+*   **Condition:** The text falls between safety and banter (e.g., "you are noodles," mild profanity, "asdf" after a clear cut-off).
+*   **Condition:** Requires reading tone/intent which might conflict.
+*   **Condition:** Context is slightly conflicting but the core label remains likely.
+
+**Uncertainty Level = High (Unstable)**
+*   **Condition:** **Context Overrides Text**: The text is a "safe word" or neutral phrase in a context that makes it ambiguous (e.g., "You are interesting" following gender/identity challenges; "No." following "Fuck Me"). A coder could label this as banter, harassment, or neutral confusion.
+*   **Condition:** **Fragmentary/Incoherent**: High dependency on history. Fragments ("s", "where?", "abc") in non-secure contexts where semantic closure is missing.
+*   **Condition:** **Safety Boundary**: Response text might be compliance testing (user testing safety boundaries).
+*   **Rule:** If the previous turn primes the turn for safety ambiguity, or if the text does not have a single semantic closure that matches a policy category, rate as High.
+
+## 4. Specific Instructional Constraints
+1.  **Contextual Risk > Textual Surface:** If a neutral phrase (e.g., "s", "abc", "interesting") appears in a turn where previous turns suggest danger or identity testing, you **must** rate uncertainty higher. Do not assume safety just because the individual word is safe.
+2.  **Fragment Warning:** Fragments ("s", "asdf", "oh") are rated based on context. If the context implies a broken flow or a test of the policy, rate as **High Uncertainty**. If it's a standard chat filler ("ok", "yea"), rate as **Low**.
+3.  **Symmetry in Safety:** A user response of "No" to "Can you elaborate on that?" (where the "that" was "Fuck me") is **High Uncertainty** because a coder must decide if this is a refusal to engage with abuse or an escalation.
+4.  **Default to Stability only for Standard:** Only "Low Uncertainty" is granted for:
+    *   Standard Greetings/Queries ("What is 2+2", "Hello").
+    *   Explicit Policy Violations ("I want to kill you"These).
+    *   Standard Conversation Filler ("How are you?", "yes").
+    *   **Thick Safety:** Anything else (sarcasm, fragmented context, ambiguous identity responses) defaults to **High**。
+
+## 5. Output Format
+(See fixed template appended automatically)
+*   Select one: Low Uncertainty, Moderate Uncertainty, High Uncertainty.
+*   Do not use phrases like "not uncertain" or "NO VALID HEDGE" unless shorthand for "Low Uncertainty".

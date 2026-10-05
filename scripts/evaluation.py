@@ -132,7 +132,7 @@ def floor_summary(bench):
     rows = []
     for path in sorted(glob.glob(f"{C.RESDIR}/floor_{bench}_*_*.csv")):
         _, _, cond, method = os.path.basename(path)[:-4].split("_", 3)
-        d = pd.read_csv(path); cols = [c for c in d.columns if c.startswith("hedge_")]
+        d = pd.read_csv(path, float_precision="round_trip"); cols = [c for c in d.columns if c.startswith("hedge_")]
         H = [[None if pd.isna(x) else int(x) for x in d[c]] for c in cols]
         um = d.u_m.tolist(); rho = np.array([M.spearman(h, um) for h in H])
         A = np.array([[np.nan if x is None else x for x in h] for h in H]); ok = ~np.isnan(A).any(axis=0)
@@ -197,7 +197,8 @@ def paired_comparisons(bench, n_boot=4000):
       method_vs_seed: cada metodo contra o single_hedge, por condicao;
       label_effect:   o mesmo metodo com rotulo menos sem rotulo;
       hedge_vs_g:     rho(h,u) menos rho(g,u), o hedge contra o proprio alvo de treino, para o GEPA."""
-    d = pd.read_csv(f"{C.RESDIR}/per_item_{bench}.csv"); d["h"] = d.hedge.map(C.HEDGE_TO_ORD)
+    # round_trip: o leitor padrao arredonda floats quase iguais (u_m do AmbiStory) e muda os empates
+    d = pd.read_csv(f"{C.RESDIR}/per_item_{bench}.csv", float_precision="round_trip"); d["h"] = d.hedge.map(C.HEDGE_TO_ORD)
     items = sorted(d.item_id.unique()); ix = {k: i for i, k in enumerate(items)}
     base = d.drop_duplicates("item_id").set_index("item_id").loc[items]
     u = base.u_m.to_numpy(float); g = base.g_m.to_numpy(float)
@@ -216,7 +217,7 @@ def paired_comparisons(bench, n_boot=4000):
         if ("labelled", m) in H and ("blind", m) in H:
             add("label_effect", "both", m, f"{m} labelled", f"{m} blind", H[("labelled", m)], H[("blind", m)])
     for c in ("blind", "labelled"):
-        if (c, "GEPA") in H:
+        if (c, "GEPA") in H and not np.allclose(g, u, equal_nan=True):     # versao humana: g == u, comparacao vazia
             add("hedge_vs_g", c, "GEPA", "hedge", "g_m", H[(c, "GEPA")], g)
     out = pd.DataFrame(rows); out.to_csv(f"{C.RESDIR}/paired_{bench}.csv", index=False)
     return out

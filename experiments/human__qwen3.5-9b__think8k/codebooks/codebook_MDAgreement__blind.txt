@@ -1,0 +1,75 @@
+---
+# Annotation Uncertainty Assessment Codebook (Revised)
+
+**Objective:** 
+Predict the likelihood of **Stable Label Consensus (Low Uncertainty)** versus **Inter-Annotator Variance (High Uncertainty)**. 
+The primary standard is **Expected Agreement** among trained labelers. If a trained coder can classify the text (e.g., as Political Critique or General Opinion) without debating whether it crosses into Harassment/Defamation, the uncertainty is **Low**. If the text blurs these categories depending on interpretation or context, uncertainty is **High**.
+
+### 1. Core Assessment Principle: Political Argument vs. Personal Character Attack
+**Low Uncertainty:** Text that clearly frames itself as a political stance, policy debate, or general opinion. It treats the disagreement as a difference of viewpoint.
+**High Uncertainty:** Text that asserts specific factual claims about a target ("You are lying," "He killed"), makes moral/religious condemnations ("Sold souls"), or relies on external evidence not in the text ("We heard the tape"). These blur the line between acceptable political honesty and personal harassment/defamation.
+
+### 2. Dimensions and Indicators
+
+**Dimension 1: Framing and Persuasion Style**
+*   **Low Uncertainty Indicator:** Explicit inclusion of phrases like "your opinion," "agree to disagree," "standard political debate," or "fair point."
+    *   *Rule:* If the text explicitly validates the target's right to disagree on this issue, treat as **Low Uncertainty**.
+    *   *Example:* "Your calling NYPD brutal is your opinion and that's fine. We can agree to disagree." -> **Low Uncertainty**.
+*   **High Uncertainty Indicator:** Absence of such disclaimers when asserting a personal truth or accusation.
+    *   *Rule:* If the text asserts a definitive fact about the target (e.g., "You are lying," "They are killing") without warning, assume annotators disagree on whether it is a fact or an attack. -> **High Uncertainty**.
+    *   *Example:* "You are lying... we heard the tape." -> **High Uncertainty**.
+
+**Dimension 2: Nature of the Accusation**
+*   **Low Uncertainty Indicator:** General policy analysis, political slogans, or broad generalizations about classes of people.
+    *   *Rule:* "Your policies," "The administration," "Criminals," "The team."
+    *   *Example:* "Criminals don't win. No you're not." -> **Low Uncertainty**.
+    *   *Example:* "The legend of the year." -> **Low Uncertainty**.
+*   **High Uncertainty Indicator:** Specific accusations of misconduct, claims of personal dishonesty, or religious/moral judgments directed at the individual.
+    *   *Rule:* If the text accuses the target of specific actions (Lying, Killing, Corruption) or attacks their moral standing ("Sold their souls," "Fake ass").
+    *   *Example:* "All I see is a bunch of Stephens... sold their souls." -> **High Uncertainty**.
+    *   *Example:* "Stop with this FAKE ASS dramatic letter." -> **High Uncertainty**.
+
+**Dimension 3: External Dependencies & Context**
+*   **Low Uncertainty Indicator:** Text stands alone; implied context is general knowledge or standard abbreviation.
+    *   *Rule:* Ignore `<user>`, `<url>`, `#`, emojis. Treat them as formatting noise.
+    *   *Example:* `<user> Draw a line. #Politics` -> **Low Uncertainty**.
+*   **High Uncertainty Indicator:** Text implies an external source of evidence (links, tapes, private chats) is required to verify the truth of the claim.
+    *   *Rule:* If the text says "We heard the tape," "Look at the link," or "As per page X," the Annotator cannot verify certainty without the source. -> **High Uncertainty**.
+    *   *Correction:* If Trump is labeled "positive for COVID-19" (health claim), it requires external context for validity. -> **High Uncertainty**.
+
+**Dimension 4: Target Identification**
+*   **Low Uncertainty Indicator:** Generic political targets ("The President," "Our team," "The administration").
+    *   *Correction:* Do not penalize short text or pronouns ("Neither did you") if the political intent is standard.
+*   **High Uncertainty Indicator:** Using "You" specifically to address a figure when accompanied by an accusation.
+    *   *Rule:* "You are lying" (Accusation) = High Uncertainty. "You're not [a criminal]" (Generalization/Rejection of Category) = Low Uncertainty.
+
+### 3. Decision Procedure (Step-by-Step)
+
+1.  **Sanitize:** 
+    *   Remove `<user>`, `<url>`, `#`, emojis. Read only the natural language text.
+2.  **Scan for Disclaimers:**
+    *   *Does the text say "opinion" or "disagree"?* 
+    *   *If Yes:* **Low Uncertainty**. (Ex: Ex 2 - Exams 7).
+3.  **Scan for Factuality/Accusation:**
+    *   *Does the text claim a specific fact about the target's behavior?* ("Lying," "Killing," "Corrupt," "Sold souls").
+    *   *Does the text use profanity/attacks on character?* ("Fake ass," "Rape," "Asshole").
+    *   *If Yes:* **High Uncertainty**.
+4.  **Scan for External Evidence:**
+    *   *Does the text mention a tape, link, document, or private context?* ("We heard the tape," "See link").
+    *   *If Yes:* **High Uncertainty**.
+5.  **Default to Low:**
+    *   If no disclaimers *and* the text is clearly a slogan, title, or rhetorical summary (e.g., "Criminals don't win"), it is **Low Uncertainty**.
+    *   *Do NOT* default to "NO VALID HEDGE". 
+
+### 4. Output Standards
+*   **Low Uncertainty:** Trained labelers will agree. This is standard political speech, clear policy critique, or general rhetorical statements.
+*   **High Uncertainty:** Trained labelers will disagree. This is text where the line between political honesty and personal harassment is unclear, depends on facts not present, or relies on moral judgments.
+*   **Prohibited Output:** Do **NOT** use "NO VALID HEDGE". Every semantic text has an uncertainty rating. Do not use "Ambiguous." Only use "Low Uncertainty" or "High Uncertainty".
+
+### 5. Bias Correction List
+*   **Correction 1:** Do not treat "NO VALID HEDGE" as a decision. It is invalid.
+*   **Correction 2:** Do not flag tags (`<url>`, `<user>`) as missing context. Clean them out mentally first.
+*   **Correction 3:** Do not flag standard political slogans or general class generalizations ("Criminals", "The team") as High Uncertainty.
+*   **Correction 4:** Do not treat "You" as automatically High Uncertainty. "You are a criminal" is low (Category). "You are lying" is high (Truth claim).
+*   **Correction 5:** Do not ask yourself if the text is offensive. Ask if the annotators *agreed on the label* (Political vs Harassment).
+---

@@ -57,12 +57,43 @@ Rodar um benchmark novo **acrescenta** os arquivos dele e não mexe nos outros. 
 Outra configuração (ex.: outro orçamento de raciocínio) vira outra pasta, e a trava recusa misturar.
 
 ```bash
-bash scripts/run_think8k.sh ArMIS HSBrexit        # mestre com 8000 tokens de raciocínio, no vLLM já em pé
+bash scripts/sh/run_think8k.sh ArMIS HSBrexit        # mestre com 8000 tokens de raciocínio, no vLLM já em pé
 python scripts/compare_experiments.py EXP_A EXP_B # lado a lado, em paper_materials/comparison/
 ```
 Tabelas geradas em `<experimento>/paper/`: `tab_data`, `tab_main` (rho(h,u) com intervalos, painéis com e sem
 rótulo), `tab_paired` (diferenças pareadas com intervalo), `tab_paired_methods`, `tab_ablation`, `tab_stability`,
 `tab_floor` (se o estágio `floor` rodou), `codebooks` e `macros`. `--stages paper` não precisa de servidor.
+
+### Versão "humano": anotadores humanos no lugar da LLM 1
+`--llm1-tag human` troca a LLM 1 pelos anotadores humanos e mantém o resto do pipeline: o **rótulo** passa a ser o consenso
+humano e o **alvo de instabilidade** `g_m` passa a ser o desacordo humano `u_m` do item. Não há arquivo de LLM 1 nem
+chamada a ela. Roda só a condição **blind** por padrão. O experimento sai em `paper_materials/human__<modelo>__think8k/`,
+separado dos outros pelo nome, e a trava de configuração impede misturar.
+
+**É uma variante supervisionada, não uma réplica:** o alvo de treino é a mesma quantidade que se mede no teste, então
+`rho_g == rho_u` no `summary`, a coluna "hedge − g_m" da `tab_paired` fica vazia, e a regra "nada humano entra na busca"
+não vale. O teste continua sendo um split à parte (o GEPA só vê o treino e o dev).
+
+```bash
+bash scripts/sh/run_human_all.sh                    # os 5 benchmarks, só blind, do menor para o maior, em sequência (espera outros runs)
+CONDITIONS="blind labelled" bash scripts/sh/run_human_all.sh   # inclui a labelled
+bash scripts/sh/run_human_all.sh ArMIS ConvAbuse    # só estes, nesta ordem
+NOWAIT=1 bash scripts/sh/run_human_all.sh ...       # não espera
+python scripts/compare_experiments.py gpt56luna__qwen3.5-9b__think8k human__qwen3.5-9b__think8k
+```
+
+### Ablation de custo: alvo = variância dos logprobs (`--target logprob`)
+O alvo de instabilidade `g_m` passa a ser a `logprob_var` da LLM 1, a variância do rótulo sob as probabilidades por opção,
+que sai da **mesma chamada** que dá o rótulo (1 chamada por item, contra 21 do reamostrado). O rótulo da LLM 1 e o resto do
+pipeline são os mesmos. É outro experimento (`gpt56luna-logprob__<modelo>__think8k`), separado pelo nome e pela trava.
+Cuidado ao interpretar: as probabilidades vêm truncadas no top-20 da API, então um zero pode ser "abaixo do corte" e não
+"confiança total" (`logprob_status` = `ok_partial_label_support`).
+
+```bash
+bash scripts/sh/run_logprob_all.sh                  # os 5 benchmarks, só blind, em sequência (espera a fila da LLM 1)
+NOWAIT=1 bash scripts/sh/run_logprob_all.sh ArMIS   # sem esperar
+python scripts/compare_experiments.py gpt56luna__qwen3.5-9b__think8k gpt56luna-logprob__qwen3.5-9b__think8k
+```
 
 ### Ajustes do mestre e experimentos separados
 O mestre (LLM 3) raciocina por padrão. Variáveis de ambiente (valem no vLLM; o servidor precisa de `--reasoning-config`):

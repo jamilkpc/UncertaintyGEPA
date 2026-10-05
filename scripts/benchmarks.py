@@ -199,4 +199,4 @@ BENCHMARKS = {
 }
 
 # benchmarks de um run padrao; acrescente os "MHS*" quando quiser pagar o download e as chamadas
-RUN = ["HSBrexit", "HSBrexitOff", "ArMIS", "ConvAbuse", "MDAgreement", "AmbiStory"]
+RUN = ["HSBrexit", "ArMIS", "ConvAbuse", "MDAgreement", "AmbiStory"]     # HSBrexitOff continua no registro, fora do escopo

@@ -46,8 +46,21 @@ def load_llm1_results(bench, tag):
     n_bad = int((x.status != "complete").sum())
     if n_bad: print(f"  {bench}: {n_bad} itens com status != complete, descartados")
     x = x[x.status == "complete"]
+    if C.TARGET_SOURCE == "logprob":
+        # alvo = variancia do rotulo sob as probabilidades por opcao (1 chamada em vez de R+1); o rotulo e o mesmo
+        print(f"  {bench}: alvo = logprob_var (nao a variancia das amostras)")
+        x = x.assign(g_m=x.logprob_var, n_valid_draws=1)
+        return x[["item_id", "llm1_label", "g_m", "n_valid_draws"]]
     return (x[["item_id", "llm1_label", "resampling_var", "n_valid_resamples"]]
             .rename(columns={"resampling_var": "g_m", "n_valid_resamples": "n_valid_draws"}))
+
+
+def human_annotations(d):
+    """Versao 'humana' da LLM 1: o rotulo e o consenso dos anotadores e o alvo de instabilidade `g_m` e o desacordo
+    humano `u_m` do proprio item. Nenhuma LLM e chamada. ATENCAO: aqui o alvo de treino e a quantidade usada na
+    avaliacao, entao rho(h, g) == rho(h, u) e a regra 'nada humano entra na busca' deixa de valer."""
+    return pd.DataFrame({"item_id": d.item_id, "llm1_label": d.consensus.astype(int),
+                         "g_m": d.u_m.astype(float), "n_valid_draws": d.n_ann})
 
 
 def build_frames(data, llm1_tag=None):
@@ -56,7 +69,10 @@ def build_frames(data, llm1_tag=None):
     ja gerados em `llm1_<tag>_<benchmark>.csv` e nao chama nenhuma LLM."""
     frames = {}
     for b, d in data.items():
-        if llm1_tag:
+        if llm1_tag == C.HUMAN_TAG:
+            print(f"{b}: anotadores HUMANOS no lugar da LLM 1 (rotulo = consenso, alvo = desacordo u_m; {len(d)} itens)")
+            llm1 = human_annotations(d)
+        elif llm1_tag:
             print(f"{b}: LLM 1 lido de llm1_{llm1_tag}_{b}.csv ({len(d)} itens no corpus)")
             llm1 = load_llm1_results(b, llm1_tag)
         else:

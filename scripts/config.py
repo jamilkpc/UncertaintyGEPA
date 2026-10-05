@@ -64,6 +64,9 @@ REQUEST_TIMEOUT = 180      # segundos por chamada (assessor, anotador)
 MASTER_TIMEOUT  = int(os.environ.get("MASTER_TIMEOUT", 600))      # teto (s) por chamada do mestre; nao e o tempo esperado
 MASTER_MAX_TOKENS = int(os.environ.get("MASTER_MAX_TOKENS", 8000))  # com raciocinio ligado o Qwen pode gastar mais de 8000 so pensando
 MASTER_THINKING_BUDGET = int(os.environ.get("MASTER_THINKING_BUDGET", 0)) or None   # vLLM: tokens de raciocinio do mestre (exige --reasoning-config no servidor)
+HUMAN_TAG = "human"        # --llm1-tag human: rotulo = consenso humano, alvo = desacordo humano u_m (variante supervisionada)
+TARGET_KIND = "llm1"       # "llm1" ou "human"; definido por run_pipeline a partir de --llm1-tag
+TARGET_SOURCE = "resampling"   # alvo g_m da LLM 1: "resampling" (variancia das R amostras) ou "logprob" (variancia sob as probabilidades dos rotulos)
 SERVER_CONTEXT = int(os.environ.get("SERVER_CONTEXT", 16384))   # --max-model-len do servidor vLLM; limita o max_tokens do mestre
 MASTER_EFFORT = "high"     # esforco de raciocinio do mestre (a LLM 2 nunca raciocina); $MASTER_EFFORT sobrescreve
 
@@ -93,7 +96,7 @@ URLS = None
 WORKERS = DEFAULT_WORKERS
 
 
-def derive_experiment_name(llm1_tag, backend):
+def derive_experiment_name(llm1_tag, backend, target="resampling"):
     """Nome padrao: <llm1>__<modelo>__<raciocinio do mestre>, ex.: gpt56luna__qwen3.5-9b__think8k.
     O nome descreve a CONFIGURACAO, nao o benchmark: todos os benchmarks rodados com a mesma configuracao
     ficam na mesma pasta (e a trava de configuracao impede misturar configuracoes diferentes)."""
@@ -106,7 +109,8 @@ def derive_experiment_name(llm1_tag, backend):
         think = f"think{MASTER_THINKING_BUDGET // 1000}k" if MASTER_THINKING_BUDGET % 1000 == 0 else f"think{MASTER_THINKING_BUDGET}"
     else:
         think = "think-free"
-    return f"{llm1_tag or 'llm1-gerada'}__{model}__{think}"
+    src = f"{llm1_tag or 'llm1-gerada'}" + ("-logprob" if target == "logprob" else "")
+    return f"{src}__{model}__{think}"
 
 
 def configure(backend=None):

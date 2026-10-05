@@ -288,7 +288,8 @@ def write_all(frames=None, summary=None, codebooks=None, run=None):
     paired = load_paired(run)
     table_data(stats)
     table_main(summary, run)
-    table_ablation(summary, run)
+    if {"blind", "labelled"} <= set(summary.condition):      # a ablacao precisa das duas condicoes
+        table_ablation(summary, run)
     table_stability(summary, run)
     if paired is not None:
         table_paired(paired, summary, run)

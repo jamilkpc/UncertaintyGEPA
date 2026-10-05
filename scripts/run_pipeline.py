@@ -46,7 +46,11 @@ def parse_args(argv=None):
                          "gpt56luna__qwen3.5-9b__think8k (todos os benchmarks da mesma configuracao ficam juntos)")
     ap.add_argument("--benchmarks", nargs="+", required=True, help=f"de: {', '.join(BENCHMARKS)}")
     ap.add_argument("--llm1-tag", default=None,
-                    help="le paper_materials/inputs/llm1/llm1_<tag>_<benchmark>.csv; sem ele, roda o anotador")
+                    help="le paper_materials/inputs/llm1/llm1_<tag>_<benchmark>.csv; sem ele, roda o anotador. "
+                         "'human': usa os anotadores humanos (rotulo = consenso, alvo = desacordo u_m), sem LLM 1")
+    ap.add_argument("--target", default="resampling", choices=["resampling", "logprob"],
+                    help="alvo de instabilidade da LLM 1: variancia das amostras (padrao) ou variancia dos logprobs "
+                         "(1 chamada por item; ablation de custo). Vira outro experimento, no nome")
     ap.add_argument("--backend", default=os.environ.get("BACKEND", "vllm"),
                     choices=["vllm", "ollama", "openrouter", "cloudflare"])
     ap.add_argument("--conditions", nargs="+", choices=["labelled", "blind"], default=None,
@@ -71,7 +75,7 @@ def _design_settings(args):
             "master_effort": C.MASTER_EFFORT, "master_thinking_budget": C.MASTER_THINKING_BUDGET,
             "master_max_tokens": C.MASTER_MAX_TOKENS, "server_context": C.SERVER_CONTEXT,
             "seed": C.SEED, "R": C.R, "n_train_folds": C.N_TRAIN_FOLDS, "n_val_folds": C.N_VAL_FOLDS,
-            "max_metric_calls": C.MAX_METRIC_CALLS, "coverage_floor": C.COVERAGE_FLOOR, "llm1_tag": args.llm1_tag}
+            "max_metric_calls": C.MAX_METRIC_CALLS, "coverage_floor": C.COVERAGE_FLOOR, "llm1_tag": args.llm1_tag, "target": args.target}
 
 
 def check_experiment_config(base, args):
@@ -80,6 +84,7 @@ def check_experiment_config(base, args):
     path = f"{base}/experiment_config.json"; now = _design_settings(args)
     if os.path.exists(path):
         old = json.load(open(path))
+        old.setdefault("target", "resampling")      # experimentos antigos nao tinham a chave
         diff = {k: (old.get(k), now[k]) for k in now if old.get(k) != now[k]}
         if diff:
             raise SystemExit("este experimento foi criado com outra configuracao (antes -> agora):\n  "
@@ -111,7 +116,7 @@ def preflight():
 def main(argv=None):
     args = parse_args(argv)
     if not args.experiment:
-        args.experiment = C.derive_experiment_name(args.llm1_tag, args.backend)
+        args.experiment = C.derive_experiment_name(args.llm1_tag, args.backend, args.target)
     unknown = [b for b in args.benchmarks if b not in BENCHMARKS]
     if unknown:
         raise SystemExit(f"benchmarks desconhecidos: {unknown}. Disponiveis: {list(BENCHMARKS)}")
@@ -122,6 +127,8 @@ def main(argv=None):
     sys.stdout, sys.stderr = Tee(sys.stdout, log), Tee(sys.stderr, log)
     print(f"log: {log}\nexperimento: {args.experiment}\nargs: {vars(args)}")
 
+    C.TARGET_KIND = "human" if args.llm1_tag == C.HUMAN_TAG else "llm1"
+    C.TARGET_SOURCE = args.target
     if args.conditions:
         C.CONDITIONS = list(args.conditions)
     run = list(args.benchmarks)

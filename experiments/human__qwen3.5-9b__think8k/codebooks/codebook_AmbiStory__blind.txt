@@ -1,0 +1,65 @@
+---
+
+# Annotator Uncertainty Codebook
+
+## Task Overview
+Your objective is to predict whether a human annotator would remain **Stable** (Low Uncertainty) or **Variable** (High Uncertainty) when assigning a plausibility label to the **Candiate Meaning** of the Ambiguous Word in the provided context.
+
+**Goal:** Determine if the text supports only the Candidate Meaning (Stable) or if it supports at least one alternative interpretation (Unstable).
+
+## Dimensions and Indicators
+
+### 1. Dimension: Semantic Polysemy
+*   **Definition:** Does the Ambiguous Word possess two or more common, distinct meanings in standard English?
+*   **Indicator A (Polysemy Present):** The word has distinct meanings (e.g., Physical vs. Abstract, Literal vs. Figurative).
+    *   *High Risk:* "Stand" (Position vs. Endure), "Bench" (Seat vs. Court), "Change" (Variation vs. Modification), "Count" (Number vs. Belief).
+*   **Indicator B (Polysemy Absent):** The word has a singular meaning in this context (e.g., "Storm" in weather context, "Lousy" only as adjective).
+
+### 2. Dimension: Contextual Disambiguation
+*   **Definition:** Does the surrounding text exclude *all* meanings except the Candidate Meaning?
+*   **Indicator: Literal vs. Figurative Competition.**
+    *   **Uncertainty Signal:** Context clues support **both** the Candidate Meaning AND a literal/alternative meaning.
+        *   *Example:* Text mentions a room and a "bench" (Physical) AND a judge (Court).
+        *   *Example:* Text mentions "change" in context of "decision" (Modification) but also "change" regarding "money/object".
+        *   *Example:* Text mentions "count" in context of "wished/hope" (Faith) but also "lost count" (Tracking).
+    *   **Stability Signal:** Context explicitly excludes literal/alternative meanings.
+        *   *Example:* "Delivery" spoken + "Manner". (Only style meaning plausible).
+        *   *Example:* "Bench" + "Procurator/Judge". (Only court meaning plausible).
+*   **Check Candidate Fit:** Does the Candidate Meaning match the context strongly?
+    *   If the Candidate Meaning is very abstract/literal mismatch but the word itself has ambiguity (e.g., Text = "Lost count", Candidate = "Faith"), note that literal word meanings create a "distractor" possibility for the annotator, increasing uncertainty.
+
+### 3. Dimension: Semantic Cluster
+*   **Definition:** Are there words or phrases nearby that activate a secondary meaning of the target word?
+*   **Indicator:** Presence of literal collocates (e.g., "wall", "nails", "tools" with "stand" or "stand" + "resolve").
+*   **Indicator:** Presence of abstract collocates (e.g., "decision", "choice", "faith").
+*   **High Uncertainty Rule:** If the context contains a cluster of triggers for *both* the Candidate Meaning and a Literal Meaning, mark as Uncertain.
+
+## Decision Logic and Verdicts
+
+Integrate the dimensions above to classify the annotation uncertainty.
+
+1.  **Scenario A: Stable / Not Uncertain**
+    *   **Condition:** Context forces one meaning OR the Candidate Meaning is the only logically possible interpretation.
+    *   **Verdict:** **not uncertain**
+    *   **Logic:** If Polysemy = Yes AND Contextuality = Exclusive Disambiguation -> **not uncertain**. (If no Polysemy on its own, always **not uncertain**).
+
+2.  **Scenario B: Unstable / Highly Uncertain**
+    *   **Condition:** Context is open to interpretation. The text allows for the Candidate Meaning to be argued *but* also supports a literal or competing figurative meaning that could confuse an annotator.
+    *   **Verdict:** **highly uncertain**
+    *   **Logic:** If Polysemy = Yes AND Contextuality = Permitting Alternative Meaning -> **highly uncertain**.
+    *   **Specific Triggers:**
+        *   Literal object present (bomb, bench, change, count) + Abstract candidate meaning -> **highly uncertain**.
+        *   Idiom or phrase that could be misinterpreted as literal (e.g., "stood" + "resolve" -> Physical vs. Endure) -> **highly uncertain**.
+        *   Slang/Figure confusion (e.g., "Lousy" quality vs Condition) -> **highly uncertain**.
+
+## Evaluation Checklist
+Before finalizing, verify the following to ensure accuracy:
+*   [ ] Did I identify if the word has standard multiple meanings?
+*   [ ] Does the surrounding text hint at a literal meaning *different* from the Candidate Meaning?
+*   [ ] Is the context explicit enough to wipe that alternative meaning clean?
+*   [ ] Am I ready to select one of the two required verdicts?
+
+**Selection Rule:** Choose "highly uncertain" if the text provides enough evidence for a second plausible interpretation to exist in the annotator's mind. Choose "not uncertain" if the text effectively rules out an alternative.
+
+---
+---

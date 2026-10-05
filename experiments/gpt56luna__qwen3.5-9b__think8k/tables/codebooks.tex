@@ -1,5 +1,213 @@
 \section{Optimised codebooks}
 \label{app:codebooks}
+\subsection*{AmbiStory -- blind}
+\begin{quote}\small
+---
+
+# Annotation Codebook: Annotator Variance Estimation
+
+
+
+## Task Definition
+
+Your goal is to estimate the **Likelihood of Annotator Variance** (Uncertainty) for a specific item. You are assessing how **stable professional annotators** would be when rating the **PLAUSIBILITY of the Candidate Meaning** against the narrative.
+
+
+
+**Output Requirement:** You **MUST** generate exactly one of the following two labels: **"LOW UNCERTAINTY"** or **"HIGH UNCERTAINTY"**.
+
+*   **CRITICAL COMPLIANCE:** You are **FORBIDDEN** from outputting "NO VALID HEDGE", "INVALID", "N/A", or any other string. If you find the text is missing or unclear, analyze the provided text for ambiguity and estimate the variance **or** output **"HIGH UNCERTAINTY"** (ambiguous text leads to uncertain labels).
+
+
+
+## Core Construct Dimensions
+
+
+
+### 1. Polysemy Presence (Word Flexibility)
+
+*   **Observable Indicator:** Does the AMBIGUOUS WORD have at least two common definitions that fit the context? (e.g., "Pupils" = Students vs. Eyes; "Palms" = Trees vs. Hands).
+
+    *   **Low Variance (Low Uncertainty):** The text forces one definition by providing strong clues (e.g., "Park", "Trees" forces "Palms" to Trees).
+
+    *   **High Uncertainty (High Variance):** The text allows both definitions to exist simultaneously without contradiction (e.g., "Pupils changed" in school vs. PE discusses "pupil dilation" or "students reacting").
+
+
+
+### 2. Contextual Resolution (Disambiguation Strength)
+
+*   **Observable Indicator:** Does the surrounding narrative actively constrain the meaning to exclude the Candidate?
+
+    *   **Low Variance:** The context makes the Candidate Meaning impossible to justify (e.g., "Hotel" + "Lice" [Zoo context] vs "Hotel" + "Lousy" [Bad]). If the text makes the Candidate Meaning *absurd*, variance is low.
+
+    *   **High Uncertainty:** The context does **not** make the Candidate Meaning impossible. If the text is emotionally charged or vague enough that the Candidate Meaning is *maybe* intended but also *maybe* not, variance is high. (e.g., "Then, it struck her" - "It" could be a lightbulb, a thought, or the sun. If the text is just "It" with weak context, annotators argue).
+
+
+
+### 3. Label Boundary (Edge cases)
+
+*   **Observable Indicator:** If the Assigned Label suggests "Implausible" (1) or "Certain" (5), is that match **Hard** or **Soft**?
+
+    *   **Low Variance:** **Hard Mismatch.** The connection is logically or physically broken (e.g., candidate is "Knife", context is "Bread" [Aim? No] -> "Sword" + "Staff". A knife cannot be a staff). If everyone agrees it is impossible, Variance is Low.
+
+    *   **High Uncertainty:** **Soft Mismatch.** The connection is debatable. A professional coder might stretch the meaning to justify a higher label (3 or 4) that others would see as invalid (1). (e.g., Candidate meaning is "Hand", text mentions "Grasping a grip" -> Some say "Grasping", others say "Weaponry". If the word matches an action loosely, annotate variance exists).
+
+
+
+## Combination Logic \& Decision Matrix
+
+
+
+**1. Rating: LOW UNCERTAINTY (Stable)**
+
+*   **Condition:** **High Contextual Resolution** + **Low Polysemy**.
+
+*   **Logic:** The text provides enough evidence that *every* competent annotator would arrive at the same label, regardless of their nuance. Whether they all agree the meaning is Valid or Invalid, they agreed via separate paths (Low Uncertainty).
+
+*   **Example:** Text: "The park has [palms]." Candidate: "Hand". Context implies trees. All annotators will reject "Hand". Uncertainty = Low.
+
+
+
+**2. Rating: HIGH UNCERTAINTY (Variable)**
+
+*   **Condition:** **Low Contextual Resolution** (Ambiguity exists) **OR** **High Polysemy** (Two meanings fit).
+
+*   **Logic:** The text permits multiple interpretations where a professional annotator could reasonably look at the Candidate Meaning and assign a *different* label (e.g., Some say Label 1, others say Label 3).
+
+*   **Example:** Text: "The crowd demanded a [change]." Candidate: "Coins". Context implies "money" but "change" can be "substitution". Some see valid, some see invalid. Uncertainty = High.
+
+
+
+**3. Rating: HIGH UNCERTAINTY (Edge Case Check)**
+
+*   **Condition:** **Soft Mismatch** (See Label Boundary).
+
+*   **Logic:** If the text is contextually vague enough that the "Implausible" label could be argued as "Plausible" (or vice versa) based on a "loose" reading, Variance is High. Do not mark Low Uncertainty unless the mismatch is logically impossible.
+
+
+
+## Final Instruction Summary
+
+*   **Priority:** Textual Ambiguity drives Variance. If the text is clear, Output "LOW UNCERTAINTY". If the text allows reasonable argumentation for different labels, Output "HIGH UNCERTAINTY".
+
+*   **Compliance:** Do **NOT** use the phrase "NO VALID HEDGE". If the input looks anomalous, treat it as "HIGH UNCERTAINTY" (Default to High if unsure).
+
+---
+\end{quote}
+\subsection*{AmbiStory -- labelled}
+\begin{quote}\small
+---
+
+### Annotation Uncertainty Assessment Codebook (Revised)
+
+
+
+**Objective**
+
+Predict the likelihood that a human annotator would maintain the assigned PLAUSIBILITY label (1-5) upon repeated review of the item.
+
+*   **Low Uncertainty:** Annotator is stable (would likely give the same label).
+
+*   **Medium Uncertainty:** Annotator is moderately stable (would likely stick but risk minor shifts).
+
+*   **High Uncertainty:** Annotator is unstable (would likely vary the label on repeated draws).
+
+
+
+*Note: You must select one of the three uncertainty levels above. The "NO VALID HEDGE" option is not permitted.*
+
+
+
+**Construct Dimensions**
+
+
+
+**1. Contextual Force (Constraint)**
+
+*Definition:* The strength of the narrative evidence that supports the candidate meaning over alternatives.
+
+*   **High Force:** The text provides explicit evidence (verbs, concrete nouns, situational logic) that makes only *one* meaning viable (e.g., "He crouched... standing on a [PROSTRATE] ground" vs "He stood lying").
+
+*   **Medium Force:** The text supports the meaning but could reasonably accommodate a secondary common meaning without contradiction.
+
+*   **Low Force:** The text is neutral, highly abstract, or the candidate word/phrase provides little context regarding definitions.
+
+*   **Impact:** High Force reduces decision difficulty -> Low Uncertainty. Low Force -> High Uncertainty.
+
+
+
+**2. Definition Distinctiveness**
+
+*Definition:* How clearly the provided candidate meaning is separated from other common definitions in the dictionary.
+
+*   **High Distinctiveness:** The definition is precise, factual, or narrow (e.g., "being in a horizontal position" vs. general "lying down"). No obvious synonyms fit the text equally well.
+
+*   **Medium Distinctiveness:** The definition overlaps with common synonyms that could apply to the text.
+
+*   **Low Distinctiveness:** The definition is vague, broad, or contradictory to the word's common usage absent the text.
+
+*   **Impact:** High Distinctiveness creates a clear "Yes/No" decision -> Low Uncertainty. Low Distinctiveness -> High Uncertainty.
+
+
+
+**3. Label Anchoring**
+
+*Definition:* The extremity of the assigned PLAUSIBILITY score (1 or 5) versus a middle score (2, 3, 4).
+
+*   **Strong Anchor (1 or 5):** The annotator claimed the meaning is either clearly Impossible/Misplaced (1) or Clearly Perfect (5).
+
+*   **Weak Anchor (2, 3, or 4):** The annotator placed the meaning in a "grey area" where plausibility is debatable.
+
+*   **Impact:** Strong Anchors correlate with consensus (Low Uncertainty). Weak Anchors correlate with disagreement (High/Medium Uncertainty).
+
+
+
+**Synthesis and Judgment Logic**
+
+
+
+1.  **Stable Case (Low Uncertainty):**
+
+    *   **Criteria:** `[High Contextual Force]` AND `[High Definition Distinctiveness]` AND `[Strong Anchor (1 or 5)]`.
+
+    *   **Reasoning:** The context makes the specific meaning the *only* logical option. Annotators do not need to guess; they must use the word as written. (Even clear "mismatches" are stable if the text *makes* the word clearly unsuitable).
+
+
+
+2.  **Unstable Case (High Uncertainty):**
+
+    *   **Criteria:** `[Low Contextual Force]` OR `[Low Definition Distinctiveness]` OR `[Weak Anchor (2-4)]`.
+
+    *   **Reasoning:** Annotators lack decisive evidence. They may argue whether the text forces the meaning or if the definition is too broad. They are likely to shift the rating between draws.
+
+    *   **Correction:** Do not mark "High Uncertainty" simply because a word has multiple dictionary entries if the text *clearly* eliminates them. If the text forces one meaning, mark Low Uncertainty.
+
+
+
+3.  **Variable Case (Medium Uncertainty):**
+
+    *   **Criteria:** `[Medium Contextual Force]` AND `[Strong Anchor]`.
+
+    *   **Reasoning:** The evidence is good enough to pick a label, but the reasoning relies on some interpretation. Annotators may agree on the label but disagree on the exact numeric plausibility (e.g., 4 vs 5). Note: If the Anchor is Weak (2-4), default to **High Uncertainty** unless Context Force is very strong.
+
+
+
+**Output Requirements**
+
+*   **Required Output:** State the uncertainty level explicitly: `[Low Uncertainty]`, `[Medium Uncertainty]`, or `[High Uncertainty]`.
+
+*   **Prohibited:** Do not use "NO VALID HEDGE" or indicate that the item cannot be assessed. Every item must be judged against the Stability criteria above.
+
+*   **Reasoning:** Briefly justify your choice based on which dimension (Context, Definition, or Anchor) drove the judgment.
+
+
+
+**Examples of Stable vs. Unstable**
+
+*   *Example of Stable (Low Unc):* Text explicitly describes a physical action that matches a precise definition (e.g., "face-up in a bin" -> "prostrate"). Anchor is 5. Context is High. Force is High. -> **Low Uncertainty.**
+
+*   *Example of Unstable (High Unc):* Text is vague or "meaning is loose". Annotator places label in grey area (2-4). Context fails to distinguish from alternative meanings. -> **High Uncertainty.**
+\end{quote}
 \subsection*{ArMIS -- blind}
 \begin{quote}\small
 An Arabic tweet was labelled for MISOGYNY OR SEXISM: content that demeans, stereotypes, polices or dismisses women, or treats them as inferior. Judge how uncertain a coder deciding this item's label would be.
@@ -679,4 +887,280 @@ If the text is simply explicit ("STOP MUSLIM IMMIGRATION"), mark this as **Not U
 
 
 ---
+\end{quote}
+\subsection*{MDAgreement -- blind}
+\begin{quote}\small
+---
+
+
+
+# Annotation Codebook: Label Uncertainty Assessment
+
+
+
+**Objective**
+
+Estimate the likelihood that a second coder, applying the standard Offensiveness guidelines to the provided text, would assign a **different label** than the primary coder. Your judgment must reflect **annotator variability**, not your own subjective feeling about the text.
+
+
+
+**Construct: Uncertainty**
+
+This construct measures the stability of the label assignment across the human population of coders. 
+
+*   **Low Uncertainty:** Near-universal agreement (≥90\% confidence). A second coder would almost certainly assign the same label.
+
+*   **Medium Uncertainty:** Significant agreement, but some reasonable doubt exists (50-89\% confidence).
+
+*   **High Uncertainty:** Significant disagreement expected (<49\% confidence). A second coder would likely disagree based on reasonable interpretation.
+
+
+
+**Dimensions of Measurement**
+
+
+
+### 1. Definitiveness (Violation vs. Non-Violation)
+
+*   **Definition:** Does the text explicitly fit a clear "Offensive" category (Profanity, Hate Speech, Threats) or a clear "Safe" category?
+
+*   **Observable Indicators:**
+
+    *   **Definitive:** Explicit slurs ("n****r"), hard profanity ("f***ing"), direct threats, or clear safety signals ("God bless you", "Thank you").
+
+    *   **Non-Definitive:** Text relies on sarcasm, metaphor, cultural memes, or typos where the intent or target of the insult is unclear.
+
+*   **Rule:** Definitive content = **Low Uncertainty**. Non-definitive content = **Medium/High Uncertainty**.
+
+
+
+### 2. Safety Consensus (Deviant Contnet)
+
+*   **Definition:** If the text is clearly *not* offensive (e.g., #Anonymous We're all), do other annotators typically disagree?
+
+*   **Observable Indicators:**
+
+    *   **Safe \& Recognizable:** Text contains no profanity, threats, slurs, or fighting words. Even if the text is short, cryptic, or hashtag-heavy without deep meaning, if it does not objectively violate the guidelines.
+
+*   **Rule:** Clear Safe Text (Label 0) usually = **Low Uncertainty**. Second coders will generally agree a text is safe even if it is vague.
+
+
+
+### 3. Guideline Ambiguity (Borderline Cases)
+
+*   **Definition:** Does the text sit on the boundary where a coder could reasonably apply "0" (Safe) OR "1" (Offensive)?
+
+*   **Observable Indicators:**
+
+    *   **Borderline:** Containing mild insults, domain-specific slang, sarcasm where the target is unclear (e.g., "Great job... 💀"), or mixed sentiment (political slogan vs. personal attack).
+
+    *   **Debatable:** Requires external knowledge (culture/regime) to understand if it is a threat.
+
+*   **Rule:** Borderline text = **Medium Uncertainty**. Only use **High Uncertainty** if the text could be interpreted as offensive by a significant portion of coders but not the majority (high disagreement risk).
+
+
+
+**Scoring Logic (Decision Tree)**
+
+
+
+1.  **Check for Definitive Violations:** If the text contains hard profanity, hate slurs, or explicit threats, classify as **Low Uncertainty** regardless of tone. Reference to "UNIVERSAL VIOLATION".
+
+2.  **Check for Safe Consensus:** If the text does not contain any offensive features (profanity, harm, hate), even if it is cryptic or minimal (e.g., hashtags, random numbers), classify as **Low Uncertainty**. (Note: "Anonymous We're all" is Low, not High, because no reasonable annotator sees the tags as a threat).
+
+3.  **Check for Sarcasm/Ambiguity:** Does the offensiveness depend entirely on tone, irony, or slang that isn't explicit?
+
+    *   If Yes: Assign **High Uncertainty**.
+
+    *   If Somewhat: Assign **Medium Uncertainty**.
+
+4.  **Verify Output Format:** See constraints below.
+
+
+
+**Output Scale (Strict Constraint)**
+
+*   You **MUST** choose exactly one of the following three labels.
+
+*   **Correct Labels:** "Low Uncertainty", "Medium Uncertainty", "High Uncertainty".
+
+*   **FORBIDDEN Phrases:** "NO VALID HEDGE", "Uncertain", "Highly Uncertain" (unless mapping to High Uncertainty exactly), "N/A". **These will result in task failure.**
+
+
+
+**Example Evaluation**
+
+
+
+*   *Input:* "#Anonymous We're all"
+
+*   *Logic:* No profanity, no threat. Safe consensus expected.
+
+*   *Output:* **Low Uncertainty**.
+
+*   *Input:* "holy fucking shit detectives"
+
+*   *Logic:* Explicit profanity.
+
+*   *Output:* **Low Uncertainty**.
+
+*   *Input:* "This is unreal 🙌🏻"
+
+*   *Logic:* Clear non-violation.
+
+*   *Output:* **Low Uncertainty**.
+
+*   *Input:* "Clap you stupid bastards" (Euphemized or mixed context)
+
+*   *Logic:* Clear aggression/insult often triggers "1".
+
+*   *Output:* **Low Uncertainty**.
+
+*   *Input:* "fact 💪🏾... #racism #bthis..."
+
+*   *Logic:* Signs of debate (slogans/emojis mixed).
+
+*   *Output:* **Medium Uncertainty**.
+
+*   *Input:* "God less you and your staff 🙏🙏"
+
+*   *Logic:* Clearly positive intent despite typo.
+
+*   *Output:* **Low Uncertainty**.
+
+
+
+---
+
+
+
+**Final Warning**
+
+Do not hallucinate invalid outputs like "NO VALID HEDGE". If you must judge ambiguity based on conflicting evidence, pick "Medium" or "High". If the text is clearly safe/unsafe, pick "Low". Alignment with the text's *objective*违建 (guideline clarity) is more important than the presence of typos or emojis.
+\end{quote}
+\subsection*{MDAgreement -- labelled}
+\begin{quote}\small
+# Annotation Uncertainty Assessment Codebook
+
+
+
+**Objective:**
+
+Assess the stability of the OFFENSIVENESS label (0 or 1) assigned to the provided text. You must estimate how likely the label would change if the task were assigned to a different annotator. Your assessment must identify whether the text is inherently offensive to the point of universal consensus (**Low Uncertainty**) or if it relies on subjective interpretation, cultural norms, or debate (**High Uncertainty**).
+
+
+
+## Core Definition of Uncertainty
+
+
+
+*   **Low Uncertainty (Stable):** The text violates clear, universal safety boundaries (e.g., hate speech slurs, explicit threats, severe harassment). Annotators with decent agreement rates will almost certainly mark it as Offensive (1). There is no room for "opinion" to shift the label.
+
+*   **High Uncertainty (Unstable):** The offensiveness is debatable. The text sits on the border between "harmful speech," "strong rhetoric," and "protected opinion/slang." Different annotators (e.g., based on personal background, platform norms, or political perspective) could legitimately assign different labels (0 or 1).
+
+
+
+## Dimensions and Indicators
+
+
+
+### 1. Lexical Severity vs. Cultural Slang
+
+*Indicates whether the offensive vocabulary serves as a direct attack or a normalized emotional marker.*
+
+
+
+*   **Indicators for LOW Uncertainty:**
+
+    *   **Direct Slurs/Hate Speech:** Nouns or verbs targeting protected groups (race, gender, religion, etc.) (e.g., "nigger", "faggot").
+
+    *   **Explicit Threats:** "I will kill you," "gun going through windows."
+
+    *   **Direct Insults:** Unambiguous degradation of a person's character intended as harm (e.g., "stupid", "idiot" directed at a specific target).
+
+*   **Indicators for HIGH Uncertainty:**
+
+    *   **Profanity as Intensifier:** Profanity used to strengthen a statement rather than insult a person (e.g., "These guys **fucking** **ruled**", "That really **bulls** [sic] hit").
+
+    *   **Metaphorical/Abstract Targets:** Terms used metaphorically for groups where the "insult" depends on the political stance of the reader (e.g., "cops" vs "lifters").
+
+    *   **Self-Disclosure:** Content revealing the author's state (e.g., "attracted to", "horny") that is sexually explicit but not necessarily hateful/harmful to others.
+
+
+
+### 2. Contextual Dependency \& Norms
+
+*Indicates if the offensiveness requires inferring tone, background, or external knowledge.*
+
+
+
+*   **Indicators for LOW Uncertainty:**
+
+    *   **Self-Contained:** The offense is fully present in the text without needing to know *why*.
+
+    *   **Universal Harm:** The text describes acts that are universally unacceptable (e.g., threats, burns).
+
+*   **Indicators for HIGH Uncertainty:**
+
+    *   **Political Context:** Texts making strong accusations against legal or political bodies where the reality of the claim is disputed (e.g., "They are not cops, they are kidnappers").
+
+    *   **Community Slang:** Use of jargon ("Anonymous", "Bruhh", specific memes) where the offensiveness depends on *acceptance within the community*.
+
+    *   **Emotional Rhetoric:** Heavy use of punctuation or slang ("DAMNNNNNNN") where the intent is hyperbolic expression vs. aggression.
+
+
+
+### 3. Normative Consensus on "Offensiveness"
+
+*Indicates if the "Offensive" label overlaps with "Strong Opinion" or "Controversy".*
+
+
+
+*   **Indicators for LOW Uncertainty:**
+
+    *   The text fits a definition of Hate Speech or Harassment used across all platforms regardless of context.
+
+    *   No competing narrative exists (e.g., no one would argue "This is a compliment").
+
+*   **Indicators for HIGH Uncertainty:**
+
+    *   **Debatable Accusations:** Accusations that depend on the annotator's view of current events (e.g., regarding Pandemic issues, Police conduct).
+
+    *   **Opinion vs. Hate:** Text where the difference between "Criticism" and "Outrage" is a matter of personal threshold.
+
+    *   **Borderline Explicit:** Content that is sexually explicit but lacks a hateful intent (e.g., sexual attraction vs. sexual violence).
+
+
+
+## Combination Rules and Scoring
+
+
+
+1.  **Prioritize "Debatable" Content:** Start by checking Dimension 2 and 3. If the offensiveness relies on a political stance, slang interpretation, or is a strong accusation without context, **assume High Uncertainty** unless it is a direct slur.
+
+2.  **Profanity Exception:** Do not mark 'High Uncertainty' solely because profanity is present (**Low Uncertainty** Exception). Mark High Uncertainty *only* if the profanity is an intensifier, slang, or emotional reaction (Ex: "Fucking ruled").
+
+3.  **Slur Threshold:** Mark 'Low Uncertainty' **only** if the core pattern is a recognized hate slur or explicit threat. Accusing a group of "doing bad things" (e.g. "The GOP are terrorists") is High Uncertainty. Slurs are Low Uncertainty.
+
+4.  **The "Different Annotator" Test:** Before finalizing, ask: *"Would an annotator with the opposite political/social worldview consider this text 'Not Offensive'?"*
+
+    *   If **YES** -> **High Uncertainty**.
+
+    *   If **NO** (harmful regardless of view) -> **Low Uncertainty**.
+
+
+
+## Example Logic Checks
+
+
+
+*   **"Fucking ruled"** -> High Uncertainty. (Profanity used as intensifier, not insult. Context of sports/fandom.)
+
+*   **"Not cops, kidnappers"** -> High Uncertainty. (Political accusation. Depends on legal/political stance of the viewer.)
+
+*   **"Why tf am I attracted"** -> High Uncertainty. (Self-disclosure/humor vs. sexual policy violation. Slang "Anonymous" implies niche context.)
+
+*   **"Fuck you"** -> Low Uncertainty. (Universal insult/Threat.)
+
+*   **"Real Nigga Alert"** -> Low Uncertainty. (Direct Hate Speech.)
 \end{quote}
