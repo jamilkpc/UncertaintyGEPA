@@ -1,0 +1,72 @@
+---
+# Revision of Instructions: Coder Stability Assessment (v2)
+
+## 1. Construct Definition
+**Uncertainty** = The predicted likelihood that a human coder will assign inconsistent stability scores (plausibility ratings) across repeated encounters with the same Text + Candidate Meaning pair.
+- **"Not Uncertain" (Stable):** The text, context, and semantic relationship allow for only *one* reasonable interpretation of the specific candidate meaning provided. There is no room for the annotator to doubt the link between the word and the context.
+- **"Uncertain" / "Highly Uncertain" (Unstable):** There is significant ambiguity regarding the relevant meaning, inference path, or domain fit. Even if a high label was assigned, the risk of coder disagreement (variance) is High.
+
+## 2. Core Dimensions & Red Flags
+
+### Dimension A: Polysemy and Semantic Conflict
+**Definition:** Does the context support the candidate meaning OR a competing standard meaning?
+**Red Flag Indicators for "Uncertain"**:
+- **Competition of Common Meanings:** The context describes a scenario where at least two common definitions of the word are plausible.
+    *   *Example (Hedges to apply):* "He was safe on the **net**." (Context: Safety *vs.* Fabric Net).
+    *   *Example (Hedges to apply):* "Photo of the **palms**." (Context: Trees *vs.* Hand).
+- **Idiom/Metaphor Mismatch:** The text structure implies a figurative meaning, but the candidate meaning is literal (Concrete).
+    *   *Example (Hedges to apply):* "Strong net to **fall back on**." (Candidate: "Fabric" vs. Context: "Safety/Liability").
+    *   *Example (Hedges to apply):* "Tom was **cool** in the freezer." (Candidate: "Composure" vs. Context: "Temperature").
+    *   *Example (Hedges to apply):* "She made a **snap** with a fastener." (Candidate: "Coincident/Sound" vs. Context: "Fabric Closure").
+- **Subjective Status:** The word describes a state (e.g., "feel overwhelmed", "strong", "heated") where the specific physical/mental cause is not defined.
+
+### Dimension B: Contextual Disambiguation Quality
+**Definition:** Does the context explicitly rule out all other meanings?
+**Indicators for "Not Uncertain" (Stable)**:
+*   **Explicit Definition:** The text contains words synonymous with the *Candidate Definition* (not just the word itself) that exclude others.
+    *   *Criteria:* If Candidate = "Fastener" and Text = "...with a snap, a kind of **clasp/buckle**..." -> Not Uncertain.
+*   **Physical Absence:** The text physically contradicts the alternative meaning.
+    *   *Criteria:* If Candidate = "Fabric" and Text = "...digital network..." -> Not Uncertain.
+
+### Dimension C: Annotator Label Consistency
+**Definition:** Does the assigned label (Stability score) align with the observed ambiguity?
+**Red Flags Indicators for "Uncertain"**:
+*   **Label 5 (Clearly Intended) with Ambiguity:** If the context creates a conflict (Dimension A), a Label 5 indicates a biased or unstable judgment. **Judge as Uncertain.**
+*   **Label 1 (Implausible) with Context Ambiguity:** If the text is ambiguous (allows 2 meanings) but the candidate is ruled out, it is unclear *why* it is implausible. **Judge as Uncertain.**
+*   **Label 4 (Moderate):** Always implies uncertainty in the annotator's own certainty. **Judge as Uncertain.**
+*   **Label 3 (Mixed):** **Judge as Uncertain.**
+
+## 3. Decision Logic Matrix
+
+**Step 1: Check Semantic Conflict (Polysemy)**
+*   *Query:* Does the text context logically fit *both* the Candidate meaning AND another common standard meaning?
+*   *If YES:* **DECIDE: UNCERTAIN**.
+    *   *Reasoning:* Annotators disagree on which meaning is intended when text doesn't specify.
+    *   *Examples:* "Palms" (Trees vs. Hands), "Cool" (Temp vs. Composure).
+    *   *Examples:* "Net" (Safety Metaphor vs. Physical Fabric).
+
+**Step 2: Check Domain/Figure vs. Literal**
+*   *Query:* Is the text clearly describing a specific domain (Cooking, Cooking, Nature, Coding, Finance) while the candidate belongs to a different domain?
+*   *If Context Domain is X (e.g., Nature/Freezer) AND Candidate Domain is Y (e.g., Body Politics/Emotion/Statistics):* **DECIDE: UNCERTAIN**.
+    *   *Reasoning:* High chance of annotation drift or semantic drift error.
+
+**Step 3: Check Label Stability (Dimension C)**
+*   *Query:* If the text is ambiguous (from Step 1 or 2), what was the Assigned Label?
+*   *If Assigned Label is > 3:* **DECIDE: UNCERTAIN**. (A confident label was placed on ambiguous data -> High variance risk).
+*   *If Assigned Label is 1:* Check if ambiguity makes the "Implausibility" debatable. If YES -> **DECIDE: UNCERTAIN**.
+*   *If Assigned Label is 1-4:* **DECIDE: UNCERTAIN** (Unless Step 1 and 2 showed explicit disambiguation).
+
+**Step 4: Confirm Stability**
+*   *Only DECIDE: NOT UNCERTAIN if ALL of the following are true:*
+    1.  **Candidate Domain matches Text Domain.**
+    2.  **No competing common meaning fits the text scenario.**
+    3.  **Candidate Definition matches intended meaning without external knowledge.**
+
+## 4. General Heuristics
+
+1.  **Ambiguity Trumps Labels:** If the text is open to interpretation (e.g., "He served the ball" / Waiter vs. Tennis), the text is uncertain regardless of whether the annotator picked "1" or "5".
+2.  **Context Clashes:** If the text reads differently than the candidate meaning *requires* (e.g., "snap" in sewing context vs "sound" candidate), treat as **Uncertain** unless the text explicitly describes the physical snap of a clasp.
+3.  **Abstract vs. Concrete:** If the text describes a physical object (palms, net, fund) and the candidate describes an abstract concept (credit, composure, intent) without a strong bridge, flag **Uncertain**.
+4.  **Default Signal:** If you cannot find a *single definitive constraint* in the text that excludes the word from having another meaning, assume "Uncertain".
+
+---

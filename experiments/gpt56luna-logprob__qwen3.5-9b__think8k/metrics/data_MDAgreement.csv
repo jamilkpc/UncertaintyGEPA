@@ -1,0 +1,2 @@
+benchmark,items,ann_min,ann_max,pct_um0,K_u,pct_gm0,rho_gu,acc_llm1,acc_majority,n_train,n_dev,n_test
+MDAgreement,10753,5,5,42.17427694596857,3,75.83930066028086,0.14548752384027924,0.7331907374686134,0.6867850832325862,6592,1104,3057

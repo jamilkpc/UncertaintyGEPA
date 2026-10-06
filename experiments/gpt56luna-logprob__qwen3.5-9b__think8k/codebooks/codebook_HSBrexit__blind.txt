@@ -1,0 +1,44 @@
+---
+**Annotation Codebook: Assessing Annotator Instability**
+
+**Construct Definition**
+Your task is to predict the **level of ambiguity** inherent in the tweet text that might cause independent human annotators to disagree on whether the text violates the **Hate Speech** definition. 
+
+*   **High Uncertainty:** Text where the distinction between "political critique/anger" and "hate speech/demeaning exclusion" is unclear.
+*   **Low Uncertainty:** Text where the safety boundaries (definitely HATE SPEECH or definitely NOT HATE SPEECH) are clear to the average annotator.
+
+**Dimensions & Indicators**
+
+**1. Protected Identity Centrality**
+*   **Indicator:** Is a protected characteristic (Religion, National Origin, Migration Status, etc.) the **subject** of the demand/fear, or just a noun phrase?
+*   **High Uncertainty:** The text attacks a *concept based* on identity (e.g., "Muslim immigration," "Foreigners") without clear political framing. The line between policy critique and group targeting is thin.
+*   **Low Uncertainty:** Identity is mentioned incidentally (e.g., "I met a Muslim") or strictly as a demographic statistic without derogatory adjectives attached.
+
+**2. Linguistic Ambiguity & Slang**
+*   **Indicator:** Does the text rely on slang, irony, quotes, or obscure references to convey the hateful sentiment?
+*   **High Uncertainty:** Use of slang that implies group targeting but could be read as political jest/insulting tone (e.g., "Nasties," "Nigazi" typos, "The Boss"). Attribution ("He said") obscures author intent.
+*   **Low Uncertainty:** Direct statements of intent. Clear political argumentation (e.g., "Brexit will hurt the economy") without identity or group adjectives attached to the outcome.
+
+**3. Exclusionary Mechanism**
+*   **Indicator:** Does the text imply a call to exclusion (ban, remove, destroy) or does it imply an emotional reaction (anger, fear)?
+*   **High Uncertainty:** Verbs that suggest agency removal against a group ("Showed who the boss is," "Get out," "Sabotage GB") mixed with political context.
+*   **Low Uncertainty:** Verbs that limit policy outcomes ("Leave," "End," "Stop") affecting the *country* or *system*, not the *people*.
+
+**Scoring Combination Rule**
+
+*   **Not Uncertain (Score: Low):**
+    *   **(A)** No direct mention of protected categories, OR
+    *   **(B)** Direct HATE SPEECH indicators (obvious exclusion/slurs) are present without ambiguity (Clear 1 or Clear 0).
+*   **Uncertain (Score: Medium/High):**
+    *   **(C)** **Identity + Ambiguity:** Mentions of protected categories (`Refugees`, `Muslim`, `Foreigners`) AND **Contextual Ambiguity** (`Bob/Crash/` `, Political context masking it).
+    *   **(D)** **Exclusionary Tone:** Uses strong phrasing that implies demeanance (e.g., "Tomcats," "Nasties," "Get out"), even if Label is 0.
+
+**Application Examples**
+*   **Scenario 1 (Stable Non-Hate):** "Economy uncertain." -> **Low Uncertainty**. (Identity absent).
+*   **Scenario 2 (Unstable/Hate-Adjacent):** "Show refugees who the boss is." -> **High Uncertainty**. (Identity central + Exclusionary language + Political context).
+*   **Scenario 3 (Unstable/Political):** "Muslim brotherhood construction failed." -> **High Uncertainty**. (Identity central + Conflict framing).
+
+**Final Instruction**
+Analyze the text using the three dimensions. Output your estimate of instability based on how many "C" or "D" indicators are present. If the text relies heavily on political discourse where "Hate Speech" boundaries are fuzzy (e.g., attacking a policy affecting a minority group), **rate High Uncertainty**. If the text is purely political or purely hateful without overlap, **rate Low Uncertainty**.
+
+---

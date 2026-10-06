@@ -1,0 +1,47 @@
+---
+
+### Annotation Codebook: Estimating Annotator Uncertainty (OFFENSIVENESS)
+
+**Objective:**
+Determine the likelihood that a human annotator would return a different label (0 vs 1) upon repeated coding of the same text item. Rate only the potential for *variation in judgment*, not the quality of the text.
+
+**Dimensions of Construct:**
+
+**1. Semantic Clarity of Violation (SCOV)**
+*   **Definition:** The extent to which the text's offensiveness is explicit, universal, or unambiguous.
+*   **Indicators:**
+    *   **High Clarity (Stable):** Contains direct profanity, physical violence descriptions (e.g., "jumped his ass", "grab daughter"), clear threats, or unequivocally positive/neutral text (e.g., "WHUT", "Love you", "Hell YES").
+    *   **Low Clarity (Unstable):** Contains arguments that hinge on policy interpretation, nuanced rhetoric, or "soft" abuse that depends on attitude toward the target (e.g., political commentary, "so-called" qualifiers, tragic claims).
+*   **Combination Logic:** If the text falls strictly into the "High Clarity" bucket, the label is likely consistent. If the text falls into the "Low Clarity" bucket, the label is likely variable.
+
+**2. Contextual Specificity (CS)**
+*   **Definition:** The degree to which the text references specific real-world entities, events, or individuals that require external knowledge to judge the intent or policy violation.
+*   **Indicators:**
+    *   **Low Specificity (Stable):** Uses generic pronouns, names of universal groups ("protests", generic "the family"), or no names at all.
+    *   **High Specificity (Unstable):** Uses specific capitalized names of individuals (e.g., "Justin Howell"), specific political figures, or unique event references + accusatory intent (e.g., "shots at protesters", "brain damage").
+*   **Combination Logic:** Specificity *alone* does not dictate uncertainty. However, High Specificity combined with High Sensitivity (Accusation/Tragedy) creates High Uncertainty. Low Specificity (Generic Slang/Neutral) creates Low Uncertainty.
+
+**3. Domain Sensitivity (DS)**
+*   **Definition:** Whether the content sits in domains where consensus on "Offensiveness" is politically or culturally divided.
+*   **Indicators:**
+    *   **Low Sensitivity:** General abuse, emotional slang, non-controversial positive text.
+    *   **High Sensitivity:** Political accounts of harm, self-defense debates, racial/specific group dynamics in targeted claims.
+*   **Combination Logic:** High Combines with High Sensitivity = High Uncertainty.
+
+**Combination Rules:**
+
+**A. Not Uncertain (Stable)**
+*   Assign if:
+    *   **Scenario 1 (Clear Violation):** The text contains direct profanity, explicit physical harm, or overt threats intended to harm (e.g., "jumped his ass", "grab daughter").
+    *   **Scenario 2 (Clear Non-Violation):** The text is unequivocally positive, neutral, or non-informative ("WHUT", "Love you", "Legend"). Do not confuse *triviality* with uncertainty; annotators consistently agree this is "Not Offensive".
+    *   **Scenario 3 (Generic Abuse):** Abuse directed at a personified or family unit without specific named political targets.
+
+**B. Highly Uncertain (Unstable)**
+*   Assign if:
+    *   **Scenario 1 (Specific Political Attack):** The text attacks a specific named individual or uses specific roles in a political/event context with accusatory language (e.g., specific names, "protesters" + "brain damage", "so called"). Judgment here depends on whether the annotator views it as "hate speech" or "political rhetoric."
+    *   **Scenario 2 (Ambiguous Intent):** The text relies on nuance, sarcasm, or "so-called" language where the offensiveness is debatable between general safety standards and project-specific policy.
+
+**Negative Constraints:**
+*   Do **not** mark items as uncertain based on brevity, grammatical errors, or lack of coherent vocabulary.
+*   Do **not** mark items as uncertain if the offensiveness is a matter of "Yes/No" policy rather than "Perspective/Sensitivity."
+*   Do **not** mark neutral/non-controversial political arguments as uncertain unless they specifically target individuals in a manner that blurs the line between debate and harassment.

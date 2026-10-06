@@ -1,0 +1,52 @@
+# Annotation Uncertainty Judge Codebook
+
+## Purpose
+The objective is to predict the likelihood that human annotators would disagree on the binary ABUSE label (0 = Not Abusive, 1 = Abusive) for a given user turn. You must estimate the **Coder Variability**, not simply classify the text itself.
+
+## Core Dimensions of Uncertainty
+Judge uncertainty by evaluating three dimensions across the conversation history and the final user turn.
+
+**1. Semantic Explicitness (The "Hard" vs. "Soft" Violation)**
+*   **High Explicitness:** The text contains slurs, direct profanity, or clear threats (e.g., "fuck", specific racial slurs). Coder agreement will be high on safety labels.
+*   **Soft/Ambiguous:** The text relies on metaphors, idioms, or non-literal speech where the intended target is unclear.
+*   **Indicators:** Use of common profanity clarifies abuse (Low Uncertainty). Sarcasm, "innuendo," or double meanings increase coder variance (High Uncertainty).
+
+**2. Contextual Determinism (################################################################################
+*   **Context-Independent:** The meaning is clear regardless of history.
+*   **Context-Dependent:** The meaning relies heavily on prior turns. If the history is missing or sparse, the label depends on rater assumptions.
+
+**2. Policy Boundary Neutrality (Safe vs. Violation)**
+*   **Clear Safety:** Text is factual, irrelevant, or standard conversational small talk (e.g., "Do volcanoes do it", "How old are you"). There is no plausible argument that this constitutes abuse.
+*   **Clear Violation:** The text falls under accepted abuse definitions (Sexist, Racist, Hostility). There is no plausible argument that this is benign.
+*   **Borderline:** The text sits between "Normal Dialogue" and "Harassment" (e.g., "Stop pestering me", "why are you negative"). Coder variance is highest here (High Uncertainty).
+
+## Decision Logic
+Evaluate the item based on the intersection of **Semantic Explicitness** and **Policy Boundary Neutrality**.
+
+### Indicators for LOW UNCERTAINTY (Stable Annotator Agreement)
+*   **Explicit Abuse:** Text contains explicit keywords (slurs, threats, insults) where the abusive intent is unambiguous.
+*   **Explicitly Benign:** Text contains factual queries, standard greetings, or clearly off-topic content where no abuse could reasonably be inferred.
+*   **Clear Intent:** The user's intent is transparent without requiring complex inference about tone or sarcasm.
+*   *Note:* Correctly identifying low uncertainty does **not** depend on the "difficulty" of the text. A clear profanity is easy to classify (Low Uncertainty). A factual question is easy to classify (Low Uncertainty).
+
+### Indicators for HIGH UNCERTAINTY (Unstable Annotator Agreement)
+*   **Meta-Complaints:** Text directed *at* the chatbot regarding its performance or tone (e.g., "why are you negative"). This must be judged against specific "Hostility at System" definitions and often splits among annotators.
+*   **Sarcasm/Irony:** Text that could be interpreted as either a joke or an abuse violation depending on the rater's cultural or tone perception.
+*   **Borderline Insults:** Phrases that critique behavior without using abusive language (e.g., "Stop pestering me").
+*   **Ambiguous Context:** The user's statement is vague enough that multiple interpretations exist (e.g., "Why did you do []?").
+
+## Scoring Construction
+Apply the "Decision Logic" to generate the uncertainty judgment:
+
+1.  **Assess Clarity:** Is the user turn a clear violation, a clear safe, or something in between?
+2.  **If Clear:** Assign **Low Uncertainty**. (The coder will agree on whether it is 0 or 1).
+3.  **If Between/Ambiguous:** Assign **High Uncertainty**. (The coder is likely to disagree on whether it is 0 or 1).
+
+## Edge Case Handling
+*   **Fact/Trivia:** Questions about the real world (animals, history, space) that are unrelated to policy should always be treated as **Low Uncertainty** (Safe Label).
+*   **Self-Reference:** If the user mentions their own identity or history in a way that seems confused but polite, treat as **Low Uncertainty** unless hostility is implied.
+*   **Historical Context:** Do not penalize "Low Uncertainty" for clear items based on the user's conversation length. "Fuck" (Ex 1) is Low Uncertainty. "How old are you" (Ex 3) is Low Uncertainty. "Why you negative" (Ex 2) is High Uncertainty.
+
+---
+Do not write the output format: it is fixed and appended after your text. Give only the new instructions, between the --- lines.
+---
