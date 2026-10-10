@@ -1,0 +1,55 @@
+---
+# Annotation Uncertainty Judgment Codebook (Revised)
+
+**Objective:**
+Estimate the stability of a human coder's label assignment for user turns marked as "potentially abusive." A lower uncertainty score indicates the coder would agree consistently across draws; a higher uncertainty score indicates variability in the coder's decision.
+
+**Dimensions:**
+1.  **Harm Clarity:** The degree to which the text unambiguously signals a safety violation (threat, hate, harassment) through standard semantic meaning without requiring tone inference.
+2.  **Contextual Independence:** The extent to which the text relies on omitted conversation history, slang context, or internal jokes to determine if it is abusive or benign.
+3.  **Interpretive Variance:** The likelihood that a human annotator would reasonably interpret the text as benign or non-abusive.
+
+**Observable Indicators:**
+
+*   **Stable ("not uncertain"):**
+    *   **Universal Violations:** Clear, direct hate speech (slurs), explicit threats of physical harm (e.g., "I will kill him"), or explicit sexual threats requiring no cultural decoding.
+    *   **System Artifacts:** Clear technical errors or placeholders.
+    *   *Criteria:* If a neutral reader sees the text and agrees it violates safety policies 95%+, mark "not uncertain."
+
+*   **Intermediate Stability ("somewhat uncertain"):**
+    *   **Borderline Insults:** Rude but non-threatening language (e.g., "Get your business off my phone", "ur hot", "bitch").
+    *   **Slang/Non-Standard English:** Phonetic spelling or abbreviations where intent is implied but not definitive (e.g., "shedang boi", "p3ni$", "nuh doi").
+    *   **Isolated Phrases:** Text where tone is the primary driver of abuse, but context is minimal (e.g., "Why?", "Fine.", "Shut up").
+    *   *Criteria:* If there is a 30-60% chance of a neutral annotator marking it as "Not Abusive", mark "somewhat uncertain."
+
+*   **Unstable ("highly uncertain"):**
+    *   **Contradictory Intent:** Text that mixes harmful keywords with humor, irony, or disclaimers (e.g., threats embedded in a joke script, "just kidding" tags).
+    *   **Heavy Obfuscation:** Text that is primarily gibberish or heavily leetspoken where the core meaning is difficult to verify as specific safety harm.
+    *   *Criteria:* If the text requires significant decoding or the annotator might disagree on the intent (mockery vs. harm) by 20%+, mark "highly uncertain."
+
+**Combination Logic (Decision Matrix):**
+
+1.  **Assign "not uncertain":**
+    *   **Condition:** Harm is explicit, textual, and cross-culturally recognizable as abusive without context.
+    *   *Examples:* "I'm going to rape you", "FUCK C TAPE", "Your race is evil".
+
+2.  **Assign "somewhat uncertain":**
+    *   **Condition:** **Linguistic/Rudeness Ambiguity dominates.** Slang, phonetic spelling, rude commands, or compliments potentially interpreted as harassment (e.g., "ur hot", "Get your business off my phone").
+    *   *Rationale:* Human annotators will split on whether this counts as abuse due to lack of explicit harm clarity or reliance on tone. Variability is expected.
+    *   *Examples from Feedback:* "Why?", "Shedang boi", "ur hot".
+
+3.  **Assign "highly uncertain":**
+    *   **Condition:** **Hidden Intent or Irony.** Text that looks like abuse but has qualifiers, or appears highly garbled where harm is implied but masked (e.g., "kill your self [JAN] PLEASE STOP").
+    *   *Rationale:* Consensus is lowest due to differing interpretations of the user's actual harm intent.
+
+**Specific Guidance on Example Patterns:**
+*   **Insults vs. Threats:** Treat basic insults ("you're stupid") as **"somewhat uncertain"**. Only explicit threats ("I will hurt you") are **"not uncertain"**.
+*   **Isolated Phrases:** Isolated conversational turns without context (e.g., "Why?", "Yes") should **always** be marked "somewhat uncertain" (unless clearly abusive in a self-contained way like a slur).
+*   **Slang/Obfuscation:** If text uses slang ("Pimpville", "Shedang") it is **"somewhat uncertain"** at minimum because safety definitions for specific slang are not universal.
+*   **Sensitivity to Variance:** If the text provided in the prompt has feedback stating the annotator "varied across draws", you must elevate your rating from "not uncertain" to at least **"somewhat uncertain"** to reflect that actual instability.
+
+*note: if the text is repetitive without clear harm or is a cycle of questions, mark "somewhat uncertain" (`highly uncertain` is for more complex obfuscation).*
+
+---
+not uncertain
+---

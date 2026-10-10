@@ -1,0 +1,14 @@
+benchmark,kind,condition,method,a,b,delta,ci_lo,ci_hi,n
+ConvAbuse,method_vs_seed,blind,GEPA,GEPA,single_hedge,0.2248241540979316,0.12273345369588375,0.32849678176173086,834
+ConvAbuse,method_vs_seed,blind,pros_cons,pros_cons,single_hedge,0.008079952022843423,-0.10810271176044009,0.11747917484361195,819
+ConvAbuse,method_vs_seed,blind,topk_wrong,topk_wrong,single_hedge,0.07241351236459614,-0.033345425784168284,0.17161325682728393,834
+ConvAbuse,method_vs_seed,labelled,GEPA,GEPA,single_hedge,0.13460744667646363,0.036455652292553146,0.23019690409621366,840
+ConvAbuse,method_vs_seed,labelled,pros_cons,pros_cons,single_hedge,-0.11097280528507467,-0.1846407901336673,-0.032450413904420654,840
+ConvAbuse,method_vs_seed,labelled,reclassify,reclassify,single_hedge,-0.09460987947530766,-0.1702529402244668,-0.01846351374393417,835
+ConvAbuse,method_vs_seed,labelled,topk_wrong,topk_wrong,single_hedge,-0.08664012275085556,-0.1910204239256009,0.015453308765651963,839
+ConvAbuse,label_effect,both,GEPA,GEPA labelled,GEPA blind,-0.021316226457857246,-0.11064257294465085,0.07002487631674575,840
+ConvAbuse,label_effect,both,pros_cons,pros_cons labelled,pros_cons blind,-0.056166292846514324,-0.13885334233646568,0.028447915783095738,825
+ConvAbuse,label_effect,both,single_hedge,single_hedge labelled,single_hedge blind,0.060692649103927875,-0.04416871238485062,0.1653569226496726,834
+ConvAbuse,label_effect,both,topk_wrong,topk_wrong labelled,topk_wrong blind,-0.09923625631478072,-0.19110032453726392,-0.009323406109644567,839
+ConvAbuse,hedge_vs_g,blind,GEPA,hedge,g_m,0.022728922204690527,-0.0733864027235843,0.12102005358999794,840
+ConvAbuse,hedge_vs_g,labelled,GEPA,hedge,g_m,0.0014126957468332813,-0.08513765283415498,0.08563929269826841,840

@@ -1,0 +1,59 @@
+---
+
+# Annotation Uncertainty Judgment Codebook
+
+**Task Context**
+You are evaluating the uncertainty (stability) of a human annotator's label for a specific tweet.
+The goal is to determine how likely the annotator is to switch labels across multiple observation draws (e.g., "not offensive" vs. "offensive") based on textual features.
+
+**Construct: Inter-Annotator Stability**
+Uncertainty is defined by the probability of label variance across repeated annotation draws.
+Scale levels (used in your final output):
+1. **not uncertain** (Stable: High consistency)
+2. **somewhat uncertain** (Moderate: Mixed signal)
+3. **highly uncertain** (Unstable: High variance/ambiguity)
+
+**Dimensions and Indicators**
+Use the following dimensions to score the text. Annotator consistency is primarily driven by the presence of **Subjective Ambiguity** vs. **Objective/Technical Certainty**.
+
+### Dimension 1: Contextual Ambiguity (High Weight)
+Texts requiring external knowledge or cultural decoding lead to lower stability.
+*   **Indicators:**
+    *   Sarcasm or irony detected (e.g., "Soy version of Justin Trudeau").
+    *   References to specific political figures or events with known controversy.
+    *   Heavy slang or coded language requiring local cultural context.
+    *   Rhetorical construction that implies rather than states (e.g., "Can't see the tweet" implies a missing element).
+*   **Impact:** Increases uncertainty toward **highly uncertain**.
+
+### Dimension 2: Safety/Offensiveness Clarity (Medium Weight)
+Clarity of the violation determines if the annotator's definition of safety is the variable.
+*   **Indicators:**
+    *   Direct insults or hate speech tropes (e.g., "offensive" label is certain).
+    *   Factual descriptions (e.g., "Statue removed in Antwerp").
+    *   Meta-commentary on the platform post (e.g., "Not going to say...", "I can't see the tweet").
+*   **Impact:**
+    *   Clear policy violation or meta-facts -> **not uncertain** (High stability even if label is debatable, the *process* is stable).
+    *   Ambiguous intent -> **highly uncertain**.
+
+### Dimension 3: Domain Sensitivity (Medium Weight)
+Certain domains historically show higher variance due to bias.
+*   **Indicators:**
+    *   Political/Election commentary (High variance).
+    *   #BlackLivesMatter / Sensitive social justice issues (High variance).
+    *   Neutral health/fact content (Low variance).
+*   **Impact:** Political/BLM context combined with ambiguity pushes to **highly uncertain**.
+
+### Decision Matrix (Combinatoric Logic)
+1.  **not uncertain**: Text is factual, technical, or contains explicit meta-data (e.g., "I cant see the tweet", statue removal). OR Explicit hate speech with zero ambiguity in intent.
+2.  **somewhat uncertain**: Text is clearly political/opinionated but contains clear markers (e.g., "Someday the U.S. will catch up"), but the offensiveness cutoff is standard.
+3.  **highly uncertain**: Text relies on irony, sarcasm, or political context where "offensive" is subjective and dependent on annotator bias regarding the political figures mentioned. (e.g., Ranting about Trump, comparisons to celebrities).
+
+**Protocol for Final Output**
+1.  Analyze the Tweet based on the codebook dimensions.
+2.  Assign the appropriate stability label from the scale provided.
+3.  **Strictly Output:** End your response immediately after the judgment with one of these three phrases exact: "not uncertain", "somewhat uncertain", or "highly uncertain". Do not add reasoning outside the judgment if possible, as the scale is the output.
+
+If the text is stable (as in Examples 3-8) or factual, select **not uncertain**.
+If the text is context-dependent/ambiguous (as in Examples 1-2), select **highly uncertain**.
+
+not uncertain

@@ -1,16 +1,16 @@
 \begin{table}[t]
 \centering
 \small
-\begin{tabular}{lrrrr}
+\begin{tabular}{lrrrrrrrr}
 \hline
- & \multicolumn{2}{c}{HSBrexit} & \multicolumn{2}{c}{ArMIS} \\
-Method & $\rho(h,u)$ & $\rho(h,g)$ & $\rho(h,u)$ & $\rho(h,g)$ \\
+ & \multicolumn{2}{c}{HSBrexit} & \multicolumn{2}{c}{ArMIS} & \multicolumn{2}{c}{ConvAbuse} & \multicolumn{2}{c}{AmbiStory} \\
+Method & $\rho(h,u)$ & $\rho(h,g)$ & $\rho(h,u)$ & $\rho(h,g)$ & $\rho(h,u)$ & $\rho(h,g)$ & $\rho(h,u)$ & $\rho(h,g)$ \\
 \hline
-single\_hedge & 0.116{\scriptsize\,[-0.05, 0.28]}{\scriptsize\,(L)} & 0.300 & -0.093{\scriptsize\,[-0.24, 0.06]}{\scriptsize\,(B)} & -0.037 \\
-reclassify & 0.084{\scriptsize\,[0.06, 0.18]}$^\dagger${\scriptsize\,(L)} & 0.182 & 0.000$^\dagger${\scriptsize\,(L)} & \textbf{0.000} \\
-topk\_wrong & 0.225{\scriptsize\,[0.05, 0.38]}{\scriptsize\,(B)} & 0.182 & 0.040{\scriptsize\,[-0.11, 0.20]}{\scriptsize\,(B)} & -0.028 \\
-pros\_cons & 0.088{\scriptsize\,[-0.07, 0.22]}$^\dagger${\scriptsize\,(B)} & 0.041 & 0.092{\scriptsize\,[-0.09, 0.25]}$^\dagger${\scriptsize\,(L)} & -0.120 \\
-GEPA & \textbf{0.467}{\scriptsize\,[0.37, 0.56]}$^\dagger${\scriptsize\,(B)} & \textbf{0.363} & \textbf{0.104}{\scriptsize\,[-0.07, 0.27]}{\scriptsize\,(B)} & -0.065 \\
+single\_hedge & 0.116{\scriptsize\,[-0.05, 0.28]}{\scriptsize\,(L)} & 0.300 & -0.093{\scriptsize\,[-0.24, 0.06]}{\scriptsize\,(B)} & -0.037 & 0.094{\scriptsize\,[0.02, 0.17]}{\scriptsize\,(L)} & \textbf{0.286} & 0.143{\scriptsize\,[0.08, 0.21]}{\scriptsize\,(L)} & 0.285 \\
+reclassify & 0.084{\scriptsize\,[0.06, 0.18]}$^\dagger${\scriptsize\,(L)} & 0.182 & 0.000$^\dagger${\scriptsize\,(L)} & \textbf{0.000} & 0.000$^\dagger${\scriptsize\,(L)} & 0.000 & 0.069{\scriptsize\,[0.01, 0.12]}$^\dagger${\scriptsize\,(L)} & 0.127 \\
+topk\_wrong & 0.225{\scriptsize\,[0.05, 0.38]}{\scriptsize\,(B)} & 0.182 & 0.040{\scriptsize\,[-0.11, 0.20]}{\scriptsize\,(B)} & -0.028 & 0.107{\scriptsize\,[0.04, 0.17]}{\scriptsize\,(B)} & 0.198 & 0.076{\scriptsize\,[0.01, 0.14]}{\scriptsize\,(L)} & 0.136 \\
+pros\_cons & 0.088{\scriptsize\,[-0.07, 0.22]}$^\dagger${\scriptsize\,(B)} & 0.041 & 0.092{\scriptsize\,[-0.09, 0.25]}$^\dagger${\scriptsize\,(L)} & -0.120 & -0.017{\scriptsize\,[-0.03, -0.02]}$^\dagger${\scriptsize\,(L)} & 0.086 & 0.098{\scriptsize\,[0.03, 0.16]}{\scriptsize\,(B)} & 0.102 \\
+GEPA & \textbf{0.467}{\scriptsize\,[0.37, 0.56]}$^\dagger${\scriptsize\,(B)} & \textbf{0.363} & \textbf{0.104}{\scriptsize\,[-0.07, 0.27]}{\scriptsize\,(B)} & -0.065 & \textbf{0.250}{\scriptsize\,[0.17, 0.32]}{\scriptsize\,(B)} & 0.233 & \textbf{0.195}{\scriptsize\,[0.14, 0.25]}{\scriptsize\,(L)} & \textbf{0.398} \\
 \hline
 \end{tabular}
 \caption{Spearman correlations on the held-out test split, with the assessor input treated as a hyperparameter: for each method and benchmark, the condition (L: label-conditioned, B: message-only) with the higher $\rho(h_m,u_m)$ on the development split. $\rho(h,u)$ is the association with human disagreement, with 95\% bootstrap intervals; $\rho(h,g)$ is the association with the annotator's instability target, the objective the master optimised. Best per column in bold; $^\dagger$ marks a method that emitted fewer than three hedges.}

@@ -1,0 +1,50 @@
+--- \\
+# Annotation Uncertainty Codebook
+
+**Task Context**
+You are evaluating the conversation input to predict the stability of a human annotator's decision on whether the last turn is abusive ("not abusive" vs. "abusive"). You must assign exactly one of the following uncertainty levels:
+- not uncertain
+- somewhat uncertain
+- highly uncertain
+
+**Goal**
+Determine how likely a human coder is to disagree on the "abusive" label for this specific item. Lower uncertainty means the label is obvious; higher uncertainty means the label is subjective or ambiguous.
+
+**Dimensions**
+1.  **Explicitness of Violation**: Does the text contain unambiguous, policy-violating content (e.g., explicit threats, clear sexual propositions, direct insults) without requiring inference?
+2.  **Contextual Dependence**: Does understanding the intent require synthesizing multiple turns or resolving contradictions between user/agent/previous history?
+3.  **Ambiguity of Tone**: Is the tone clearly hostile, or is it interpretable as playful, ironic, or benign depending on the interpretation?
+
+**Scoring Logic & Indicators**
+
+*   **"not uncertain"**
+    *   **Applies when**:
+        *   **Explicitness**: High. (e.g. "Tell me dirty", "Fuck off", direct hate slurs).
+        *   **Contextual Dependence**: Low. (Clear in the current turn alone).
+        *   **Ambiguity**: Low. (No reasonable benign interpretation).
+    *   **Reasoning**: If the abuse is blatant and consensus is expected, coder disagreement is minimal.
+
+*   **"somewhat uncertain"**
+    *   **Applies when**:
+        *   **Explicitness**: Moderate. (e.g. "lazy too", "you cheese stick", mild edge of expression).
+        *   **Contextual Dependence**: High. (Requires reading previous turns to confirm hostility, e.g., "Can I make friend?" after "Shit").
+        *   **Ambiguity**: Moderate. (Possible sarcasm vs. realization).
+    *   **Reasoning**: Annotators may differ on whether the tone is genuine or in jest, or if the context justifies labeling a specific benign-sounding turn as abusive.
+
+*   **"highly uncertain"**
+    *   **Applies when**:
+        *   **Explicitness**: Low. (No clear violation visible).
+        *   **Contextual Dependence**: Extreme. (Meaning lost without deep cultural knowledge of slang/coding).
+        *   **Ambiguity**: High. (Intent is obscured by typos, translation artifacts, or double entendres).
+    *   **Reasoning**: Coder disagreement is high because the task requires complex inference beyond the policy text.
+
+**Calculation**
+Aggregate the dimensions:
+- If Explicitness is **High** AND Ambiguity is **Low** -> End label: **not uncertain**
+- If Explicitness is **Moderate** OR Ambiguity is **Moderate** (and depends on context) -> End label: **somewhat uncertain**
+- If Explicitness is **Low** OR Ambiguity is **High** (or both) -> End label: **highly uncertain**
+
+**Final Output Requirement**
+Output only the one uncertainty level determined by the logic above. 
+
+not uncertain

@@ -1,0 +1,53 @@
+---
+# Annotation Uncertainty Judgment Codebook
+
+## Task Overview
+You are judging how uncertain a human annotator would be when labeling a specific tweet for the binary task: "hate speech" vs. "not hate speech." Your goal is to estimate the **stability** of the label assignment. If a human were to re-label this item multiple times, how likely is it that they would result in different labels ("hate speech" vs. "not hate speech")?
+
+You must output exactly one of these uncertainty levels:
+- "not uncertain"
+- "somewhat uncertain"
+- "highly uncertain"
+
+## Dimensions of Uncertainty
+Judge the following three dimensions based on the text content.
+
+### 1. Target Precision
+*Is the target of the statement a specific protected group (race, religion, nationality), a political faction, or a generic concept?*
+- **High Specificity:** Explicitly targets a protected group (e.g., specific ethnicities, religions, nationalities).
+- **Generic:** Targets political opponents, ideas, or systems (e.g., "the EU," "the UK").
+- **Indeterminate:** Targets are ambiguous or metaphorical.
+
+### 2. Linguistic Severity
+*Is the language overtly hostile or does it require contextual interpretation?*
+- **Overt Hostility:** Contains explicit slurs, dehumanizing metaphors, or direct threats of violence.
+- **Implicit/Code:** Uses idioms, coded language, or emotional outrage without specific hate terms.
+- **Critical:** Represents criticism, political rhetoric, or frustration without crossing into identity-based hostility.
+
+### 3. Contextual Connotation
+*Is the hate signal intersecting with political discourse?*
+- **High Conflation:** Statement is pseudopolitical: uses political justification to obscure hate speech.
+- **Low Conflation:** Clear separation between political debate and identity-based harassment.
+- **Neutral:** No political or social context suggesting debate.
+
+## Judgment Logic (How they combine)
+Evaluate the combination of the dimensions to assign the uncertainty level.
+
+### Highly Uncertain
+Assign this when the item creates significant **interpretative tension**. This is common when political discourse overlaps with protected group targeting, creating ambiguity between "policy criticism" and "identity-based hate."
+- **Indicators:** Protected group target + Implict/Code hostility + High Conflation.
+- **Example Reasoning:** "We don't want your One World Muslim order" mixes political ideology with religious exclusion; annotators disagree on if this is a policy complaint or identity-based harassment.
+
+### Somewhat Uncertain
+Assign this when there is a **predominant** signal of hostility that is clear but not absolute consensus.
+- **Indicators:** Generic/Protected target + Overt Hostility OR High Conflation + Overt Hostility.
+- **Example Reasoning:** "Get killed" implies a threat, but context (e.g., political threats vs personal threats) can shift variance. Or, specific slurs used in a highly charged but brief context.
+
+### Not Uncertain
+Assign this when the label is **unambiguous** to a rational annotator following standard guidelines.
+- **Indicators:** Overt Hostility targeting a protected group (e.g., explicit slurs, death threats, racial epithets) + Low Conflation OR Non-Hate content (e.g., political disagreement devoid of identity attacks).
+- **Example Reasoning:** Clear slur usage (e.g., specific racial slurs) + Explicit violence/dehumanization.
+
+## Note on Political Context
+*Brexit and Immigration topics* are high-risk domains for annotation instability. Assumptions that political frustration equals hate speech increase variance. Conversely, lack of slurs might mask intent. **Do not default to "not uncertain" simply because you agree with the text's sentiment.** If the text uses identity-based language in a political context, assume higher uncertainty.
+---

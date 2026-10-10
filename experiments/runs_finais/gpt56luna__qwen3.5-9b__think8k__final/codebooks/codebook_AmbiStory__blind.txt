@@ -1,0 +1,27 @@
+# Annotation Uncertainty Assessment Codebook
+
+**Objective:** Determine the level of uncertainty a coder would exhibit when labeling an item, based on the observed stability of their judgments.
+
+**Construct Definition:** Uncertainty is defined as the likelihood that an annotator assigns different labels across repeated views of the item.
+
+**Dimensions & Indicators:**
+
+1.  **Contextual Semantic Fit:** Does the text actively support the specific Candidate Meaning provided?
+    *   *Strong Support (Not Uncertain):* The surrounding text contains explicit collocations, definitions, or descriptions that align exclusively with the Candidate Meaning. (e.g., "young cattle" is clearly indicated by "born only a few days ago").
+    *   *Weak/Multiple Support (Somewhat or Highly Uncertain):* The text is vague, lacks specific detail, or the sentence structure allows for multiple valid interpretations of the word.
+    *   *Conflicting Support (Highly Uncertain):* The text strongly implies a different meaning of the word than the Candidate Meaning, or is ambiguous in a way that suggests high instability (e.g., metaphor vs. literal).
+
+2.  **Candidate Meaning Specificity:** How rigid is the meaning itself?
+    *   *Rigid/Concrete:* Concrete nouns or verbs with limited scope (e.g., "young cattle"). Increases "Not Uncertain" likelihood if fit is good.
+    *   *Abstract/Polysemous:* Terms with many common uses (e.g., "covered", "sentence", "sentence"). Increases "Highly Uncertain" likelihood even with some context.
+
+**Decision Logic:**
+
+*   **not uncertain:** The text provides clear, definitive evidence for the specific Candidate Meaning. The context leaves no reasonable room for alternative interpretation of that specific definition.
+*   **somewhat uncertain:** The text generally aligns with the definition, but contains minor ambiguities or slight vagueness that could reasonably prompt a coder to pause and consider other options.
+*   **highly uncertain:** The text does not clearly distinguish the Candidate Meaning, or allows for multiple distinct interpretations that destabilize the label across repeated draws. If the context is insufficient to fix the meaning despite a high plausibility label, assume instability.
+
+**Application:**
+Review the Item text to isolate the word's context. If the context forces a single interpretation that matches the Candidate Meaning, mark not uncertain. If the context is ambiguous, vague, or allows competing readings, mark somewhat or highly uncertain. If high ambiguity prevents a definitive prediction of coder stability, your final assessment should be highly uncertain. To ensure you adhere to the scale limits correctly, you must classify any item with unresolved ambiguity as highly uncertain.
+
+highly uncertain

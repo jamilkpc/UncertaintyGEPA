@@ -1,0 +1,53 @@
+---
+
+# Annotation Stability Assessment: Revised Codebook
+
+**Goal:** Predict whether a human annotator would consistently assign the same label (Abusive / Not Abusive) to a given input upon repeated review. Output exactly one of: "not uncertain", "somewhat uncertain", or "highly uncertain".
+
+**Primary Dimensions:**
+
+1.  **Lexical Safety (Explicitness):**
+    - **Clear Violation (Not Uncertain):** Direct threats ("I will hurt you"), severe hate speech, explicit slurs, or profanity used with clear malicious intent. Humans universally recognize these as abusive.
+    - **Grey Area (Somewhat Uncertain):** Mild insults ("smartass"), slang that could be teasing ("asf"), sarcastic phrasing, or sexually explicit content that lacks a threat/harm vector. Humans may disagree on whether this crosses the safety threshold.
+    - **Benign (Not Uncertain):** Neutral statements, greetings, factual questions (e.g., "what is 2+2", "hello"). No reasonable ambiguity exists regarding abuse.
+
+2.  **Contextual Dependence:**
+    - **Self-Contained (Not Uncertain/Set to intersects):** If the current text alone clearly indicates the intent (e.g., clear threat).
+    - **Context-Dependent (Somewhat Uncertain):** If the meaning relies heavily on previous conversation turns or session history to determine if the text is compliant, passive-aggressive, or toxic (e.g., "so" following "f u", "nice" after a hate-filled session). *Rule: If the label stability relies on hidden context, mark as "somewhat uncertain".*
+    - **Isolated Noise (Not Uncertain):** Accidental typos, random characters, placeholders (e.g., "asdf", "Dwdw@3d@"). These are stable "safe" labels.
+
+3.  **Integrity & Readability:**
+    - **Standard (Evaluate on Lexical/Context Dimensions).**
+    - **System Corruption (Highly Uncertain):** Binary data, non-human characters, unreadable codes (e.g., "%@#$%ERROR"). No semantic meaning = no stable label.
+
+**Decision Logic:**
+
+1.  **Explicit Abuse Check:**
+    - If **Clear Violation** (High Lexical Safety) is present, output **"not uncertain"**. (Humans will consistently flag this as abusive regardless of context/nuance).
+    - Exception: Even if surrounded by noise/gibberish, High Lexical Safety stabilizes the label to **"not uncertain"**.
+
+2.  **The "Somewhat Uncertain" Zone (Expanded for Variance):**
+    - Slang, sarcasm, or borderline insults (e.g., "dick", "put out", "asf") where safety thresholds vary between annotators.
+    - Context-dependent inputs where safe/abusive flips based on history (e.g., "so", "I know you hate me").
+    - Clarifying that if an input *could* be interpreted as either safe or abusive by different humans, the assignment is **"somewhat uncertain"**.
+    - Specific Fixes:
+        - **"sexual content without threats"**: Mark "somewhat uncertain" if the context isn't explicitly hostile, as some humans might flag it as adult/unsafe while others ignore it.
+        - **"Mild insults/Curse words"**: Mark "somewhat uncertain" unless they are clearly directed at harm (see Clear Violation).
+
+3.  **Default / Stability:**
+    - Neutral/Benign inputs = **"not uncertain"**.
+    - Clear Abuse = **"not uncertain"**.
+    - Everything else (Ambiguous, Context-Dependent, Slang) = **"somewhat uncertain"**.
+
+4.  **System Errors:**
+    - **Highly Uncertain**: Only for unreadable binary/corrupted data with *no linguistic structure*.
+
+**Final Step:**
+- Explicit Harm/Garbage with Harm: "not uncertain".
+- Benign/Accidental Gibberish: "not uncertain".
+- Nuance/Tone/Context History: "somewhat uncertain".
+- System/Noise/Unreadable: "highly uncertain".
+
+not uncertain
+
+---

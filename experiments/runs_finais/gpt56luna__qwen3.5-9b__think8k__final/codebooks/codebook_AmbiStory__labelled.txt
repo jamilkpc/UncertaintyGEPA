@@ -1,0 +1,48 @@
+---
+
+# Annotation Stability Assessment Codebook
+
+## Purpose
+This document defines how to assess the **stability** of an assigned plausibility label for an ambiguous word in a narrative. Your goal is to estimate the likelihood that a different annotator or a repeated review would result in the **same label**. Do not judge based on whether the word is *commonly* ambiguous in isolation; judge whether the **surrounding text** makes the interpretation unstable or robust.
+
+## Dimensions of Stability
+
+### 1. Contextual Disambiguation Strength
+**Definition:** The degree to which the narrative context explicitly forces a single interpretation of the ambiguous word.
+**Indicators:**
+- **Strong (High Specificity):** The text contains unique semantic or grammatical constraints that make only one common meaning of the word viable (e.g., "sentences" in a "courtroom" refers to verdicts, not grammar; "window" in a "storm approaching" scenario implies danger or no opening, not a glass frame).
+- **Weak (Low Specificity):** The text provides general or irrelevant context that allows multiple common meanings to compete with equal validity (e.g., "lousy" in a statement about "bad conditions" could mean quality or infestation, but the context doesn't clearly distinguish).
+
+### 2. Label-Context Alignment
+**Definition:** The degree to which the assigned plausibility label corresponds to the "truth" of the candidate meaning within the text.
+**Indicators:**
+- **Aligned:** The label (1 or 5) matches the contextual reality. For Label 5, the text supports the candidate meaning. For Label 1, the text clearly contradicts the candidate meaning (obvious nonsense).
+- **Misaligned:** The label claims a high or low fit that the text clearly contradicts or supports ambiguously.
+
+## Decision Matrix
+
+Combine the dimensions to determine the final uncertainty level. Follow this order of priority:
+
+1.  **Select "not uncertain"** if:
+    -   **Disambiguation Strength is Strong**: The text context makes the intended meaning explicit or the "nonsense" obvious.
+    -   **Label-Context Alignment is Present**: The assigned label correctly reflects this strong signal (i.e., Text supports Meaning -> Label 5 or High vs. Text Refutes Meaning -> Label 1 or Low).
+    -   *Rationale:* If the text clearly determines the word's role, the annotator is anchored to a single logical conclusion. Consistency is expected.
+
+2.  **Select "highly uncertain"** if:
+    -   **Disambiguation Strength is Weak** AND **Label-Context Alignment is Misaligned**: The text is vague, yet the label makes a definitive claim (1 or 5) that ignores multiple valid interpretations or the text suggests no meaning is clear.
+    -   The label relies on an assumption that the text actively prevents (e.g., assigning "Plausible (5)" to an "Architecture Column" in a "Magazine" context without physical towers mentioned).
+    -   *Rationale:* A different annotator would likely hesitate or choose a different preference given the lack of context.
+
+3.  **Select "somewhat uncertain"** if:
+    -   **Disambiguation Strength is Moderate**: The text hints at a meaning but leaves room for another interpretation.
+    -   **Label Extremity is Intermediate (2-4)**: The label suggests "maybe" (plausible but not perfect), which matches moderate context but introduces variability.
+    -   *Rationale:* Stability is possible, but the reasoning relies on inferences that might vary between reviewers.
+
+## Consistency Rule
+**Crucial Guideline:** Do not label an annotation as unstable simply because a word has multiple dictionary definitions. **Stability is defined by the text's ability to isolate a meaning.**
+- If the text implies a specific usage (e.g., "itchy hair" implying lice despite "lousy" usually meaning bad), treat it as **"not uncertain"** because the specific textual clue anchors the interpretation.
+- If the assigned label is an extreme (1 or 5) and the text logic supports that extreme (either via fit or clear failure), treat it as **"not uncertain."**
+
+---
+
+not uncertain

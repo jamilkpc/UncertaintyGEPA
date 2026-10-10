@@ -1,0 +1,78 @@
+\section{Optimised codebooks}
+\label{app:codebooks}
+\subsection*{AmbiStory -- blind}
+\begin{quote}\small
+---
+
+**Codebook: Judging Annotator Stability in Word Plausibility Ratings**
+
+
+
+**Objective:**
+
+Predict the stability of the original annotator's plausibility score (1-5) across repeated evaluations. Your uncertainty judgment should reflect the likelihood that the annotator would have assigned the same label consistently.
+
+
+
+**Construct Dimensions \& Observable Indicators:**
+
+
+
+**1. Textual Evidence Strength**
+
+*   **Indicator:** Does the immediate textual evidence establish a definitive stance (plausible or implausible) relative to the *specific* candidate meaning?
+
+*   **High Strength:** The narrative text contains explicit features (e.g., "wedding ring" vs "circuit breaker for a ring", "driving the car" vs "motivation") that make the Candidate Meaning either clearly supported *or* clearly contradictory based on grammar/semantics.
+
+*   **Low Strength:** The narrative allows the text to be interpreted such that the Candidate Meaning could arguably be valid *or* invalid, preventing a definitive call for that specific definition.
+
+
+
+**2. Candidate Meaning Constraint**
+
+*   **Indicator:** How specific is the provided candidate definition to the textual context?
+
+*   **High Constraint:** The Candidate Meaning fits the grammatical structure or semantic slot rigidly (e.g., "out of the blue" for "blue" vs "color of an object").
+
+*   **Low Constraint:** The Candidate Meaning is broad enough to potentially fit, or the text uses idiomatic language that changes the definitional expectation.
+
+
+
+**Combination Logic (Mapping to Uncertainty Levels):**
+
+
+
+*   **"not uncertain" (High Stability)**
+
+    *   Assign when **Textual Evidence Strength** is **High** (both for Support *and* for Rejection).
+
+    *   *Reasoning:* Whether the annotator rates the meaning as perfectly plausible or clearly implausible, the textual cues are strong enough that the annotator will consistently choose low (clear mismatch) or high (clear match) scores across draws. Consistency in "Rejection" counts as low instability; the annotator does not waver.
+
+
+
+*   **"somewhat uncertain" (Moderate Stability)**
+
+    *   Assign when **Textual Evidence Strength** is **Moderate** (text supports the meaning weakly but not strongly).
+
+    *   *Reasoning:* The evidence leans one way, but enough overlap exists (e.g., ambiguous idioms or loose metaphors) that a cautious annotator might rate slightly differently (e.g., 3 vs 4) on re-readings.
+
+
+
+*   **"highly uncertain" (Low Stability)**
+
+    *   Assign when **Textual Evidence Strength** is **Low** OR **Textual Evidence Strength** is **Ambiguous** (weak cues allowing both yes and no for the specific candidate definition).
+
+    *   *Reasoning:* The text provides insufficient guidance for the specific candidate, forcing the annotator to guess between multiple interpretations, leading to label fluctuations across draws.
+
+
+
+**Formatting Constraints:**
+
+*   Evaluate the evidence using the dimensions above.
+
+*   Select **exactly one** uncertainty level from the allowed list: "not uncertain", "somewhat uncertain", "highly uncertain".
+
+*   End your response with the chosen label only. Do not include explanations after the label.
+
+not uncertain
+\end{quote}

@@ -1,0 +1,61 @@
+---
+# Annotation Uncertainty Codebook (Revised)
+
+## Construct Definition
+This metric assesses the likelihood of divergent human annotation judgments across repeated intersects. Uncertainty is derived from the **clarity of intent** regarding hate/spectrum classification and the **contextual frame** (Direct vs. Debatable/Normative).
+
+- **`not uncertain`**: Annotators converge entirely when the stance is **clearly non-hateful** (support, neutral, or nonsense with no hate subtext) **OR** when the target is a **specific, named individual**.
+- **`somewhat uncertain`**: Annotators diverge when the text addresses a **generalized group** using **hate-charged language**, **religious/moral arguments**, or **political norms** where the distinction between hate and ideological critique is feasible.
+- **`highly uncertain`**: Annotators diverge significantly when text contains **heavy irony**, **slang masking intent**, or is **truly ambiguous** regarding the existence of hate (e.g., sarcastic validation).
+
+---
+
+## Dimensions and Indicators
+
+### 1. Target Specificity (Primary Driver)
+- **Stable Indicator:** **Named/Specific Individual** (e.g., "You", "That girl", "Name").
+    - *Rule:* Attacks on specific entities lock the uncertainty level to **`not uncertain`**, as intent is impossible to debate against a person.
+- **Variable Indicator:** **Generalized Group** (e.g., "Women", "Feminists", "Saudi women").
+    - *Rule:* Generalized targets + any frame (except neutral/support) generally lead to disagreement because annotators debate the line between "hate" and "ideological critique".
+    - *Exception:* Clear support/non-hate on groups remains **`not uncertain`**.
+
+### 2. Framing and Intent (The Debatability Check)
+- **Stable Indicator (Clear Non-Hate/Support):** Text clearly aligns with the perceived "safe" side (e.g., "I support", "Women are strong", or simple slang that means nothing).
+    - *Rule:* If the text is clearly **Not Misogynistic** or **Nonsensical but Not Hate**, it is **`not uncertain`**.
+- **Variable Indicator (Hate/Normative/Religious):** Text uses targeted language against a group where the attacker *asks/teaches* or implies harm via norms/religion (e.g., "They are broken", "God takes them", "Feminists blind").
+    - *Rule:* Generalized Hate Claims + Religious/Moral Context = **`somewhat uncertain`**.
+    - *Reasoning:* Annotators disagree on whether theological/normative claims constitute hate speech vs. traditional beliefs. (See Ex 5, 7).
+- **Variable Indicator (Generalized Violence/Trauma):** Direct accusations of violence against a group ("Kill them", "Curses them") without specific targets.
+    - *Rule:* Generalized threats lead to divergence (Literal vs. Metaphorical/Hyperbole). Classify as **`somewhat uncertain`**.
+
+### 3. Contextual Ambiguity
+- **Stable Indicator:** Plain declarative text where hate/non-hate is obvious.
+- **Unsolute Indicator:** **Chaos/Nonsense** (Gibberish, corrupted text).
+    - *Correction:* If the text is chaotic but **clearly not hate** (e.g., Ex 1s slang "Khembdel"), it is stable **`not uncertain`**.
+- **Unstable Indicator:** **Irony/Sarcasm** where the label depends on tone decoding (e.g., "Beautiful women... if I want" vs "Terrible women").
+    - *Correction:* If the hate status requires tonal decoding, classify as **`highly uncertain`**.
+
+---
+
+## Decision Hierarchy (Flowchart)
+
+1.  **Is the target a Named Individual?**
+    - **Yes:** -> **`not uncertain`** (Specific Attack Lock-In).
+    - **No:** -> Step 2
+
+2.  **Is the text clearly Non-Hate (Support/Neutral) or Nonsensical/Non-Hate?**
+    - **Yes:** -> **`not uncertain`** (Clear Negation of Hate).
+    - **No:** -> Step 3
+
+3.  **Is the text a Generalized Group Attack with Normative/Religious/Argumentative Framing?**
+    - **Is it Religious/Normative Debate?** -> **`somewhat uncertain`** (Debate: Hate vs. Culture).
+    - **Is it Generalized Threat/Insult?** -> **`somewhat uncertain`** (Debate: Literal vs. Hyperbole).
+    - **Is it Sarcasm/Irony?** -> **`highly uncertain`**.
+
+---
+
+## Summary Checklist for Label Selection
+*   [ ] **Named Individual Target?** -> **`not uncertain`**
+*   [ ] **Clearly Non-Hate / Support / Neutral / Nonsensical Non-Hate?** -> **`not uncertain`**
+*   [ ] **Generalized Group + Argumentative/Religious/Normative Insult?** -> **`somewhat uncertain`**
+*   [ ] **Irony/Sarcasm/Hard-to-Decode Intent on Hate?** -> **`highly uncertain`**

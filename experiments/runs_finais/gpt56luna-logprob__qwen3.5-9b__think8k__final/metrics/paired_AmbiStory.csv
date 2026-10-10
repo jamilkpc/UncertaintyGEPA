@@ -1,0 +1,5 @@
+benchmark,kind,condition,method,a,b,delta,ci_lo,ci_hi,n
+AmbiStory,method_vs_seed,blind,GEPA,GEPA,single_hedge,-0.08470606111026774,-0.16885853868102485,-0.0003848830070844356,927
+AmbiStory,method_vs_seed,blind,pros_cons,pros_cons,single_hedge,-0.04668410318307216,-0.1305754981481831,0.03675595571825634,924
+AmbiStory,method_vs_seed,blind,topk_wrong,topk_wrong,single_hedge,-0.011755869918157164,-0.09523193622878083,0.07176929142245068,927
+AmbiStory,hedge_vs_g,blind,GEPA,hedge,g_m,-0.16628896731422094,-0.24156946021765927,-0.09219087956442279,930

@@ -1,0 +1,4 @@
+benchmark,kind,condition,method,a,b,delta,ci_lo,ci_hi,n
+MDAgreement,method_vs_seed,blind,GEPA,GEPA,single_hedge,0.1331006768082378,0.08295849674867636,0.18216867939937142,3052
+MDAgreement,method_vs_seed,blind,pros_cons,pros_cons,single_hedge,-0.014485063752841476,-0.06247836373844115,0.033705870059643026,3027
+MDAgreement,method_vs_seed,blind,topk_wrong,topk_wrong,single_hedge,0.12847829121371407,0.08079794315089635,0.17601183091849049,3051

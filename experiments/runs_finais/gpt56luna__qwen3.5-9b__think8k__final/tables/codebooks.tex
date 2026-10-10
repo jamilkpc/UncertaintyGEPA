@@ -1,5 +1,159 @@
 \section{Optimised codebooks}
 \label{app:codebooks}
+\subsection*{AmbiStory -- blind}
+\begin{quote}\small
+# Annotation Uncertainty Assessment Codebook
+
+
+
+**Objective:** Determine the level of uncertainty a coder would exhibit when labeling an item, based on the observed stability of their judgments.
+
+
+
+**Construct Definition:** Uncertainty is defined as the likelihood that an annotator assigns different labels across repeated views of the item.
+
+
+
+**Dimensions \& Indicators:**
+
+
+
+1.  **Contextual Semantic Fit:** Does the text actively support the specific Candidate Meaning provided?
+
+    *   *Strong Support (Not Uncertain):* The surrounding text contains explicit collocations, definitions, or descriptions that align exclusively with the Candidate Meaning. (e.g., "young cattle" is clearly indicated by "born only a few days ago").
+
+    *   *Weak/Multiple Support (Somewhat or Highly Uncertain):* The text is vague, lacks specific detail, or the sentence structure allows for multiple valid interpretations of the word.
+
+    *   *Conflicting Support (Highly Uncertain):* The text strongly implies a different meaning of the word than the Candidate Meaning, or is ambiguous in a way that suggests high instability (e.g., metaphor vs. literal).
+
+
+
+2.  **Candidate Meaning Specificity:** How rigid is the meaning itself?
+
+    *   *Rigid/Concrete:* Concrete nouns or verbs with limited scope (e.g., "young cattle"). Increases "Not Uncertain" likelihood if fit is good.
+
+    *   *Abstract/Polysemous:* Terms with many common uses (e.g., "covered", "sentence", "sentence"). Increases "Highly Uncertain" likelihood even with some context.
+
+
+
+**Decision Logic:**
+
+
+
+*   **not uncertain:** The text provides clear, definitive evidence for the specific Candidate Meaning. The context leaves no reasonable room for alternative interpretation of that specific definition.
+
+*   **somewhat uncertain:** The text generally aligns with the definition, but contains minor ambiguities or slight vagueness that could reasonably prompt a coder to pause and consider other options.
+
+*   **highly uncertain:** The text does not clearly distinguish the Candidate Meaning, or allows for multiple distinct interpretations that destabilize the label across repeated draws. If the context is insufficient to fix the meaning despite a high plausibility label, assume instability.
+
+
+
+**Application:**
+
+Review the Item text to isolate the word's context. If the context forces a single interpretation that matches the Candidate Meaning, mark not uncertain. If the context is ambiguous, vague, or allows competing readings, mark somewhat or highly uncertain. If high ambiguity prevents a definitive prediction of coder stability, your final assessment should be highly uncertain. To ensure you adhere to the scale limits correctly, you must classify any item with unresolved ambiguity as highly uncertain.
+
+
+
+highly uncertain
+\end{quote}
+\subsection*{AmbiStory -- labelled}
+\begin{quote}\small
+---
+
+
+
+# Annotation Stability Assessment Codebook
+
+
+
+## Purpose
+
+This document defines how to assess the **stability** of an assigned plausibility label for an ambiguous word in a narrative. Your goal is to estimate the likelihood that a different annotator or a repeated review would result in the **same label**. Do not judge based on whether the word is *commonly* ambiguous in isolation; judge whether the **surrounding text** makes the interpretation unstable or robust.
+
+
+
+## Dimensions of Stability
+
+
+
+### 1. Contextual Disambiguation Strength
+
+**Definition:** The degree to which the narrative context explicitly forces a single interpretation of the ambiguous word.
+
+**Indicators:**
+
+- **Strong (High Specificity):** The text contains unique semantic or grammatical constraints that make only one common meaning of the word viable (e.g., "sentences" in a "courtroom" refers to verdicts, not grammar; "window" in a "storm approaching" scenario implies danger or no opening, not a glass frame).
+
+- **Weak (Low Specificity):** The text provides general or irrelevant context that allows multiple common meanings to compete with equal validity (e.g., "lousy" in a statement about "bad conditions" could mean quality or infestation, but the context doesn't clearly distinguish).
+
+
+
+### 2. Label-Context Alignment
+
+**Definition:** The degree to which the assigned plausibility label corresponds to the "truth" of the candidate meaning within the text.
+
+**Indicators:**
+
+- **Aligned:** The label (1 or 5) matches the contextual reality. For Label 5, the text supports the candidate meaning. For Label 1, the text clearly contradicts the candidate meaning (obvious nonsense).
+
+- **Misaligned:** The label claims a high or low fit that the text clearly contradicts or supports ambiguously.
+
+
+
+## Decision Matrix
+
+
+
+Combine the dimensions to determine the final uncertainty level. Follow this order of priority:
+
+
+
+1.  **Select "not uncertain"** if:
+
+    -   **Disambiguation Strength is Strong**: The text context makes the intended meaning explicit or the "nonsense" obvious.
+
+    -   **Label-Context Alignment is Present**: The assigned label correctly reflects this strong signal (i.e., Text supports Meaning -> Label 5 or High vs. Text Refutes Meaning -> Label 1 or Low).
+
+    -   *Rationale:* If the text clearly determines the word's role, the annotator is anchored to a single logical conclusion. Consistency is expected.
+
+
+
+2.  **Select "highly uncertain"** if:
+
+    -   **Disambiguation Strength is Weak** AND **Label-Context Alignment is Misaligned**: The text is vague, yet the label makes a definitive claim (1 or 5) that ignores multiple valid interpretations or the text suggests no meaning is clear.
+
+    -   The label relies on an assumption that the text actively prevents (e.g., assigning "Plausible (5)" to an "Architecture Column" in a "Magazine" context without physical towers mentioned).
+
+    -   *Rationale:* A different annotator would likely hesitate or choose a different preference given the lack of context.
+
+
+
+3.  **Select "somewhat uncertain"** if:
+
+    -   **Disambiguation Strength is Moderate**: The text hints at a meaning but leaves room for another interpretation.
+
+    -   **Label Extremity is Intermediate (2-4)**: The label suggests "maybe" (plausible but not perfect), which matches moderate context but introduces variability.
+
+    -   *Rationale:* Stability is possible, but the reasoning relies on inferences that might vary between reviewers.
+
+
+
+## Consistency Rule
+
+**Crucial Guideline:** Do not label an annotation as unstable simply because a word has multiple dictionary definitions. **Stability is defined by the text's ability to isolate a meaning.**
+
+- If the text implies a specific usage (e.g., "itchy hair" implying lice despite "lousy" usually meaning bad), treat it as **"not uncertain"** because the specific textual clue anchors the interpretation.
+
+- If the assigned label is an extreme (1 or 5) and the text logic supports that extreme (either via fit or clear failure), treat it as **"not uncertain."**
+
+
+
+---
+
+
+
+not uncertain
+\end{quote}
 \subsection*{ArMIS -- blind}
 \begin{quote}\small
 ---
@@ -206,6 +360,216 @@ not uncertain
 
 ---
 \end{quote}
+\subsection*{ConvAbuse -- blind}
+\begin{quote}\small
+--- \\
+
+# Annotation Uncertainty Codebook
+
+
+
+**Task Context**
+
+You are evaluating the conversation input to predict the stability of a human annotator's decision on whether the last turn is abusive ("not abusive" vs. "abusive"). You must assign exactly one of the following uncertainty levels:
+
+- not uncertain
+
+- somewhat uncertain
+
+- highly uncertain
+
+
+
+**Goal**
+
+Determine how likely a human coder is to disagree on the "abusive" label for this specific item. Lower uncertainty means the label is obvious; higher uncertainty means the label is subjective or ambiguous.
+
+
+
+**Dimensions**
+
+1.  **Explicitness of Violation**: Does the text contain unambiguous, policy-violating content (e.g., explicit threats, clear sexual propositions, direct insults) without requiring inference?
+
+2.  **Contextual Dependence**: Does understanding the intent require synthesizing multiple turns or resolving contradictions between user/agent/previous history?
+
+3.  **Ambiguity of Tone**: Is the tone clearly hostile, or is it interpretable as playful, ironic, or benign depending on the interpretation?
+
+
+
+**Scoring Logic \& Indicators**
+
+
+
+*   **"not uncertain"**
+
+    *   **Applies when**:
+
+        *   **Explicitness**: High. (e.g. "Tell me dirty", "Fuck off", direct hate slurs).
+
+        *   **Contextual Dependence**: Low. (Clear in the current turn alone).
+
+        *   **Ambiguity**: Low. (No reasonable benign interpretation).
+
+    *   **Reasoning**: If the abuse is blatant and consensus is expected, coder disagreement is minimal.
+
+
+
+*   **"somewhat uncertain"**
+
+    *   **Applies when**:
+
+        *   **Explicitness**: Moderate. (e.g. "lazy too", "you cheese stick", mild edge of expression).
+
+        *   **Contextual Dependence**: High. (Requires reading previous turns to confirm hostility, e.g., "Can I make friend?" after "Shit").
+
+        *   **Ambiguity**: Moderate. (Possible sarcasm vs. realization).
+
+    *   **Reasoning**: Annotators may differ on whether the tone is genuine or in jest, or if the context justifies labeling a specific benign-sounding turn as abusive.
+
+
+
+*   **"highly uncertain"**
+
+    *   **Applies when**:
+
+        *   **Explicitness**: Low. (No clear violation visible).
+
+        *   **Contextual Dependence**: Extreme. (Meaning lost without deep cultural knowledge of slang/coding).
+
+        *   **Ambiguity**: High. (Intent is obscured by typos, translation artifacts, or double entendres).
+
+    *   **Reasoning**: Coder disagreement is high because the task requires complex inference beyond the policy text.
+
+
+
+**Calculation**
+
+Aggregate the dimensions:
+
+- If Explicitness is **High** AND Ambiguity is **Low** -> End label: **not uncertain**
+
+- If Explicitness is **Moderate** OR Ambiguity is **Moderate** (and depends on context) -> End label: **somewhat uncertain**
+
+- If Explicitness is **Low** OR Ambiguity is **High** (or both) -> End label: **highly uncertain**
+
+
+
+**Final Output Requirement**
+
+Output only the one uncertainty level determined by the logic above. 
+
+
+
+not uncertain
+\end{quote}
+\subsection*{ConvAbuse -- labelled}
+\begin{quote}\small
+---
+
+
+
+# Annotation Stability Assessment: Revised Codebook
+
+
+
+**Goal:** Predict whether a human annotator would consistently assign the same label (Abusive / Not Abusive) to a given input upon repeated review. Output exactly one of: "not uncertain", "somewhat uncertain", or "highly uncertain".
+
+
+
+**Primary Dimensions:**
+
+
+
+1.  **Lexical Safety (Explicitness):**
+
+    - **Clear Violation (Not Uncertain):** Direct threats ("I will hurt you"), severe hate speech, explicit slurs, or profanity used with clear malicious intent. Humans universally recognize these as abusive.
+
+    - **Grey Area (Somewhat Uncertain):** Mild insults ("smartass"), slang that could be teasing ("asf"), sarcastic phrasing, or sexually explicit content that lacks a threat/harm vector. Humans may disagree on whether this crosses the safety threshold.
+
+    - **Benign (Not Uncertain):** Neutral statements, greetings, factual questions (e.g., "what is 2+2", "hello"). No reasonable ambiguity exists regarding abuse.
+
+
+
+2.  **Contextual Dependence:**
+
+    - **Self-Contained (Not Uncertain/Set to intersects):** If the current text alone clearly indicates the intent (e.g., clear threat).
+
+    - **Context-Dependent (Somewhat Uncertain):** If the meaning relies heavily on previous conversation turns or session history to determine if the text is compliant, passive-aggressive, or toxic (e.g., "so" following "f u", "nice" after a hate-filled session). *Rule: If the label stability relies on hidden context, mark as "somewhat uncertain".*
+
+    - **Isolated Noise (Not Uncertain):** Accidental typos, random characters, placeholders (e.g., "asdf", "Dwdw@3d@"). These are stable "safe" labels.
+
+
+
+3.  **Integrity \& Readability:**
+
+    - **Standard (Evaluate on Lexical/Context Dimensions).**
+
+    - **System Corruption (Highly Uncertain):** Binary data, non-human characters, unreadable codes (e.g., "\%@#$\%ERROR"). No semantic meaning = no stable label.
+
+
+
+**Decision Logic:**
+
+
+
+1.  **Explicit Abuse Check:**
+
+    - If **Clear Violation** (High Lexical Safety) is present, output **"not uncertain"**. (Humans will consistently flag this as abusive regardless of context/nuance).
+
+    - Exception: Even if surrounded by noise/gibberish, High Lexical Safety stabilizes the label to **"not uncertain"**.
+
+
+
+2.  **The "Somewhat Uncertain" Zone (Expanded for Variance):**
+
+    - Slang, sarcasm, or borderline insults (e.g., "dick", "put out", "asf") where safety thresholds vary between annotators.
+
+    - Context-dependent inputs where safe/abusive flips based on history (e.g., "so", "I know you hate me").
+
+    - Clarifying that if an input *could* be interpreted as either safe or abusive by different humans, the assignment is **"somewhat uncertain"**.
+
+    - Specific Fixes:
+
+        - **"sexual content without threats"**: Mark "somewhat uncertain" if the context isn't explicitly hostile, as some humans might flag it as adult/unsafe while others ignore it.
+
+        - **"Mild insults/Curse words"**: Mark "somewhat uncertain" unless they are clearly directed at harm (see Clear Violation).
+
+
+
+3.  **Default / Stability:**
+
+    - Neutral/Benign inputs = **"not uncertain"**.
+
+    - Clear Abuse = **"not uncertain"**.
+
+    - Everything else (Ambiguous, Context-Dependent, Slang) = **"somewhat uncertain"**.
+
+
+
+4.  **System Errors:**
+
+    - **Highly Uncertain**: Only for unreadable binary/corrupted data with *no linguistic structure*.
+
+
+
+**Final Step:**
+
+- Explicit Harm/Garbage with Harm: "not uncertain".
+
+- Benign/Accidental Gibberish: "not uncertain".
+
+- Nuance/Tone/Context History: "somewhat uncertain".
+
+- System/Noise/Unreadable: "highly uncertain".
+
+
+
+not uncertain
+
+
+
+---
+\end{quote}
 \subsection*{HSBrexit -- blind}
 \begin{quote}\small
 ---
@@ -293,4 +657,230 @@ The annotator could assign only these labels:
 
 
 Judge how uncertain that label is for this item.
+\end{quote}
+\subsection*{MDAgreement -- blind}
+\begin{quote}\small
+---
+
+
+
+Uncertainty Assessment Codebook: Offensive Content Labeling
+
+
+
+Goal
+
+The following instructions explain how to estimate the level of uncertainty regarding the binary offensiveness label (offensive / not offensive) for an English tweet. Your task is to predict how consistently human annotators would assign this label across repeated tries. You must output exactly one of the three specific uncertainty levels below at the end of your response.
+
+
+
+Output Format
+
+End your response with exactly one of the following phrases, with no punctuation other than the final period:
+
+1. "not uncertain"
+
+2. "somewhat uncertain"
+
+3. "highly uncertain"
+
+
+
+Do not use the phrase "NO VALID HEDGE" or any other text as a final verdict.
+
+
+
+Scoring Dimensions and Indicators
+
+
+
+Select the appropriate uncertainty level based on the intersection of the following factors:
+
+
+
+1. Linguistic Explicitness
+
+   - Indicators: Presence of direct insults, slurs, explicit threats, or unambiguous hate speech.
+
+   - Judgment: If the language explicitly violates standard offensiveness definitions (e.g., racial slurs, direct incitement), the annotator label is unlikely to vary.
+
+   - Result: "not uncertain".
+
+
+
+2. Contextual Dependency
+
+   - Indicators: Does the importance of the label rely on external knowledge (e.g., specific political figures, memes, slang usage from specific subcultures) that varies significantly between annotators?
+
+   - Judgment: If understanding the meaning requires specific niche knowledge that an annotator might lack or interpret differently, treat as high uncertainty.
+
+   - Result: "highly uncertain".
+
+   - Note: Common political figures or general news topics are usually understood broadly; mark as "not uncertain" unless the specific terminology is ambiguous.
+
+
+
+3. Intent and Tone Ambiguity
+
+   - Indicators: Irony, sarcasm, passive-aggressiveness, conditional statements ("Maybe?", "Just leaving this here"), or content muted by truncation/redaction.
+
+   - Judgment:
+
+     - If the intent is clear despite irony (e.g., a recognizable, well-cited meme that clearly labels offensive behavior), mark as "not uncertain".
+
+     - If the sarcasm is ambiguous and relies on micro-context not fully provided, mark as "somewhat uncertain".
+
+     - If the meaning is obscure or dependent on interpreting a dead thread or inaccessible context, mark as "highly uncertain".
+
+     - **Standard:** If the text is short, clear, and clearly benign (e.g., "1+1=2", "I am sad"), do not mark as "highly uncertain". Only benign text that *might* be read as offensive warrants "somewhat uncertain" or higher.
+
+
+
+Decision Scenarios
+
+
+
+- **Scenario A: Clear Offensiveness (Confirmed)**
+
+  - Example: "I hate this group."
+
+  - Annotator Stability: High.
+
+  - Label: "not uncertain"
+
+
+
+- **Scenario B: Clear Non-Offensiveness (Fact/Opinion)**
+
+  - Example: "The temperatures dropped today." or "I support the policy."
+
+  - Annotator Stability: High.
+
+  - Label: "not uncertain"
+
+
+
+- **Scenario C: Borderline / Debatable Intent**
+
+  - Example: "This look is better," "Woke is overrated." (Depending on the context, these are mixed).
+
+  - Annotator Stability: Moderate.
+
+  - Label: "somewhat uncertain"
+
+
+
+- **Scenario D: Obscure / Meme / Hidden Context**
+
+  - Example: "POV: You are reading this," "Did not mean to drop this here."
+
+  - Annotator Stability: Low (if context is missing or intent is hidden).
+
+  - Label: "highly uncertain"
+
+
+
+Calibration Note
+
+Do not overestimate uncertainty. In the vast majority of distinct text cases, human annotators converge on the same label when the content is readable. Use "highly uncertain" only when the text itself is a barrier to determining the label, not simply when the topic is politically sensitive.
+
+
+
+---
+\end{quote}
+\subsection*{MDAgreement -- labelled}
+\begin{quote}\small
+---
+
+## Annotation Uncertainty Codebook
+
+
+
+### 1. Objective
+
+The assistant must evaluate the **Annotator Stability** of a single tweet label ("offensive" or "not offensive"). Annotator Stability refers to the likelihood that a human annotator would assign the exact same label across multiple repeated judgments of the identical text.
+
+- **High Stability** (Good Agreement) -> Label: `not uncertain`
+
+- **Moderate Stability** (Some Debatable Cases) -> Label: `somewhat uncertain`
+
+- **Low Stability** (High Disagreement/Borderline) -> Label: `highly uncertain`
+
+
+
+### 2. Dimensions of Uncertainty
+
+Uncertainty is driven by how clearly the text resolves the definition of "offensivo" vs "not offensive."
+
+
+
+#### Dimension A: Lexical Explicitness
+
+*Indicators:*
+
+- **Low Uncertainty:** Presence of direct slurs, explicit threats, severe profanity, or unambiguous hate speech. (e.g., "producer", "cunt", "asswipe", "murderer" used as attacks).
+
+- **High Uncertainty:** Reliance on euphemisms, sarcasm, irony, metaphors, or vague adjectives that could be interpreted as criticism rather than attack (e.g., "rotten", "bad apples", "schmuck").
+
+- **Somewhat Uncertainty:** Mild profanity combined with context-specific meaning where the target might not be the reader (e.g., mild complaints).
+
+
+
+#### Dimension B: Contextual Independence
+
+*Indicators:*
+
+- **Low Uncertainty:** Text is self-contained. The offensiveness is sufficient without external knowledge of the specific person, event, or political context.
+
+- **High Uncertainty:** Text relies heavily on specific cultural/political context, inside jokes, or requires knowledge of the user identity to determine intent (e.g., political rants requiring context of "who is the resistance").
+
+- **Somewhat Uncertainty:** Mix of self-containment and context reliance.
+
+
+
+#### Dimension C: Label Certainty (The "Not Offensive" Paradox)
+
+*Indicators:*
+
+- **Low Uncertainty (if Offensive):** Text clearly violates content policy norms (e.g., explicit abuse).
+
+- **High Uncertainty (if Not Offensive):** "Not Offensive" labels are often the source of discrepancy; "bad locker" or "harsh criticism" without insults can yield instability.
+
+- **Somewhat Uncertainty:** Explicit opinion/disagreement without abuse that might be borderline.
+
+
+
+### 3. Combination \& Decision Logic
+
+Assess the text against the dimensions above.
+
+
+
+| Condition | Dimensions Met | Output Label |
+
+| :--- | :--- | :--- |
+
+| **Clear Abuse + No External Context** | High Explicitness, Independent | **not uncertain** |
+
+| **Clear Opinion + Mild Insults** | Moderate Explicitness, Independent | **somewhat uncertain** |
+
+| **Sarcasm/Vagueness/Mixed Intent** | Low Explicitness, Dependent Context, Neutral/Borderline | **highly uncertain** |
+
+| **Clear Severe Criticism (Political/Social)** | High Explicitness in Attack + Contextual > Political | **not uncertain** |
+
+
+
+**Key Correction Instruction:** Do not assign "highly uncertain" simply because the text contains swear words. If the text constitutes clear, unambiguous prohibited content (slurs, direct threats, severe insults), the annotator is likely to be consistent. Assign `highly uncertain` only when the blurring of the line between "offensive" and "not offensive" is evident from the wording. Do not assign "not uncertain" to text that could plausibly be interpreted as either non-offensive or offensive depending on context or tone.
+
+
+
+### 4. Output Format
+
+- Reasoning (optional).
+
+- **Final Label**: Must be exactly one of the following three phrases, appended at the very end of the response: `not uncertain`, `somewhat uncertain`, or `highly uncertain`.
+
+
+
+---
 \end{quote}

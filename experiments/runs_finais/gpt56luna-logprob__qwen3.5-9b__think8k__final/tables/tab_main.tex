@@ -1,0 +1,18 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lr}
+\hline
+Method & AmbiStory \\
+\hline
+\multicolumn{2}{l}{\emph{Message-only}} \\
+single\_hedge & \textbf{0.149}{\scriptsize\,[0.09, 0.21]} \\
+topk\_wrong & 0.139{\scriptsize\,[0.08, 0.21]} \\
+pros\_cons & 0.098{\scriptsize\,[0.03, 0.16]} \\
+GEPA & 0.063{\scriptsize\,[0.00, 0.13]} \\
+$\rho_{\max}(H{=}3)$ & 0.946 \\
+\hline
+\end{tabular}
+\caption{Spearman $\rho(h_m,u_m)$ between the emitted hedge and human disagreement on the held-out test split, with 95\% bootstrap intervals. Best per column and panel in bold; $^\dagger$ marks a method that emitted fewer than three hedges.}
+\label{tab:main}
+\end{table}

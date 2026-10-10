@@ -1,0 +1,51 @@
+---
+### Annotation Uncertainty Assessment Codebook
+
+**Objective:**
+Assess the likelihood of instability in an annotator's decision process (i.e., how uncertain the annotator was across repeated draws) for a given ambiguous word item.
+
+**Core Dimensions:**
+
+1.  **Lexical Polysemy (Salience of Competitors)**
+    *   *Definition:* The number and strength of alternative valid meanings for the ambiguous word within the target domain.
+    *   *Indicators:*
+        *   **High:** Word has 2+ common definitions where at least one is a plausible distractor for the context (e.g., "calf" = animal leg vs. young cow; "draft" = beer vs. draft of money/air; "sentence" = grammatical unit vs. criminal penalty).
+        *   **Low:** Word has only one dominant meaning in this context or the alternatives are category-definitely incorrect (e.g., "tap" when context clearly implies plumbing vs. open container).
+
+2.  **Contextual Disambiguation Strength**
+    *   *Definition:* How explicitly the surrounding text rules out the competing word meanings.
+    *   *Indicators:*
+        *   **High (Explicit):** Text uses specific modifiers or facts that exclude the other meaning (e.g., "young of *domestic cattle* explicitly" vs "brown and hairy calf" which could imply leg).
+        *   **Low (Implicit):** Context allows the alternative meaning to linger without explicit exclusion (e.g., "field"/"cattle" makes animal calf likely, but does not rule out the leg calf entirely if the writer is metaphorical, or "calf" in "fighting calf" which might not fit).
+
+3.  **Narrative Coherence**
+    *   *Definition:* The logical consistency of the text and pronouns relative to the subject.
+    *   *Indicators:*
+        *   **High:** Consistent subject references, logical progression, no contradictory statements (e.g., "He walked...").
+        *   **Low:** Pronoun shifts, subject confusion, or contradictory predicates (e.g., "He... She..."; Calf that is brown/hairy but born "only a few days ago" in a work context).
+
+**Combination Rules (Judgment Matrix):**
+
+To determine the uncertainty level, evaluate the three dimensions in the following order of priority:
+
+1.  **COHERENCE OVERRIDE:**
+    *   If **Narrative Coherence is Low** + **Contextual Strength is Weak or Neutral**: **Highly Uncertain**.
+    *   *Reasoning:* Textual contradictions or incoherence create a high cognitive cost for the annotator, leading to high variation in decisions.
+2.  **SEMANTIC AMBIGUITY CHECK:**
+    *   If **Lexical Polysemy is High** AND **Contextual Strength is Weak**: **Somewhat Uncertain**.
+    *   *Reasoning:* Even with context, the presence of strong alternative meanings causes annotator hesitation and potential label shifts.
+    *   If **Lexical Polysemy is High** AND **Contextual Strength is Explicit**: **Somewhat Uncertain**.
+    *   *Reasoning:* In this dataset, even explicitly contextualized ambiguous words show significant instability compared to non-ambiguous items. If the annotator is unsure between a version or a related word, they vary their choice.
+    *   If **Lexical Polysemy is Low** (or candidate is clearly the only valid meaning): **Not Uncertain**.
+    *   *Reasoning:* Low semantic risk leads to stable annotation practices.
+3.  **PLAUSIBILITY TIE-BREAKER:**
+    *   If the assigned label is **Plausibility 1 or 5** AND **Polysemy is High**: **Somewhat Uncertain** (Indicates forced decision in hard cases).
+    *   If the assigned label is **Plausibility 3**: **Somewhat Uncertain** (Indicates moderate hesitations).
+
+**Final Determination Summary:**
+*   **Highly Uncertain:** Incoherent text or contradictory logic + High Lexical Ambiguity.
+*   **Somewhat Uncertain:** Any case with High Lexical Polysemy (e.g., "calf", "draft", "sentence") AND/OR Plausibility scores that are not definitive extremes (1-2).
+*   **Not Uncertain:** Low Lexical Polysemy + Explicit Contextual Constraints + High Narrative Coherence.
+
+---
+Judge the uncertainty of the annotation based on the codebook provided above.

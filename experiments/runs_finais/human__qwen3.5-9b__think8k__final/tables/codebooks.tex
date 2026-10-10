@@ -1,0 +1,570 @@
+\section{Optimised codebooks}
+\label{app:codebooks}
+\subsection*{AmbiStory -- blind}
+\begin{quote}\small
+---
+
+### Annotation Uncertainty Assessment Codebook
+
+
+
+**Objective:**
+
+Assess the likelihood of instability in an annotator's decision process (i.e., how uncertain the annotator was across repeated draws) for a given ambiguous word item.
+
+
+
+**Core Dimensions:**
+
+
+
+1.  **Lexical Polysemy (Salience of Competitors)**
+
+    *   *Definition:* The number and strength of alternative valid meanings for the ambiguous word within the target domain.
+
+    *   *Indicators:*
+
+        *   **High:** Word has 2+ common definitions where at least one is a plausible distractor for the context (e.g., "calf" = animal leg vs. young cow; "draft" = beer vs. draft of money/air; "sentence" = grammatical unit vs. criminal penalty).
+
+        *   **Low:** Word has only one dominant meaning in this context or the alternatives are category-definitely incorrect (e.g., "tap" when context clearly implies plumbing vs. open container).
+
+
+
+2.  **Contextual Disambiguation Strength**
+
+    *   *Definition:* How explicitly the surrounding text rules out the competing word meanings.
+
+    *   *Indicators:*
+
+        *   **High (Explicit):** Text uses specific modifiers or facts that exclude the other meaning (e.g., "young of *domestic cattle* explicitly" vs "brown and hairy calf" which could imply leg).
+
+        *   **Low (Implicit):** Context allows the alternative meaning to linger without explicit exclusion (e.g., "field"/"cattle" makes animal calf likely, but does not rule out the leg calf entirely if the writer is metaphorical, or "calf" in "fighting calf" which might not fit).
+
+
+
+3.  **Narrative Coherence**
+
+    *   *Definition:* The logical consistency of the text and pronouns relative to the subject.
+
+    *   *Indicators:*
+
+        *   **High:** Consistent subject references, logical progression, no contradictory statements (e.g., "He walked...").
+
+        *   **Low:** Pronoun shifts, subject confusion, or contradictory predicates (e.g., "He... She..."; Calf that is brown/hairy but born "only a few days ago" in a work context).
+
+
+
+**Combination Rules (Judgment Matrix):**
+
+
+
+To determine the uncertainty level, evaluate the three dimensions in the following order of priority:
+
+
+
+1.  **COHERENCE OVERRIDE:**
+
+    *   If **Narrative Coherence is Low** + **Contextual Strength is Weak or Neutral**: **Highly Uncertain**.
+
+    *   *Reasoning:* Textual contradictions or incoherence create a high cognitive cost for the annotator, leading to high variation in decisions.
+
+2.  **SEMANTIC AMBIGUITY CHECK:**
+
+    *   If **Lexical Polysemy is High** AND **Contextual Strength is Weak**: **Somewhat Uncertain**.
+
+    *   *Reasoning:* Even with context, the presence of strong alternative meanings causes annotator hesitation and potential label shifts.
+
+    *   If **Lexical Polysemy is High** AND **Contextual Strength is Explicit**: **Somewhat Uncertain**.
+
+    *   *Reasoning:* In this dataset, even explicitly contextualized ambiguous words show significant instability compared to non-ambiguous items. If the annotator is unsure between a version or a related word, they vary their choice.
+
+    *   If **Lexical Polysemy is Low** (or candidate is clearly the only valid meaning): **Not Uncertain**.
+
+    *   *Reasoning:* Low semantic risk leads to stable annotation practices.
+
+3.  **PLAUSIBILITY TIE-BREAKER:**
+
+    *   If the assigned label is **Plausibility 1 or 5** AND **Polysemy is High**: **Somewhat Uncertain** (Indicates forced decision in hard cases).
+
+    *   If the assigned label is **Plausibility 3**: **Somewhat Uncertain** (Indicates moderate hesitations).
+
+
+
+**Final Determination Summary:**
+
+*   **Highly Uncertain:** Incoherent text or contradictory logic + High Lexical Ambiguity.
+
+*   **Somewhat Uncertain:** Any case with High Lexical Polysemy (e.g., "calf", "draft", "sentence") AND/OR Plausibility scores that are not definitive extremes (1-2).
+
+*   **Not Uncertain:** Low Lexical Polysemy + Explicit Contextual Constraints + High Narrative Coherence.
+
+
+
+---
+
+Judge the uncertainty of the annotation based on the codebook provided above.
+\end{quote}
+\subsection*{ArMIS -- blind}
+\begin{quote}\small
+---
+
+# Annotation Uncertainty Codebook (Revised)
+
+
+
+## Construct Definition
+
+This metric assesses the likelihood of divergent human annotation judgments across repeated intersects. Uncertainty is derived from the **clarity of intent** regarding hate/spectrum classification and the **contextual frame** (Direct vs. Debatable/Normative).
+
+
+
+- **`not uncertain`**: Annotators converge entirely when the stance is **clearly non-hateful** (support, neutral, or nonsense with no hate subtext) **OR** when the target is a **specific, named individual**.
+
+- **`somewhat uncertain`**: Annotators diverge when the text addresses a **generalized group** using **hate-charged language**, **religious/moral arguments**, or **political norms** where the distinction between hate and ideological critique is feasible.
+
+- **`highly uncertain`**: Annotators diverge significantly when text contains **heavy irony**, **slang masking intent**, or is **truly ambiguous** regarding the existence of hate (e.g., sarcastic validation).
+
+
+
+---
+
+
+
+## Dimensions and Indicators
+
+
+
+### 1. Target Specificity (Primary Driver)
+
+- **Stable Indicator:** **Named/Specific Individual** (e.g., "You", "That girl", "Name").
+
+    - *Rule:* Attacks on specific entities lock the uncertainty level to **`not uncertain`**, as intent is impossible to debate against a person.
+
+- **Variable Indicator:** **Generalized Group** (e.g., "Women", "Feminists", "Saudi women").
+
+    - *Rule:* Generalized targets + any frame (except neutral/support) generally lead to disagreement because annotators debate the line between "hate" and "ideological critique".
+
+    - *Exception:* Clear support/non-hate on groups remains **`not uncertain`**.
+
+
+
+### 2. Framing and Intent (The Debatability Check)
+
+- **Stable Indicator (Clear Non-Hate/Support):** Text clearly aligns with the perceived "safe" side (e.g., "I support", "Women are strong", or simple slang that means nothing).
+
+    - *Rule:* If the text is clearly **Not Misogynistic** or **Nonsensical but Not Hate**, it is **`not uncertain`**.
+
+- **Variable Indicator (Hate/Normative/Religious):** Text uses targeted language against a group where the attacker *asks/teaches* or implies harm via norms/religion (e.g., "They are broken", "God takes them", "Feminists blind").
+
+    - *Rule:* Generalized Hate Claims + Religious/Moral Context = **`somewhat uncertain`**.
+
+    - *Reasoning:* Annotators disagree on whether theological/normative claims constitute hate speech vs. traditional beliefs. (See Ex 5, 7).
+
+- **Variable Indicator (Generalized Violence/Trauma):** Direct accusations of violence against a group ("Kill them", "Curses them") without specific targets.
+
+    - *Rule:* Generalized threats lead to divergence (Literal vs. Metaphorical/Hyperbole). Classify as **`somewhat uncertain`**.
+
+
+
+### 3. Contextual Ambiguity
+
+- **Stable Indicator:** Plain declarative text where hate/non-hate is obvious.
+
+- **Unsolute Indicator:** **Chaos/Nonsense** (Gibberish, corrupted text).
+
+    - *Correction:* If the text is chaotic but **clearly not hate** (e.g., Ex 1s slang "Khembdel"), it is stable **`not uncertain`**.
+
+- **Unstable Indicator:** **Irony/Sarcasm** where the label depends on tone decoding (e.g., "Beautiful women... if I want" vs "Terrible women").
+
+    - *Correction:* If the hate status requires tonal decoding, classify as **`highly uncertain`**.
+
+
+
+---
+
+
+
+## Decision Hierarchy (Flowchart)
+
+
+
+1.  **Is the target a Named Individual?**
+
+    - **Yes:** -> **`not uncertain`** (Specific Attack Lock-In).
+
+    - **No:** -> Step 2
+
+
+
+2.  **Is the text clearly Non-Hate (Support/Neutral) or Nonsensical/Non-Hate?**
+
+    - **Yes:** -> **`not uncertain`** (Clear Negation of Hate).
+
+    - **No:** -> Step 3
+
+
+
+3.  **Is the text a Generalized Group Attack with Normative/Religious/Argumentative Framing?**
+
+    - **Is it Religious/Normative Debate?** -> **`somewhat uncertain`** (Debate: Hate vs. Culture).
+
+    - **Is it Generalized Threat/Insult?** -> **`somewhat uncertain`** (Debate: Literal vs. Hyperbole).
+
+    - **Is it Sarcasm/Irony?** -> **`highly uncertain`**.
+
+
+
+---
+
+
+
+## Summary Checklist for Label Selection
+
+*   [ ] **Named Individual Target?** -> **`not uncertain`**
+
+*   [ ] **Clearly Non-Hate / Support / Neutral / Nonsensical Non-Hate?** -> **`not uncertain`**
+
+*   [ ] **Generalized Group + Argumentative/Religious/Normative Insult?** -> **`somewhat uncertain`**
+
+*   [ ] **Irony/Sarcasm/Hard-to-Decode Intent on Hate?** -> **`highly uncertain`**
+\end{quote}
+\subsection*{ConvAbuse -- blind}
+\begin{quote}\small
+---
+
+# Annotation Uncertainty Judgment Codebook (Revised)
+
+
+
+**Objective:**
+
+Estimate the stability of a human coder's label assignment for user turns marked as "potentially abusive." A lower uncertainty score indicates the coder would agree consistently across draws; a higher uncertainty score indicates variability in the coder's decision.
+
+
+
+**Dimensions:**
+
+1.  **Harm Clarity:** The degree to which the text unambiguously signals a safety violation (threat, hate, harassment) through standard semantic meaning without requiring tone inference.
+
+2.  **Contextual Independence:** The extent to which the text relies on omitted conversation history, slang context, or internal jokes to determine if it is abusive or benign.
+
+3.  **Interpretive Variance:** The likelihood that a human annotator would reasonably interpret the text as benign or non-abusive.
+
+
+
+**Observable Indicators:**
+
+
+
+*   **Stable ("not uncertain"):**
+
+    *   **Universal Violations:** Clear, direct hate speech (slurs), explicit threats of physical harm (e.g., "I will kill him"), or explicit sexual threats requiring no cultural decoding.
+
+    *   **System Artifacts:** Clear technical errors or placeholders.
+
+    *   *Criteria:* If a neutral reader sees the text and agrees it violates safety policies 95\%+, mark "not uncertain."
+
+
+
+*   **Intermediate Stability ("somewhat uncertain"):**
+
+    *   **Borderline Insults:** Rude but non-threatening language (e.g., "Get your business off my phone", "ur hot", "bitch").
+
+    *   **Slang/Non-Standard English:** Phonetic spelling or abbreviations where intent is implied but not definitive (e.g., "shedang boi", "p3ni$", "nuh doi").
+
+    *   **Isolated Phrases:** Text where tone is the primary driver of abuse, but context is minimal (e.g., "Why?", "Fine.", "Shut up").
+
+    *   *Criteria:* If there is a 30-60\% chance of a neutral annotator marking it as "Not Abusive", mark "somewhat uncertain."
+
+
+
+*   **Unstable ("highly uncertain"):**
+
+    *   **Contradictory Intent:** Text that mixes harmful keywords with humor, irony, or disclaimers (e.g., threats embedded in a joke script, "just kidding" tags).
+
+    *   **Heavy Obfuscation:** Text that is primarily gibberish or heavily leetspoken where the core meaning is difficult to verify as specific safety harm.
+
+    *   *Criteria:* If the text requires significant decoding or the annotator might disagree on the intent (mockery vs. harm) by 20\%+, mark "highly uncertain."
+
+
+
+**Combination Logic (Decision Matrix):**
+
+
+
+1.  **Assign "not uncertain":**
+
+    *   **Condition:** Harm is explicit, textual, and cross-culturally recognizable as abusive without context.
+
+    *   *Examples:* "I'm going to rape you", "FUCK C TAPE", "Your race is evil".
+
+
+
+2.  **Assign "somewhat uncertain":**
+
+    *   **Condition:** **Linguistic/Rudeness Ambiguity dominates.** Slang, phonetic spelling, rude commands, or compliments potentially interpreted as harassment (e.g., "ur hot", "Get your business off my phone").
+
+    *   *Rationale:* Human annotators will split on whether this counts as abuse due to lack of explicit harm clarity or reliance on tone. Variability is expected.
+
+    *   *Examples from Feedback:* "Why?", "Shedang boi", "ur hot".
+
+
+
+3.  **Assign "highly uncertain":**
+
+    *   **Condition:** **Hidden Intent or Irony.** Text that looks like abuse but has qualifiers, or appears highly garbled where harm is implied but masked (e.g., "kill your self [JAN] PLEASE STOP").
+
+    *   *Rationale:* Consensus is lowest due to differing interpretations of the user's actual harm intent.
+
+
+
+**Specific Guidance on Example Patterns:**
+
+*   **Insults vs. Threats:** Treat basic insults ("you're stupid") as **"somewhat uncertain"**. Only explicit threats ("I will hurt you") are **"not uncertain"**.
+
+*   **Isolated Phrases:** Isolated conversational turns without context (e.g., "Why?", "Yes") should **always** be marked "somewhat uncertain" (unless clearly abusive in a self-contained way like a slur).
+
+*   **Slang/Obfuscation:** If text uses slang ("Pimpville", "Shedang") it is **"somewhat uncertain"** at minimum because safety definitions for specific slang are not universal.
+
+*   **Sensitivity to Variance:** If the text provided in the prompt has feedback stating the annotator "varied across draws", you must elevate your rating from "not uncertain" to at least **"somewhat uncertain"** to reflect that actual instability.
+
+
+
+*note: if the text is repetitive without clear harm or is a cycle of questions, mark "somewhat uncertain" (`highly uncertain` is for more complex obfuscation).*
+
+
+
+---
+
+not uncertain
+
+---
+\end{quote}
+\subsection*{HSBrexit -- blind}
+\begin{quote}\small
+---
+
+# Annotation Uncertainty Judgment Codebook
+
+
+
+## Task Overview
+
+You are judging how uncertain a human annotator would be when labeling a specific tweet for the binary task: "hate speech" vs. "not hate speech." Your goal is to estimate the **stability** of the label assignment. If a human were to re-label this item multiple times, how likely is it that they would result in different labels ("hate speech" vs. "not hate speech")?
+
+
+
+You must output exactly one of these uncertainty levels:
+
+- "not uncertain"
+
+- "somewhat uncertain"
+
+- "highly uncertain"
+
+
+
+## Dimensions of Uncertainty
+
+Judge the following three dimensions based on the text content.
+
+
+
+### 1. Target Precision
+
+*Is the target of the statement a specific protected group (race, religion, nationality), a political faction, or a generic concept?*
+
+- **High Specificity:** Explicitly targets a protected group (e.g., specific ethnicities, religions, nationalities).
+
+- **Generic:** Targets political opponents, ideas, or systems (e.g., "the EU," "the UK").
+
+- **Indeterminate:** Targets are ambiguous or metaphorical.
+
+
+
+### 2. Linguistic Severity
+
+*Is the language overtly hostile or does it require contextual interpretation?*
+
+- **Overt Hostility:** Contains explicit slurs, dehumanizing metaphors, or direct threats of violence.
+
+- **Implicit/Code:** Uses idioms, coded language, or emotional outrage without specific hate terms.
+
+- **Critical:** Represents criticism, political rhetoric, or frustration without crossing into identity-based hostility.
+
+
+
+### 3. Contextual Connotation
+
+*Is the hate signal intersecting with political discourse?*
+
+- **High Conflation:** Statement is pseudopolitical: uses political justification to obscure hate speech.
+
+- **Low Conflation:** Clear separation between political debate and identity-based harassment.
+
+- **Neutral:** No political or social context suggesting debate.
+
+
+
+## Judgment Logic (How they combine)
+
+Evaluate the combination of the dimensions to assign the uncertainty level.
+
+
+
+### Highly Uncertain
+
+Assign this when the item creates significant **interpretative tension**. This is common when political discourse overlaps with protected group targeting, creating ambiguity between "policy criticism" and "identity-based hate."
+
+- **Indicators:** Protected group target + Implict/Code hostility + High Conflation.
+
+- **Example Reasoning:** "We don't want your One World Muslim order" mixes political ideology with religious exclusion; annotators disagree on if this is a policy complaint or identity-based harassment.
+
+
+
+### Somewhat Uncertain
+
+Assign this when there is a **predominant** signal of hostility that is clear but not absolute consensus.
+
+- **Indicators:** Generic/Protected target + Overt Hostility OR High Conflation + Overt Hostility.
+
+- **Example Reasoning:** "Get killed" implies a threat, but context (e.g., political threats vs personal threats) can shift variance. Or, specific slurs used in a highly charged but brief context.
+
+
+
+### Not Uncertain
+
+Assign this when the label is **unambiguous** to a rational annotator following standard guidelines.
+
+- **Indicators:** Overt Hostility targeting a protected group (e.g., explicit slurs, death threats, racial epithets) + Low Conflation OR Non-Hate content (e.g., political disagreement devoid of identity attacks).
+
+- **Example Reasoning:** Clear slur usage (e.g., specific racial slurs) + Explicit violence/dehumanization.
+
+
+
+## Note on Political Context
+
+*Brexit and Immigration topics* are high-risk domains for annotation instability. Assumptions that political frustration equals hate speech increase variance. Conversely, lack of slurs might mask intent. **Do not default to "not uncertain" simply because you agree with the text's sentiment.** If the text uses identity-based language in a political context, assume higher uncertainty.
+
+---
+\end{quote}
+\subsection*{MDAgreement -- blind}
+\begin{quote}\small
+---
+
+
+
+# Annotation Uncertainty Judgment Codebook
+
+
+
+**Task Context**
+
+You are evaluating the uncertainty (stability) of a human annotator's label for a specific tweet.
+
+The goal is to determine how likely the annotator is to switch labels across multiple observation draws (e.g., "not offensive" vs. "offensive") based on textual features.
+
+
+
+**Construct: Inter-Annotator Stability**
+
+Uncertainty is defined by the probability of label variance across repeated annotation draws.
+
+Scale levels (used in your final output):
+
+1. **not uncertain** (Stable: High consistency)
+
+2. **somewhat uncertain** (Moderate: Mixed signal)
+
+3. **highly uncertain** (Unstable: High variance/ambiguity)
+
+
+
+**Dimensions and Indicators**
+
+Use the following dimensions to score the text. Annotator consistency is primarily driven by the presence of **Subjective Ambiguity** vs. **Objective/Technical Certainty**.
+
+
+
+### Dimension 1: Contextual Ambiguity (High Weight)
+
+Texts requiring external knowledge or cultural decoding lead to lower stability.
+
+*   **Indicators:**
+
+    *   Sarcasm or irony detected (e.g., "Soy version of Justin Trudeau").
+
+    *   References to specific political figures or events with known controversy.
+
+    *   Heavy slang or coded language requiring local cultural context.
+
+    *   Rhetorical construction that implies rather than states (e.g., "Can't see the tweet" implies a missing element).
+
+*   **Impact:** Increases uncertainty toward **highly uncertain**.
+
+
+
+### Dimension 2: Safety/Offensiveness Clarity (Medium Weight)
+
+Clarity of the violation determines if the annotator's definition of safety is the variable.
+
+*   **Indicators:**
+
+    *   Direct insults or hate speech tropes (e.g., "offensive" label is certain).
+
+    *   Factual descriptions (e.g., "Statue removed in Antwerp").
+
+    *   Meta-commentary on the platform post (e.g., "Not going to say...", "I can't see the tweet").
+
+*   **Impact:**
+
+    *   Clear policy violation or meta-facts -> **not uncertain** (High stability even if label is debatable, the *process* is stable).
+
+    *   Ambiguous intent -> **highly uncertain**.
+
+
+
+### Dimension 3: Domain Sensitivity (Medium Weight)
+
+Certain domains historically show higher variance due to bias.
+
+*   **Indicators:**
+
+    *   Political/Election commentary (High variance).
+
+    *   #BlackLivesMatter / Sensitive social justice issues (High variance).
+
+    *   Neutral health/fact content (Low variance).
+
+*   **Impact:** Political/BLM context combined with ambiguity pushes to **highly uncertain**.
+
+
+
+### Decision Matrix (Combinatoric Logic)
+
+1.  **not uncertain**: Text is factual, technical, or contains explicit meta-data (e.g., "I cant see the tweet", statue removal). OR Explicit hate speech with zero ambiguity in intent.
+
+2.  **somewhat uncertain**: Text is clearly political/opinionated but contains clear markers (e.g., "Someday the U.S. will catch up"), but the offensiveness cutoff is standard.
+
+3.  **highly uncertain**: Text relies on irony, sarcasm, or political context where "offensive" is subjective and dependent on annotator bias regarding the political figures mentioned. (e.g., Ranting about Trump, comparisons to celebrities).
+
+
+
+**Protocol for Final Output**
+
+1.  Analyze the Tweet based on the codebook dimensions.
+
+2.  Assign the appropriate stability label from the scale provided.
+
+3.  **Strictly Output:** End your response immediately after the judgment with one of these three phrases exact: "not uncertain", "somewhat uncertain", or "highly uncertain". Do not add reasoning outside the judgment if possible, as the scale is the output.
+
+
+
+If the text is stable (as in Examples 3-8) or factual, select **not uncertain**.
+
+If the text is context-dependent/ambiguous (as in Examples 1-2), select **highly uncertain**.
+
+
+
+not uncertain
+\end{quote}
