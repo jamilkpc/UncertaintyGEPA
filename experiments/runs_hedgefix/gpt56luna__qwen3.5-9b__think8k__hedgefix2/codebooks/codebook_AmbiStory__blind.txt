@@ -1,0 +1,64 @@
+# Annotation Uncertainty Codebook
+
+## 1. Task Objective
+Evaluate the stability of a human coder's plausibility rating (1-5 scale) for a specific item. Based on the provided text (`ITEM`), `AMBIGUOUS WORD`, and `CANDIDATE MEANING`, assess how likely it is that a human coder would agree on the rating.
+*   **Metric:** Inter-Annotator Agreement (IAA).
+*   **Output Constraint:** Output exactly one of the three fixed uncertainty levels: "not uncertain", "somewhat uncertain", or "highly uncertain".
+
+## 2. Uncertainty Scale Definitions
+
+*   **"not uncertain"**: The text provides sufficient, specific cues that the `CANDIDATE MEANING` is either clearly intended or clearly incompatible, leaving little room for disagreement. Even if the word itself has multiple dictionary definitions, the context constrains the interpretation to a single, unambiguous semantic choice that fits the `CANDIDATE MEANING` consistently.
+*   **"somewhat uncertain"**: The text supports the meaning but lacks specific confirmation, or allows for mild ambiguity where two interpretations are both plausible but do not map perfectly to the rating scale. Coders might agree on the rating (e.g., both "not implausible"), but the *rationale* differs slightly, or the context leaves a margin for debate.
+*   **"highly uncertain"**: The text lacks the ability to support a specific plausibility rating, or the context creates a strong conflict where the `CANDIDATE MEANING` could reasonably be viewed as "highly implausible" by some coders and "clearly intended" by others. This includes cases where the word is broken/typo'd, or the context fails to distinguish between conflicting senses that would affect the rating.
+
+## 3. Evaluation Dimensions
+
+### 3.1 Word Form Validity
+*   **Indicator for "highly uncertain"**:
+    *   The word is truncated, formatted as a random string, or is a non-standard typo that requires guessing morphological structure.
+    *   The word's orthography prevents a confident determination of the lemma (e.g., "manila" as "manile").
+*   **Indicator for "not uncertain"**:
+    *   The word is spelled correctly as a standard lemma.
+    *   Standard spelling does not preclude uncertainty.
+*   **Indicator for "somewhat uncertain"**:
+    *   The word is standard, but the candidate meaning is obscure (e.g., archaic usage).
+
+### 3.2 Contextual Disambiguation
+*   **Indicator for "not uncertain" (Strong Resolution)**:
+    *   The context (verbs, adjectives, co-occurring nouns) explicitly forces one specific semantic sense.
+    *   **Crucial:** Even if the word is polysemous (e.g., "calf" in a farm/vet context), if only one sense fits the context and the candidate meaning matches it, this level applies.
+    *   Example: "farm", "vet", "calf" + "young of domestic cattle" = Context matches candidate meaning definitively.
+*   **Indicator for "highly uncertain" (Weak/No Resolution)**:
+    *   The context allows for *multiple conflicting interpretations of the candidate rating level*. (e.g., text is neutral on whether it's literal or metaphorical, making the rating 1 vs 5 unpredictable).
+    *   **Crucial:** If the text describes attributes that fit another possible word sense that contradicts the candidate meaning (e.g., describing an animal's legs when candidate is the animal itself, leading to confusion about the rating 1 vs 5), it is highly uncertain.
+    *   Example: "burn" + "fire damage" vs "mental anguish". If the context doesn't clarify, the rating is uncertain.
+*   **Indicator for "somewhat uncertain" (Partial Resolution)**:
+    *   The context fits the meaning but does not rule out metaphorical alternatives.
+    *   Example: "bright sun" (could be intensity or physical location).
+
+### 3.3 Candidate Meaning Fit
+*   **Indicator for "not uncertain"**:
+    *   The candidate meaning is standard and aligns perfectly with the forced context.
+*   **Indicator for "somewhat uncertain"**:
+    *   The meaning fits the text generally but is abstract or broad.
+*   **Indicator for "highly uncertain"**:
+    *   The candidate meaning is self-contradictory or vague.
+    *   The candidate meaning does not distinguish between two likely interpretations found in the text.
+
+## 4. Decision Logic
+
+Combine dimensions to assign the final level. Use the highest uncertainty dimension if there is a conflict.
+
+1.  **Gatekeeper: Word Form Validity**:
+    *   If **Word Form Validity** is "highly uncertain" (broken/typo) → Output "**highly uncertain**".
+2.  **Default Check: Contextual Disambiguation**:
+    *   If **Contextual Disambiguation** is "Strong Resolution" AND Word Form is Standard → Output "**not uncertain**".
+    *   (Note: Do not downgrade "Strong Resolution" just because the word is polysemous. If context locks the meaning, "Strong Resolution" holds).
+    *   If **Contextual Disambiguation** is "Weak/No Resolution" → Output "**highly uncertain**".
+3.  **Ambiguity Check**:
+    *   If **Contextual Disambiguation** indicates mild flexibility (e.g., metaphorical vs. literal are both somewhat possible but the rating likely stays the same) → Output "**somewhat uncertain**".
+
+## 5. Examples for Calibration
+*   **Stable (not uncertain)**: Item contains "farm" and "calf". Candidate is "animal". (Specific Context + Standard Lemma = Strong Resolution).
+*   **Conflict (highly uncertain)**: Item mentions "spot" and "safety". Context does not specify "security guard" (metaphor) or "dirty patch" (literal). (Weak Resolution on rating).
+*   **Intermediate (somewhat uncertain)**: Item contains "hold" + "grip". Candidate "grasp". Context implies possession but could be grip. (Partial Resolution).

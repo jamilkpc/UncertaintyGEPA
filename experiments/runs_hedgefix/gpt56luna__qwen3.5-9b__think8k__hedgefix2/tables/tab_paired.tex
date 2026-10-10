@@ -1,0 +1,18 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrrr}
+\hline
+Benchmark & \multicolumn{2}{c}{codebook $-$ single hedge} & hedge $-$ $g_m$ & label $-$ no label \\
+ & message-only & label-cond. & (as predictors of $u_m$) & (codebook) \\
+\hline
+HSBrexit & +0.153{\scriptsize\,[-0.02, +0.32]} & +0.014{\scriptsize\,[-0.18, +0.21]} & +0.042{\scriptsize\,[-0.15, +0.24]} & +0.142{\scriptsize\,[-0.04, +0.32]} \\
+ArMIS & -0.083{\scriptsize\,[-0.29, +0.12]} & +0.232{\scriptsize\,[-0.00, +0.44]} & +0.156{\scriptsize\,[-0.07, +0.36]} & +0.111{\scriptsize\,[-0.14, +0.33]} \\
+ConvAbuse & +0.022{\scriptsize\,[-0.08, +0.12]} & +0.074{\scriptsize\,[-0.03, +0.18]} & -0.088{\scriptsize\,[-0.18, +0.00]} & +0.010{\scriptsize\,[-0.10, +0.12]} \\
+MDAgreement & +0.045{\scriptsize\,[-0.00, +0.09]} & +0.022{\scriptsize\,[-0.02, +0.07]} & +0.086{\scriptsize\,[+0.04, +0.13]} & +0.225{\scriptsize\,[+0.18, +0.27]} \\
+AmbiStory & -0.031{\scriptsize\,[-0.11, +0.05]} & +0.057{\scriptsize\,[-0.01, +0.13]} & -0.003{\scriptsize\,[-0.07, +0.06]} & +0.092{\scriptsize\,[+0.02, +0.17]} \\
+\hline
+\end{tabular}
+\caption{Paired differences in $\rho(\cdot,u_m)$, bootstrapped over test items (4,000 resamples, common seed), with 95\% percentile intervals; positive favours the first term. The third column compares the hedge with the instability target it was trained on, in whichever condition the codebook scored higher.}
+\label{tab:paired}
+\end{table}

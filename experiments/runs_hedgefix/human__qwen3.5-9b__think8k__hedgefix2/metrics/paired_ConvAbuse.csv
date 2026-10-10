@@ -1,0 +1,4 @@
+benchmark,kind,condition,method,a,b,delta,ci_lo,ci_hi,n
+ConvAbuse,method_vs_seed,blind,GEPA,GEPA,single_hedge,0.11014774817092099,0.008941114028905543,0.2123870055716676,838
+ConvAbuse,method_vs_seed,blind,pros_cons,pros_cons,single_hedge,-0.029107841098438957,-0.13306079953148334,0.07502349842558599,838
+ConvAbuse,method_vs_seed,blind,topk_wrong,topk_wrong,single_hedge,0.12142647670437945,0.027388640595024952,0.2129031552104802,838

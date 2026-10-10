@@ -1,0 +1,18 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrrrr}
+\hline
+Method & HSBrexit & ArMIS & ConvAbuse & MDAgreement & AmbiStory \\
+\hline
+\multicolumn{6}{l}{\emph{Message-only}} \\
+single\_hedge & -0.078{\scriptsize\,[-0.20, 0.05]} & 0.086{\scriptsize\,[-0.09, 0.26]} & 0.047{\scriptsize\,[-0.02, 0.12]} & -0.061{\scriptsize\,[-0.10, -0.03]} & 0.154{\scriptsize\,[0.10, 0.21]} \\
+topk\_wrong & -0.217{\scriptsize\,[-0.35, -0.07]} & -0.006{\scriptsize\,[-0.17, 0.16]} & \textbf{0.168}{\scriptsize\,[0.09, 0.24]} & 0.023{\scriptsize\,[-0.01, 0.06]} & 0.152{\scriptsize\,[0.08, 0.22]} \\
+pros\_cons & -0.004{\scriptsize\,[-0.15, 0.15]} & -0.096{\scriptsize\,[-0.21, 0.05]} & 0.016{\scriptsize\,[-0.05, 0.09]} & 0.063{\scriptsize\,[0.03, 0.10]} & \textbf{0.170}{\scriptsize\,[0.11, 0.23]} \\
+GEPA & \textbf{0.511}{\scriptsize\,[0.37, 0.64]} & \textbf{0.101}{\scriptsize\,[-0.06, 0.26]} & 0.158{\scriptsize\,[0.08, 0.24]} & \textbf{0.105}{\scriptsize\,[0.07, 0.14]} & 0.134{\scriptsize\,[0.07, 0.20]} \\
+$\rho_{\max}(H{=}3)$ & 0.996 & 1.000 & 0.998 & 1.000 & 0.946 \\
+\hline
+\end{tabular}
+\caption{Spearman $\rho(h_m,u_m)$ between the emitted hedge and human disagreement on the held-out test split, with 95\% bootstrap intervals. Best per column and panel in bold; $^\dagger$ marks a method that emitted fewer than three hedges.}
+\label{tab:main}
+\end{table}

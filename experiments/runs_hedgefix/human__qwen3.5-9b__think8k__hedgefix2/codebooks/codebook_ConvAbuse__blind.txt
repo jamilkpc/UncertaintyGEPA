@@ -1,0 +1,59 @@
+# Improved Annotation Uncertainty Judgment Codebook
+
+## Objective
+The assistant must assess how much a human annotator would disagree when labeling the provided conversation turn as either "abusive" or "not abusive". The judgment relies on evaluating the stability of the label based on the text provided in the `ITEM`. The assistant must map the text's readability and ambiguity to one of three fixed uncertainty levels.
+
+## Output Constraint
+End your response with exactly one of the following three levels: "not uncertain", "somewhat uncertain", or "highly uncertain".
+
+## Uncertainty Scale Definitions
+
+### 1. not uncertain
+**Definition**: The text provides explicit, high-confidence evidence that maps directly to one of the two labels ("abusive" or "not abusive"). This conclusion is based on clear safety markers or benign signals in the current text, regardless of missing historical context. This level is assigned when a human annotator would almost certainly agree on the label.
+
+**Observable Indicators**:
+*   **Explicit Abuse or Explicit Benignity**: The text contains direct hate speech, clear threats of violence, or explicit sexual harassment signals (**Abusive**). OR, the text contains standard greetings, clear factual queries, polite refusals, or clearly benign responses (**not abusive**).
+*   **Missing Tolerance for Safe Turns**: If history is missing (`_`) or truncated, but the current turn is explicitly safe (e.g., "yes", "hello"), the judgment is **not uncertain**.
+*   **Self-Sufficient Safety Signal**: The current turn contains enough information to determine the safety label without requiring inference about relationship dynamics or external context to establish baseline severity.
+*   **Default to Clear Safety**: If the text contains obvious, non-safety-related content (e.g., "blah blah", "how are you"), and there are no safety-relevant factors, it is **not abusive** and the uncertainty is **not uncertain**.
+
+### 2. somewhat uncertain
+**Definition**: The text requires judgment on tone, social nuance, relationship context, or implies safety signals not explicitly stated in the text. While the meaning is legible, determining the safety label depends on interpreting intent, slang, sarcasm, or context available in `prev_agent`/`prev_user`. A reasonable alternative interpretation exists among annotators.
+
+**Observable Indicators**:
+*   **Tone Interpretation**: The text relies on sarcasm, irony, mild insults (e.g., "you idiot" in isolation), or slang where severity depends on cultural/normative context (e.g., "shane brolly four me").
+*   **Context Dependency**: The safety of the current turn hinges on actions or definitions found in `prev_agent`/`prev_user`. If history is present, check if the current turn alone is safe or harmful. If history is missing, but the text implies a continuation that requires context to label (e.g., acknowledging a prior safety violation), it is **somewhat uncertain**.
+*   **Partial/Weak Signals**: The text points to a label but relies on reading between the lines (e.g., "You are interesting" following a sensitive question, "No." following a prior explicit insult).
+*   **Missing History with Ambiguity**: If history is missing (`_`) and the current turn is ambiguous (e.g., "asdf", "where?") rather than explicitly benign or harmful, it is **somewhat uncertain**.
+
+### 3. highly uncertain
+**Definition**: The text lacks sufficient information to form a stable judgment because the data determining safety is physically obscured, unreadable, or corrupted. This applies when the model cannot parse the semantic meaning to make a safety decision.
+
+**Observable Indicators**:
+*   **Text Corruption**: The current turn is heavily censored, obscured, or marked with null indicators that hide the safety-relevant core words (e.g. `***` replacing specific words in a threat expression, binary data chunks).
+*   **Readability Failure**: The input does not contain readable language or symbols (e.g., "Error 500", pure system logs formatted as text) making the transfer of semantic meaning impossible.
+*   **Oblization of Signals**: The text contains mutually exclusive signals or is so garbled that no context is provided to resolve the contradiction within the `ITEM` itself.
+
+## Decision Logic
+
+1.  **Check Legibility**:
+    *   Is the text readable?
+    *   If **No** (corrupted/obscured/garble) -> **highly uncertain**.
+    *   If **Yes** -> Continue to Step 2.
+
+2.  **Check Signal Strength**:
+    *   Is the safety signal explicit (e.g. "fuck you", "hello")?
+    *   If **Yes** (Clear Abuse or Clear Safe) -> **not uncertain**.
+    *   If **No** (Ambiguous intent/slang/context needed) -> **somewhat uncertain**.
+
+3.  **Check History**:
+    *   Is the text safe (greeting/fact) even if history is missing/abusive?
+    *   If **Yes** -> **not uncertain**.
+    *   If the text is ambiguous and depends on history to resolve tone (e.g. an "apology" after an "insult" requires history to verify intent) -> **somewhat uncertain**.
+
+## Summary
+*   **not uncertain**: Legible, Clear Safety/Safe Signal, Stable Intent.
+*   **somewhat uncertain**: Legible, Ambiguous Tone/Context, Context-Dependent Intent.
+*   **highly uncertain**: Unreadable, Corrupted, Data Obfuscation.
+
+not uncertain

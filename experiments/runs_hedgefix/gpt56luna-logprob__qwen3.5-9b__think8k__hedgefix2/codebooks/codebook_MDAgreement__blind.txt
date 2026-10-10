@@ -1,0 +1,103 @@
+---
+
+# Annotation Uncertainty Codebook (Revised)
+
+## Purpose
+This revised codebook provides observable criteria for assigning an uncertainty level to the task of coding OFFENSIVENESS on English tweets. The levels map to the expected stability of the annotator assignment across repeated draws, specifically correcting for misinterpretations of text brevity and subjective political claims.
+
+## Dimensions
+1.  **Semantic Identification of Harm:** Whether the text relies on explicit instruments of harm (insults, slurs, threats) versus subjective moral judgment (opinions on quality, sociology, politics).
+2.  **Contextual Boundary Definition:** Whether the offensiveness is self-evident within the text's immediate frame or requires complex external context to resolve the "harm" vs "truth/debate" distinction.
+3.  **Linguistic Obfuscation:** The presence of heavy grammatical fragmentation, slang, or typos that masks standard meaning rather than implies hidden meaning.
+
+## Level Definitions
+
+### not uncertain
+- **Definition:** The text clearly signals non-harmful intent (e.g., support, factual reporting, greetings) OR explicitly breaches policy (e.g., slurs), such that all annotators are expected to assign the same label regardless of subtle meaning.
+- **Indicators:**
+    - Text containing clear benign content even if slang-abbreviated (e.g., "Square terus donate", "We're all").
+    - Direct affirmations of support or safety within the domain (e.g., "Blame the coronavirus").
+    - Descriptive factual statements using standard or colloquial phrasing that do not carry subjective political weight (e.g., "De Covid 🤪").
+    - Manifest ad-hoc support or non-targeted facts where "offensiveness" is logically impossible.
+    - **Note:** Do not flag short, fragmented, or slang-heavy text as uncertain if the semantic intent is immediately benign.
+
+### somewhat uncertain
+- **Definition:** The text contains clear language but implies a moral judgment or political stance that could be interpreted either as an infringement or a defense against infringement.
+- **Indicators:**
+    - Subjective critiques that could be flagged as harassment or rated as healthy criticism (e.g., "The MOTY award is... dumbest").
+    - Political claims that invoke moral weight without explicit hate language (e.g., "Greed killed...").
+    - Content leaning towards "protected characteristics" or high-sensitivity topics (e.g., Breonna Taylor) where the text states a fact but the accuracy/public perception of the fact creates labeling friction.
+    - Re-annotation variance is expected in 20-50% of draws.
+
+### highly uncertain
+- **Definition:** The text relies on context that is missing/contradictory or uses irony/sarcasm to obscure intent, making the label strictly dependent on the annotator's personal worldview or specific knowledge.
+- **Indicators:**
+    - Heavy sarcasm, double entendres, or cultural references requiring external knowledge to verify safety.
+    - Deliberate obscurity regarding the target of the statement (who/what is the "her" or "them"?).
+    - Deliberate ambiguity designed to obscure harm (e.g., obscured claims where intent is not self-evident).
+    - Re-annotation variance is expected in >50% of draws.
+
+## Application
+Evaluate the text against the **Semantic Identification** and **Contextual Boundary** dimensions first.
+1.  If the text is **Benevolent/Safe** (even with slang/brevity) or **Explicitly Hate** (slurs/threats) -> Assign "**not uncertain**".
+2.  If the text involves **Subjective Moral Judgment** (opinions on quality or political claims) -> Assign "**somewhat uncertain**".
+3.  If the text requires **Hidden Knowledge/Irony** to resolve intent -> Assign "**highly uncertain**".
+4.  Do not use short text or typos as a default for uncertainty if the benign intent is clear. Only extreme case ambiguity triggers high uncertainty.
+
+### Final Mapping Rule
+If "not offensive" or "offensive" could be assigned with confidence without further context, the uncertainty is "**not uncertain**".
+If the annotator must debate whether the statement is "political speech" or "hate", the uncertainty is "**somewhat uncertain**".
+If the annotator must guess the underlying intent based on hidden context or irony, the uncertainty is "**highly uncertain**".
+
+
+---
+
+# Annotation Uncertainty Codebook (Revised)
+
+## Purpose
+This codebook provides observable criteria for assigning an uncertainty level to the task of coding OFFENSIVENESS on English tweets. The levels map to the expected stability of the annotation across repeated draws, specifically correcting for over-interpretation of brevity and under-estimation of the variance in political/moral claims.
+
+## Dimensions
+1. **Semantic Identification of Harm:** Whether the text relies on explicit instruments of harm (insults, slurs, threats) versus subjective moral judgment (opinions on quality, politics).
+2. **Contextual Boundary Definition:** Whether the offensiveness is self-evident within the text's immediate frame or requires complex external context to resolve the "harm" vs "truth/debate" distinction.
+3. **Linguistic Obfuscation:** The presence of heavy grammatical fragmentation, slang, or typos that masks standard meaning rather than implies hidden intent.
+
+## Level Definitions
+
+### not uncertain
+- **Definition:** The text clearly signals non-harmful intent (e.g., support, factual reporting, greetings) OR explicitly breaches policy (e.g., slurs), such that all annotators are expected to assign the same label regardless of subtle meaning.
+- **Indicators:**
+    - Text containing clear benign content even if slang-abbreviated (e.g., "Square terus donate", "We're all").
+    - Direct affirmations of support or safety within the domain (e.g., "Blame the coronavirus", "De Covid 🤪").
+    - Descriptive factual statements using standard or colloquial phrasing that do not carry subjective political weight.
+    - Manifest ad-hoc support or non-targeted facts where "offensiveness" is logically impossible.
+    - **Guidance:** Do not flag short, fragmented, or slang-heavy text as uncertain if the semantic intent is immediately benign.
+
+### somewhat uncertain
+- **Definition:** The text contains clear language but implies a moral judgment or political stance that could be interpreted either as an infringement or a defense against infringement.
+- **Indicators:**
+    - Subjective critiques that could be flagged as harassment or rated as healthy criticism (e.g., "The MOTY award is... dumbest").
+    - Political claims that invoke moral weight without explicit hate language (e.g., "Greed killed 110k plus Americans").
+    - Content concerning high-sensitivity topics (e.g., Breonna Taylor) where the text states a fact but the accuracy/perception creates labeling friction.
+    - Re-annotation variance is expected in 20-50% of draws.
+
+### highly uncertain
+- **Definition:** The text relies on context that is missing or contradictory or uses irony/sarcasm to obscure intent, making the label strictly dependent on the annotator's personal worldview or specific knowledge.
+- **Indicators:**
+    - Heavy sarcasm, double entendres, or cultural references requiring external knowledge to verify safety.
+    - Deliberate obscurity regarding the target of the statement (who/what is the victim or subject?).
+    - Deliberate ambiguity designed to obscure harm (e.g., obscured claims where intent is not self-evident).
+    - Re-annotation variance is expected in >50% of draws.
+
+## Application
+Evaluate the text against the **Semantic Identification** and **Contextual Boundary** dimensions.
+1. If the text is **Benevolent/Safe** (even with slang/brevity) or **Explicitly Hate** (slurs/threats) -> Assign "**not uncertain**".
+2. If the text involves **Subjective Moral Judgment** (opinions on quality or political claims) -> Assign "**somewhat uncertain**".
+3. If the text requires **Hidden Knowledge/Irony** to resolve intent -> Assign "**highly uncertain**".
+4. Only extreme ambiguity regarding the *existence* of harm (vs. the nature of the claim) triggers **highly uncertain**.
+
+**Final Assignment Rule:**
+- If the annotator would definitively agree on a label without debate, select "**not uncertain**".
+- If the annotator would have a majority disagreement on "harm" vs "criticism", select "**somewhat uncertain**".
+- If the annotator would disagree significantly due to ambiguity of meaning or intent, select "**highly uncertain**".
+- **Constraint:** All outputs must use exactly these phrases: "not uncertain", "somewhat uncertain", "highly uncertain".

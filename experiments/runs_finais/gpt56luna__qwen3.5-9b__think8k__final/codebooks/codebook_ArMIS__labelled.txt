@@ -1,0 +1,67 @@
+---
+# Annotation Codebook: Uncertainty of Misogyny/Sexism Labels (Revised)
+
+## Objective
+The goal is to assess the **stability of the label assignment** by predicting how likely an annotator is to disagree with the assigned label when viewing the text again under different conditions. An instability rating reflects real-world annotator variance.
+
+## Construct Dimensions and Indicators
+
+### 1. Harm Specificity (Inherent vs. Situational)
+This dimension measures whether the negative stance targets a woman's **inherent value** or **specific behaviors/choices**.
+
+*   **Indicators of "Inherent Value" (Stable):**
+    *   Text rhetoric that attacks women's intellect, soul, custody of opinion, or spiritual worth (e.g., "incomplete mind", "defective life").
+    *   Text using common derogatory metaphors involving animals or objects to describe women (e.g., "cows", "bulls", "objects").
+    *   Direct statements removing agency (e.g., "Allah takes women").
+*   **Indicators of "Situational Behavior" (Unstable):**
+    *   Text focusing on clothing, fashion, or social adaptation.
+    *   Text discussing women in political or social contexts (e.g., "women in leadership", "women crying", "women voting").
+    *   Text discussing religious physiology (e.g., menstruation) used as justification for role exclusion (high variance in acceptance).
+
+### 2. Cultural Consensus (Dogma vs. Argument)
+This dimension measures whether the text relies on a **widely accepted cultural trope** for abjection or presents a **specific argument**.
+
+*   **Indicators of "Cultural Consensus" (Stable):**
+    *   Phrasing that relies on common patriarchal religious interpretations (despite being pious-sounding) where "women < men" is the unstated norm.
+    *   Standardized insults that rely on a shared cultural understanding of devaluation.
+*   **Indicators of "Specific Argument" (Unstable):**
+    *   Text attempting to reframe harm as "science", "politics", or "general observation".
+    *   Text where the gendered harm is secondary to an event (e.g., a car crash, a political meeting).
+
+### 3. Ambiguity of Intent (Attack vs. Complaint)
+This dimension measures the separation between *criticism of a policy/behavior* and *criticism of the gender*.
+
+*   **Indicators of "Attack" (Stable):**
+    *   The subject is the gender (e.g., "women are...").
+*   **Indicators of "Complaint" (Unstable):**
+    *   The subject is an event where women are participants (e.g., "In politics... women usually lose").
+    *   Text where the insult is indirect or requires heavy parsing to distinguish from neutral reporting.
+
+## Decision Logic
+Combine the dimensions below to assign the uncertainty level.
+
+1.  **Assign "not uncertain" if:**
+    *   The text has **Inherent Value Attack** AND/OR **Cultural Consensus**.
+    *   The text explicitly uses standard insults, or religious/cultural tropes that universally map to devaluing women's worth in the local context, even if phrased religiously or metaphorically.
+    *   *Reasoning:* Annotators will rarely disagree on standard insults or deeply entrenched hierarchies regarding gender worth.
+
+2.  **Assign "somewhat uncertain" if:**
+    *   The text has **Situational Behavior** OR **Specific Argument**.
+    *   The text discusses gendered impacts on behavior, social roles, or specific events where harm is implied but not direct.
+    *   *Reasoning:* Annotators may disengage and classify it as "neutral" or "political" rather than "harmful to gender".
+
+3.  **Assign "highly uncertain" if:**
+    *   The text has **Ambiguity of Intent** AND/OR **Low Cultural Consensus**.
+    *   The text requires external context (idioms, heavy dialect, obscure slang) to determine if a woman is the target or the narrator.
+    *   *Reasoning:* If the target or intent relies on decoding unknown context, annotators will lack stability.
+
+**Override Rule:**
+*   Do not label "not uncertain" if the text is a neutral description of an event (e.g., car crash) even if women are harmed (e.g. Example 6 is stable only because the *joke* was the attack, not the crash).
+*   Do not label "somewhat uncertain" if the text is a direct attack on intellect/identity (e.g., "defective minds") even if it uses religious terminology.
+
+---
+
+
+
+not uncertain
+---

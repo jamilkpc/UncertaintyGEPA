@@ -1,0 +1,47 @@
+---
+
+# Annotation Uncertainty Judgment Codebook (Revised)
+
+## 1. Objective
+Estimate the likelihood that a different annotator would assign a different label to the provided item. Your judgment must align with the observed stability of the provided annotation across multiple annotators. Use exactly one of these three fixed phrases: "not uncertain", "somewhat uncertain", or "highly uncertain".
+
+## 2. Scale Definitions
+Use the exact phrases below to classify the uncertainty level based on the criteria.
+
+**"not uncertain"**
+*   **Condition:** The support for the assigned label is robust and unlikely to be disputed by another annotator. This applies to clearly negative texts and clearly neutral/positive texts where the label aligns directly with the text's core intent.
+*   **Observable Criteria:**
+    *   **Assigned Label = Misogynistic or Sexist:** The text contains direct harms, demeaning language, or stereotypes against women (e.g., insults, blame, inflammatory generalizations). *Correction:* Do **not** treat broad cultural/political generalizations here as uncertainty. If the text adopts a negative stance toward women (even via generalization about "women in that region" or "people like them"), it is stable.
+    *   **Assigned Label = Not Misogynistic:** The text describes women or gender topics in a strictly positive, abistorical, or abstractly neutral way (e.g., listing achievements, defending concepts like equality, discussing scientific facts without gendered critique).
+*   **Result:** Assign "not uncertain".
+
+**"somewhat uncertain"**
+*   **Condition:** The text relies on tone, irony, or rhetorical devices that require inference to interpret accurately, though the general sentiment remains discernible.
+*   **Observable Criteria:**
+    *   Use of sarcasm, irony, humor, or rhetorical questions where the target (women or gender norms) is implied but the emotional charge is ambiguous (e.g., humor that could be read as friendly or an attack).
+    *   Text that discusses women's behavior without explicit intent but implies potential judgment (e.g., "she always..." without "that time when...").
+*   **Result:** Assign "somewhat uncertain".
+
+**"highly uncertain"**
+*   **Condition:** The text mixes messages or engages in logic that challenges the boundary of the assigned label. This is specific to "Not Misogynistic" labels where the text justifies gender differences or roles that invite critique.
+*   **Observable Criteria:**
+    *   **Assigned Label = Not Misogynistic:** The text discusses women's roles, biology, or behavior in a way that justifies inequality or enforces traditional norms (e.g., "Men are natural leaders because...", "Women are softer by nature"), even if the main label is positive. This creates conflict between the specific label and the content.
+    *   The text presents contradictory signals (e.g., praising specific women while simultaneously validating gender-based restrictions or hierarchies in the broader argument).
+*   **Result:** Assign "highly uncertain".
+
+## 3. Decision Process
+1.  **Check Label Consistency:**
+    *   **If Assigned Label = Misogynistic:** Check for direct negative intent or stereotyping. Broad generalizations regarding women do not increase uncertainty here.
+        *   *If Intent is Clear:* Follow "not uncertain".
+        *   *If Text is Sarcasitic/Ambiguous:* Follow "somewhat uncertain".
+        *   *If Intent is Obvious Attack:* Follow "not uncertain".
+    *   **If Assigned Label = Not Misogynistic:** Check the content framing.
+        *   *If Content is Laudatory/Abstract:* Follow "not uncertain".
+        *   *If Content Justifies Gender Roles/Hierarchy:* Follow "highly uncertain".
+        *   *If Content Tone is Ambiguous:* Follow "somewhat uncertain".
+2.  **Apply Final Level:** Match the analysis to the exact scale names.
+
+## 4. Output Requirement
+Output exactly one of the phrases defined in Section 2 at the very end of this message. Ensure no other uncertainty labels (e.g., high/medium/low stability) appear.
+
+not uncertain

@@ -1,0 +1,35 @@
+# Objective
+Assess the potential for human annotation disagreement (stability) regarding whether a tweet about Brexit or immigration qualifies as Hate Speech (attacks, demeans, or excludes people based on religion, national origin, or migration status). Rates indicate how clear the classification is for a human annotator. Use the following exact uncertainty labels throughout the document: "not uncertain", "somewhat uncertain", "highly uncertain".
+
+# Dimensions
+To judge stability, evaluate the following dimensions in combination:
+
+1.  **Protected Group Identification**
+    *   Assesses whether a protected group (religion, national origin, migration status) is explicitly identified as the victim or subject of negative language, or if the target is purely political actors/policies.
+2.  **Nature of Negative Sentiment**
+    *   Assesses whether the language constitutes direct attacks on the group's identity (derogation/dehumanization) or if it functions as political, economic, or policy opinion that overlaps with identity.
+
+# Level Indicators and Combinations
+Assign the uncertainty level based on how much interpretive effort is needed to distinguish policy critique from group exclusion.
+
+# Level 1: not uncertain
+Assign this level when the classification is stable because the text aligns clearly with one endpoint with no ambiguity regarding the target or nature of the harm:
+- **Clear Hate Speech:** The text explicitly names a protected group (e.g., "Immigrants", "Muslims", specific slurs) as the subject of dehumanizing language, incitement, or threats. There is no plausible interpretation of policy-only critique here.
+- **Clear Not Hate Speech:** The text discusses voting behavior, specific political platforms, or economic arguments without referencing the *identity* of the people involved and without using generalizations that attack the group's existence. (e.g., "Immigration policy is hard to balance", "I voted for X").
+
+# Level 2: somewhat uncertain
+Assign this level when the text expresses negative sentiment toward a group but lacks explicit markers for hate speech, or when the distinction between policy critique and group discrimination is based on generalizations or ambiguous phrasing:
+- **Generalizations/Stereotypes:** The text makes negative claims or broad strokes about a protected group (e.g., "[Group] drain the economy", "[Group] are a threat") without using slurs or calling for violence.
+- **Identity-Entangled Criticism:** The text targets individuals primarily through their political choices or affiliation with a group, making the boundary between attacking the person's origin and attacking a political platform blurry. (e.g., targeting "voters with a [Religious] passport" or criticizing "foreign policy of [Religion]").
+
+# Level 3: highly uncertain
+Assign this level only when the interpretation of the hate speech criteria depends heavily on external context, nuance, or ambiguity that obscures the target:
+- **Indirect Tone/Context:** The meaning of the attack relies on sarcasm, irony, or coded language where the intent to exclude or demean a group must be inferred rather than stated textually.
+- **Ambiguous Group Reference:** The reference to a "group" is too broad, uses indirect naming (e.g., "them", "foreigners" without specifics), or relies on niche political discussions to identify if a protected group is actually being harmed.
+- **Mixed Attribution:** The blame or sentiment shifts between an individual action and a systemic group attribute making it unclear who is being demeaned.
+
+# Instruction to Output
+Review the tweet against the dimensions above. Determine the stability of the "Hate Speech" label.
+- Output "not uncertain" if the text is clearly Hate Speech or clearly Not Hate Speech.
+- Output "somewhat uncertain" if the text uses generalizations, identity-entangled criticism, or is ambiguous between policy and group attack.
+- Output "highly uncertain" only if the target is obscured by tone, indirect references, or heavy reliance on external context.

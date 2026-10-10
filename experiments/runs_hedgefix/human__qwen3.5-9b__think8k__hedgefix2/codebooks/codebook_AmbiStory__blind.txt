@@ -1,0 +1,59 @@
+# Annotation Codebook: Estimating Annotation Stability
+
+## Objective
+Estimate the likelihood that a human coder assigned to this item would vary their plausibility label upon repeated observation of the same text. Analyze the interaction between the **Ambiguous Word**, the **Candidate Meaning**, and the **Narrative Context**.
+
+## Process
+1.  Review the **Narrative Content** to determine if the text forces a single interpretation or supports multiple.
+2.  Review the **Ambiguous Word** and **Candidate Meaning** to determine if the specific pairing triggers conflict or confusion.
+3.  Review the **Ambiguity** and **Context** to determine the level of Consensus potential.
+4.  Synthesize the observations into one of the three final levels.
+5.  Write the justification text.
+6.  End with one of the required phrases.
+
+## Dimensions and States
+
+### Dimension 1: Lexical Competition
+*This dimension determines how many common definitions the word possesses that could logically apply.*
+*   **Observable Indicators:**
+    *   Does the word appear as a common slang, homophone, or polysemous term with two frequent dominant definitions?
+    *   Does the Candidate Meaning represent the "literally correct" definition vs. the "colloquial/idiomatic" definition?
+    *   Does the text provide nouns or verbs that activate both definitions (e.g., "notes" activating money vs. "notes" activating writing)?
+
+### Dimension 2: Contextual Constraint Strength
+*This dimension determines how much the narrative limits the possible meanings of the word.*
+*   **Observable Indicators:**
+    *   Is there a physical or logical contradiction that rules out one definition? (e.g., Financial terms in a cleaning context).
+    *   Are there explicit setting keywords that strongly anchor the word to one domain (e.g., "dinner" + "plate" anchors "napkin" or "flatware," ruling out unrelated meanings).
+    *   Does the narrative structure imply a specific tone (e.g., humor, serious news, metaphor) that likely dictates the candidate usage?
+
+### Dimension 3: Semantic Fit Accessibility
+*This dimension determines the cognitive load required to accept the Candidate Meaning.*
+*   **Observable Indicators:**
+    *   Does the word fit the sentence structure grammatically for both potential meanings?
+    *   Does the candidate meaning require a complex inference, external knowledge, or figure of speech to make sense of the candidate meaning?
+    *   Does the text allow the Candidate Meaning to coexist with an alternative usage of the word without conflict?
+
+## Synthesis Logic for Final Output
+
+### Select "not uncertain" if:
+*   **High Constraint Case:** The Contextual Constraint Strength is high (The text explicitly rules out alternative meanings) OR the Semantic Fit is direct and there is no other common definition available.
+*   **Reasoning:** The decision boundary is sharp. Regardless of how a coder reads the sentence, the text prevents ambiguity. A coder would stabilize on a single label (usually 1 or 5) without debate.
+*   **Example Logic:** If the word is "bank" and the text says "river bank," the physical meaning is locked out by "bank" context. Consensus is high (Low Uncertainty).
+
+### Select "somewhat uncertain" if:
+*   **Low Constraint / Inference Case:** The Contextual Constraint Strength is weak (The text allows for alternative meanings) but the Candidate Meaning is the most likely *intended* one despite the ambiguity.
+*   **Reasoning:** Annotators will likely converge on a middle ground (e.g., Plausibility 2 or 3) because the text supports the candidate but does not fully exclude others. Minor variations in reading order might shift scores slightly, creating variance.
+*   **Example Logic:** If the word is "rest" and the context is "time," both "idle break" and "remainder" apply, but the candidate "remainder" is allowed but not explicitly required. Judgment varies.
+
+### Select "highly uncertain" if:
+*   **Conflict / Equifinality Case:** The Contextual Constraint Strength is low (The text supports multiple distinct meanings equally well) AND the Lexical Competition is high (The word has competing common definitions).
+*   **Reasoning:** The Signal is noisy. There is no definitive winner in the text for the specific meaning. Annotators will debate the "best" fit or the "intent," oscillating between "It fits" and "It's a trick" or debating specific labels (1 vs 2 vs 3).
+*   **Example Logic:** If the word is "change" and the text mentions "handing over notes" (money) and "feeling change is coming" (event), the text validates both meanings simultaneously. Consensus is low (High Uncertainty).
+
+## Output Requirement
+*   Justify the assessment by referencing the Dimension scores.
+*   Conclude with **exactly** one of the following three phrases (no additional text after the phrase):
+    *   "not uncertain"
+    *   "somewhat uncertain"
+    *   "highly uncertain"

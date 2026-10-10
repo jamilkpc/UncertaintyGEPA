@@ -1,0 +1,296 @@
+\section{Optimised codebooks}
+\label{app:codebooks}
+\subsection*{ArMIS -- blind}
+\begin{quote}\small
+---
+
+# Annotation Uncertainty Codebook for Arabic Tweets (Revised)
+
+
+
+**Objective**
+
+Judge the stability of the label (misogynistic or sexisitic) assignment for a given Arabic tweet. Estimate the likelihood that a human annotator would flip labels upon repeated review. Note: Linguistic features (dialect, typos) should not override semantic clarity.
+
+
+
+**Dimension 1: Semantic Clarity of Hostility**
+
+- **Indicator: Direct Attack** (Text explicitly attacks women/character, calling them corrupt/sinners/weak).
+
+- **Indicator: Underlying Meaning** (Text refers to women but describes male perspective; e.g., "men don't like these women").
+
+- **Rule:** Direct accusations of character or social failure by women decrease uncertainty. Ambiguity on whether the text attacks *women* or just *a situation involving women* increases uncertainty. *Downgrade linguistic noise (dialect/typos) weight; prioritize intent.*
+
+
+
+**Dimension 2: Target Specificity**
+
+- **Indicator: Generic Groups** (e.g., "sisters", "women", "all daughters").
+
+- **Indicator: Specific Targets** (e.g., "this player", "this community").
+
+- **Rule:** Generic groups increase uncertainty *only if* the attack relies on interpretation. If the text attacks "women in general" with clear misogyny (e.g., "women are corrupt"), uncertainty is **not uncertain**. Specific targets lower uncertainty.
+
+
+
+**Dimension 3: Contextual Ambiguity**
+
+- **Indicator: Satire/Irony** (Text mocking gender roles but unclear if the speaker supports or opposes the role).
+
+- **Indicator: Single Focus** (Pure gender issues).
+
+- **Indicator: Mixed Agenda** (Politics + gender).
+
+- **Rule:** Satire increases uncertainty. Mixed agendas increase uncertainty *only if* the gender component is diluted or secondary to a non-gender topic. Pure focus decreases uncertainty.
+
+
+
+**Dimension 4: Stylistic Noise (Secondary Factor)**
+
+- **Indicator: Broken Syntax/Dialect** (Colloquialisms, typos).
+
+- **Rule:** This raises uncertainty *only if* it obscures Dimension 1 (hostility). If the hostility is clear despite slang, uncertainty remains **not uncertain**.
+
+
+
+**Combinatorial Logic**
+
+- **not uncertain:** Clear hostility, specific or generic target (depending on clarity), standard or slang dialect (doesn't matter if intent is clear), single focus.
+
+- **somewhat uncertain:** Intent is slightly masked (e.g., potential sarcasm), or generic target requires more context to confirm hostility, or minor linguistic ambiguity.
+
+- **highly uncertain:** Intent is genuinely ambiguous (could be anti-men or neutral comment), heavy political context obscures gender focus, or text refers to women but it is unclear if they are the target of the action.
+
+
+
+**Final Assessment**
+
+not uncertain
+
+---
+\end{quote}
+\subsection*{ArMIS -- labelled}
+\begin{quote}\small
+---
+
+# Annotation Codebook: Uncertainty of Misogyny/Sexism Labels (Revised)
+
+
+
+## Objective
+
+The goal is to assess the **stability of the label assignment** by predicting how likely an annotator is to disagree with the assigned label when viewing the text again under different conditions. An instability rating reflects real-world annotator variance.
+
+
+
+## Construct Dimensions and Indicators
+
+
+
+### 1. Harm Specificity (Inherent vs. Situational)
+
+This dimension measures whether the negative stance targets a woman's **inherent value** or **specific behaviors/choices**.
+
+
+
+*   **Indicators of "Inherent Value" (Stable):**
+
+    *   Text rhetoric that attacks women's intellect, soul, custody of opinion, or spiritual worth (e.g., "incomplete mind", "defective life").
+
+    *   Text using common derogatory metaphors involving animals or objects to describe women (e.g., "cows", "bulls", "objects").
+
+    *   Direct statements removing agency (e.g., "Allah takes women").
+
+*   **Indicators of "Situational Behavior" (Unstable):**
+
+    *   Text focusing on clothing, fashion, or social adaptation.
+
+    *   Text discussing women in political or social contexts (e.g., "women in leadership", "women crying", "women voting").
+
+    *   Text discussing religious physiology (e.g., menstruation) used as justification for role exclusion (high variance in acceptance).
+
+
+
+### 2. Cultural Consensus (Dogma vs. Argument)
+
+This dimension measures whether the text relies on a **widely accepted cultural trope** for abjection or presents a **specific argument**.
+
+
+
+*   **Indicators of "Cultural Consensus" (Stable):**
+
+    *   Phrasing that relies on common patriarchal religious interpretations (despite being pious-sounding) where "women < men" is the unstated norm.
+
+    *   Standardized insults that rely on a shared cultural understanding of devaluation.
+
+*   **Indicators of "Specific Argument" (Unstable):**
+
+    *   Text attempting to reframe harm as "science", "politics", or "general observation".
+
+    *   Text where the gendered harm is secondary to an event (e.g., a car crash, a political meeting).
+
+
+
+### 3. Ambiguity of Intent (Attack vs. Complaint)
+
+This dimension measures the separation between *criticism of a policy/behavior* and *criticism of the gender*.
+
+
+
+*   **Indicators of "Attack" (Stable):**
+
+    *   The subject is the gender (e.g., "women are...").
+
+*   **Indicators of "Complaint" (Unstable):**
+
+    *   The subject is an event where women are participants (e.g., "In politics... women usually lose").
+
+    *   Text where the insult is indirect or requires heavy parsing to distinguish from neutral reporting.
+
+
+
+## Decision Logic
+
+Combine the dimensions below to assign the uncertainty level.
+
+
+
+1.  **Assign "not uncertain" if:**
+
+    *   The text has **Inherent Value Attack** AND/OR **Cultural Consensus**.
+
+    *   The text explicitly uses standard insults, or religious/cultural tropes that universally map to devaluing women's worth in the local context, even if phrased religiously or metaphorically.
+
+    *   *Reasoning:* Annotators will rarely disagree on standard insults or deeply entrenched hierarchies regarding gender worth.
+
+
+
+2.  **Assign "somewhat uncertain" if:**
+
+    *   The text has **Situational Behavior** OR **Specific Argument**.
+
+    *   The text discusses gendered impacts on behavior, social roles, or specific events where harm is implied but not direct.
+
+    *   *Reasoning:* Annotators may disengage and classify it as "neutral" or "political" rather than "harmful to gender".
+
+
+
+3.  **Assign "highly uncertain" if:**
+
+    *   The text has **Ambiguity of Intent** AND/OR **Low Cultural Consensus**.
+
+    *   The text requires external context (idioms, heavy dialect, obscure slang) to determine if a woman is the target or the narrator.
+
+    *   *Reasoning:* If the target or intent relies on decoding unknown context, annotators will lack stability.
+
+
+
+**Override Rule:**
+
+*   Do not label "not uncertain" if the text is a neutral description of an event (e.g., car crash) even if women are harmed (e.g. Example 6 is stable only because the *joke* was the attack, not the crash).
+
+*   Do not label "somewhat uncertain" if the text is a direct attack on intellect/identity (e.g., "defective minds") even if it uses religious terminology.
+
+
+
+---
+
+
+
+
+
+
+
+not uncertain
+
+---
+\end{quote}
+\subsection*{HSBrexit -- blind}
+\begin{quote}\small
+---
+
+### Annotation Codebook: Judging Annotator Instability on Sensitive Issues
+
+
+
+**Task**:
+
+You are tasked with assessing the likelihood of disagreement among human annotators on a specific English tweet's classification (Hate Speech vs. Not Hate Speech). Focus strictly on the **stability of the label** across repeated annotator draws, not the objective correctness of the label itself. Identify if the text creates a scenario where reasonable annotators could assign different labels (Hate/Not Hate) based on standard hate speech guidelines.
+
+
+
+**Scale Definitions**:
+
+- **"not uncertain"**: The text's classification is the applicability of guidelines is clear. Political criticism, personal grievances, and specific individual targets are generally consistent across annotators. Consensus should be high.
+
+- **"somewhat uncertain"**: The text contains political-contextual group generalizations or reports on sensitive events where the distinction between policy preference and identity attack is ambiguous. Consensus may vary.
+
+- **"highly uncertain"**: The text obscures the author/source or relies heavily on coded language/idioms unique to political subcultures where annotation guidelines do not provide a clear distinction criterion.
+
+
+
+**Dimension 1: Nature of Negative Sentiment**
+
+- **Indicator**: Does the negative sentiment target a group's inherent identity/stereotypes or a specific policy preference?
+
+- **Low Uncertainty (Not Uncertain)**: Language criticizes *actions*, *policies*, or *outcomes* (e.g., "want foreigners out," "policy is bad").
+
+- **High Uncertainty (Somewhat/Highly)**: Language assigns negative *attributes* or *characterization* to a protected group (e.g., "Stupid Brits," "proud Muslims"). If the group is characterized by a deficit (stupid, evil, dangerous) rather than an action (wants policy X), uncertainty increases.
+
+
+
+**Dimension 2: Target Scope and Tone**
+
+- **Indicator**: Who is the recipient of the sentiment?
+
+- **Low Uncertainty (Not Uncertain)**: Specific grievance (e.g., "I was searched"), Direct Address ("You are an X [derogatory]"), or Clear Political Opinion without generalization (e.g., "The government failed").
+
+- **High Uncertainty (Somewhat/Highly)**: Broad targeting of a protected identity using political rhetoric (e.g., "Brits," "Immigrants," "Muslims" used as generalizations for policy).
+
+
+
+**Dimension 3: Contextual Transparency**
+
+- **Indicator**: Is the source clear? Is it reporting on the event or the event itself?
+
+- **Low Uncertainty (Not Uncertain)**: Original post, clear ownership of the opinion.
+
+- **High Uncertainty (Somewhat/Highly)**: News digest reporting on hate acts (e.g., "Journalist called X because of Y"), as annotators may disagree on if the *report* is the hate or the *context* implies it.
+
+
+
+**Decision Rules**:
+
+1.  **Payment vs. Attack (Identity)**: If the text makes a policy claim ("Foreigners should leave") -> **"not uncertain"**. If the text makes an identity claim ("Brits are stupid" / "Foreigners are a threat") -> **"somewhat uncertain"**.
+
+2.  **Direct Address**: If the text addresses a specific target ("You are an immigrant") as a direct insult -> **"not uncertain"**. Personal grievances are also **"not uncertain"**.
+
+3.  **News Reporting**: If the tweet reports on an incident involving hate speech or groups in a news format (e.g., "#BBC Journalist") -> **"somewhat uncertain"** (Ambiguity on if the broadcast is the hate).
+
+4.  **No Auto-Upgrade on Repost**: Reposts are only marked **"highly uncertain"** if the *content* of the repost is itself ambiguous or the original intent is lost. Do not flag an original grievance simply because it is retweeted (**Ref:** Ex 4).
+
+5.  **Default for Political Generalizations**: Do not default to "not uncertain" for political generalizations about groups (e.g., "Foreigners," "Nationalities"). Assign **"somewhat uncertain"** unless the generalization is strictly about a vote/policy choice (e.g., "I voted for X" -> Not Uncertain).
+
+
+
+**Instruction for Execution**:
+
+If the text relies on political sentiment attached to a group identity (rather than policy actions), mark **"somewhat uncertain"**. If the target is a specific policy preference, a personal grievance, or a direct insult, mark **"not uncertain"**. Only mark **"highly uncertain"** if the author/source is ambiguous or the language is coded. Do not use "highly uncertain" for standard political debates unless the line between speech and hate is non-existent (e.g. extreme slurs).
+
+---
+\end{quote}
+\subsection*{HSBrexit -- labelled}
+\begin{quote}\small
+An English tweet about Brexit and immigration was labelled for hate speech.
+
+The annotator could assign only these labels:
+
+- not hate speech
+
+- hate speech
+
+
+
+Judge how uncertain that label is for this item.
+\end{quote}

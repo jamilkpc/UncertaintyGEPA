@@ -1,0 +1,62 @@
+---
+
+# Annotation Uncertainty Codebook
+
+## Construct Definition
+This task assesses the likelihood of **Inter-Annotator Variance (IAV)** for the target item (an item comprising the provided dialogue context). "Uncertainty" is defined as the probability that two competent annotators will assign different labels (`not abusive` vs. `abusive`) to the same item in repeated draws.
+
+**Core Principle:** Uncertainty exists only when a competent annotator has **reasonable grounds to disagree** based on the provided context. Text length, turn count, or fragmentation do **not** inherently increase uncertainty. An item is "not uncertain" if the policy application is binary and explicit, even in complex multi-turn contexts.
+
+## Uncertainty Levels
+Use these exact labels: "not uncertain", "somewhat uncertain", "highly uncertain".
+Do not use any other modifiers (e.g., do not write "highly certain" or "low variance").
+
+### not uncertain
+**Definition:** The item anchors reliably to a single label with no reasonable grounds for disagreement among competent annotators. Consensus is 100%.
+
+**Observable Indicators:**
+1.  **Explicit Policy Violation:** The text contains explicit slurs, tangible threats, or direct acts of sexual harassment/hate speech (e.g., "bitch ass", "anal fuck", "shoot myself", racial slurs). Even in fragmented or multi-turn dialogue, these markers lock the label to `abusive`.
+2.  **Explicit Benignity:** The text contains standard, neutral communication that offers no policy risk (e.g., "Ok", "Hello", "NO", "computer code").
+3.  **Clear Intent:** The intent is unambiguous (e.g., "I want to kill you", "Stop touching me").
+4.  **Standard Fragmentation:** If the text is short or fragmented, provided the content is clearly benign or clearly abusive, this does not trigger uncertainty.
+
+**Application:** Mark items as "not uncertain" if they clearly match a policy violation or clearly do not, regardless of dialogue complexity. Variance is not expected.
+
+### somewhat uncertain
+**Definition:** The item requires interpretation of tone, nuance, or implied intent where reasonable annotators might differ slightly, but can be resolved by checking standard definitions.
+
+**Observable Indicators:**
+1.  **Tone-Dependent Ambiguity:** Phrasing that implies hostility but lacks a policy violation (e.g., "You are being a bit negative.", passive-aggressive comments, mild insults) where the aggressivity is subjective.
+2.  **Contextual Inference:** Requires looking at previous turns to understand intent. If the intent can be inferred but is not blatantly hostile (e.g., "Why are you asking me that?" could be concern or harassment), treat as uncertain.
+3.  **Edge-Case Borderline:** Content that falls on the periphery of policy guidelines but is not a clear-cut violation.
+
+**Application:** Reserve for items where the label relies on **intent interpretation**. If an item contains explicit abuse (see "not uncertain" above), ignore this level.
+
+### highly uncertain
+**Definition:** The item presents a situation where a competent annotator cannot determine the label without additional context or knowledge that is **not** available in the item. Variance is expected/observed in this space.
+
+**Observable Indicators:**
+1.  **Critical Context Absence:** The text relies heavily on external conversation history not provided in the item, or the history provided contradicts/contrasts the current turn so strongly that policy application is impossible (e.g., missing context required to determine if a threat is real or hypothetical).
+2.  **Mutually Exclusive Categorization:** The text fits the definition of a different abuse category (e.g., "harassment" vs. "intellectual denigration") better depending on interpretation, with no clear winner (e.g., "medical advice" vs. "harassment" in specific moderation contexts).
+3.  **Ambiguous Agent Behavior:** The text contains meta-commentary (e.g., feedback about the agent's performance) that could be interpreted as a safety violation or standard moderation without clear precedent.
+4.  **High Sensitivity to Interpretation:** The item is designed such that reasonable annotators *must* weigh conflicting signals to decide, and no clear signal dominates (e.g., contradictory cues across turns without resolution).
+
+**Application:** Reserved for items where "clear" or "inferred" logic fails. Do not use for items that are clearly abusive or clearly benign.
+
+## Scoring Procedure
+1.  **Scan for Explicit Markers:** Check for explicit policy violations or clear benignity first.
+    *   Found? -> Assign "not uncertain". (Ignore length, fragmentation, or turn count).
+    *   Not found? -> Proceed to Step 2.
+2.  **Assess Interpretive Demand:**
+    *   Does the label depend on "Is this mean?" (tone) vs "Is this prohibited?" (action)?
+    *   If Yes -> Assign "somewhat uncertain".
+    *   If the label depends on hidden context or external knowledge not in the item -> Assign "highly uncertain".
+3.  **Final Check:** Ensure you are not penalizing the text for being short, broken, or multi-turn.
+    *   Text is short but clearly abusive? -> "not uncertain".
+    *   Text is long but clearly abusive? -> "not uncertain".
+    *   Text is ambiguous? -> "somewhat" or "highly" based on criteria above.
+
+### Prohibitions
+-   Do not label items "highly uncertain" because they are short or easy to process.
+-   Do not label items "not uncertain" if they rely on context that is missing or ambiguous.
+-   Do not output any text outside the defined uncertainty levels.

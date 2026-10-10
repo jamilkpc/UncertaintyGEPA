@@ -1,0 +1,15 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrrr}
+\hline
+Benchmark & \multicolumn{2}{c}{codebook $-$ single hedge} & hedge $-$ $g_m$ & label $-$ no label \\
+ & message-only & label-cond. & (as predictors of $u_m$) & (codebook) \\
+\hline
+HSBrexit & +0.451{\scriptsize\,[+0.27, +0.62]} & +0.000{\scriptsize\,[+0.00, +0.00]} & +0.292{\scriptsize\,[+0.11, +0.47]} & -0.351{\scriptsize\,[-0.51, -0.18]} \\
+ArMIS & +0.196{\scriptsize\,[+0.00, +0.37]} & -0.229{\scriptsize\,[-0.42, -0.02]} & +0.092{\scriptsize\,[-0.17, +0.34]} & -0.127{\scriptsize\,[-0.37, +0.12]} \\
+\hline
+\end{tabular}
+\caption{Paired differences in $\rho(\cdot,u_m)$, bootstrapped over test items (4,000 resamples, common seed), with 95\% percentile intervals; positive favours the first term. The third column compares the hedge with the instability target it was trained on, in whichever condition the codebook scored higher.}
+\label{tab:paired}
+\end{table}

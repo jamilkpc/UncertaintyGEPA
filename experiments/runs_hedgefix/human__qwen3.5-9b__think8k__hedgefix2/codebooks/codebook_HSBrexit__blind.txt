@@ -1,0 +1,94 @@
+---
+Context (also fixed):
+An English tweet about Brexit and immigration was labelled for HATE SPEECH: language that attacks, demeans or excludes people because of their religion, national origin or migration status.
+The annotator could assign only these labels:
+- not hate speech
+- hate speech
+The assistant sees only the item, not the label.
+
+An assistant was given the instructions below to judge how uncertain an annotation is:
+---
+An English tweet about Brexit and immigration was labelled for HATE SPEECH: language that attacks, demeans or excludes people because of their religion, national origin or migration status. Judge how uncertain a coder deciding this item's label would be.
+---
+
+Below is the annotation codebook for assessing uncertainty based on the provided examples and feedback.
+
+# UNCERTAINTY ASSESSMENT CODEBOOK
+
+## 1. DEFINITION OF THE CONSTRUCT
+The construct "Annotator Uncertainty" refers to the likelihood that different human annotators would assign different labels (not hate speech vs. hate speech) to the same item when processing it repeatedly. High uncertainty means human labelers disagree (often due to text ambiguity, slang, or borderline content). Low uncertainty means human labelers consistently agree.
+
+## 2. UNCERTAINTY LEVELS AND DEFINITIONS
+Use these exact names for the three levels:
+- "not uncertain"
+- "somewhat uncertain"
+- "highly uncertain"
+
+**Criterion:** Select exactly one level. Do not mention "hate speech" or "not hate speech" in your final output; you are only naming the uncertainty level.
+
+## 3. DIMENSIONS, INDICATORS, AND CRITERIA
+Evaluate the item based on three dimensions.
+
+### Dimension A: Targeting Protocols
+Indicate whether the text targets a protected group (religion, national origin, migration status) negatively.
+**Observable Indicators:**
+- **Protected Group Naming:** Does the text name Muslim/extremist/refugee/foreigner explicitly (Ex 2, 3, 8)?
+- **Generalized Policy:** Does the text discuss policies, events, or abstract concepts (Ex 1)?
+
+### Dimension B: Offensive Language & Code
+Indicate if the text uses slurs, threats, or coded language that implies exclusivity or aggression.
+**Observable Indicators:**
+- **Slurs/Negatives:** Use of "cucks/pakis/kafir/extremists" (Ex 5, 3, 2).
+- **Threats/Violence:** Claims of "get killed", "kick out", "riot" (Ex 3, 8).
+- **Coded Slang:** Use of #hashtags linking to political violence or irony (Ex 7, 8, 9).
+
+### Dimension C: Contextual Clarity
+Indicate if the intent is a direct personal attack or a political context.
+**Observable Indicators:**
+- **Direct Attack:** The aim is to demean the person/group (High Certainty of Labeling).
+- **Political Discussion:** The aim is to discuss outcomes/results/history (High Stability in "Not Hate Speech").
+
+## 4. UNCERTAINTY ASSIGNMENT RULES
+
+### "not uncertain" [Least Uncertain]
+**Use this when:**
+1.  **The text is exclusively descriptive or policy-based** without attacking individuals or groups based on protected characteristics.
+    *   *Example Criteria:* Text discusses student outcomes, university numbers, or macro-economic "foreign student" industries (e.g., Ex 1: "...foreign students have their dreams be more uncertain...").
+    *   *Note:* This triggers consistent agreement among annotators that it is "not hate speech."
+2.  **No language or sentiment suggests exclusion or threat.** There are no slurs, threats, or calls to action toward the group.
+3.  **High Consistency:** Every draw of an annotator will likely mark this as "not hate speech."
+
+### "somewhat uncertain" [Moderate Uncertainty]
+**Use this when:**
+1.  **The text criticizes a group but remains ambiguous on "hate speech" intent.**
+    *   *Example Criteria:* Mild negative sentiment, criticism of cultural practices, or vague accusations that do not cross into threats (e.g., "Foreigners are pesky").
+2.  **Context relies heavily on tone.**
+    *   *Note:* Annotators might disagree on whether it is "criticism" or "demeaning language," but there is no hard evidence of slurs.
+3.  **Mildly Ambiguous Language:** Words like "pesky", "cucks" in mild contexts.
+
+### "highly uncertain" [Most Uncertain]
+**Use this when:**
+1.  **The text contains clear slurs or coded hate speech markers.**
+    *   *Example Criteria:* Words like "cucks", "pakis", "kafir", "extremists" (Ex 5, 3, 2).
+2.  **The text mixes hate speech indicators with "not hate speech" ground truth.** (See Ex 5 text: Label assigned "not hate speech" but Annotator Varied.)
+    *   *Reasoning:* This indicates the content is controversial enough that some annotators will flag it as Hate Speech while others will not.
+3.  **The text contains calls to exclusion or violence.**
+    *   *Example Criteria:* "Get killed", "kick out the refugees", "RIOT", "declare independence... in the name of jihad" (Ex 3, 8).
+4.  **The text is highly ironic or uses ambiguous hashtags.**
+    *   *Reasoning:* Text like "#VoteLeave" combined with violence claims creates interpretive variance regarding the user's intent (Protection vs. Incitement).
+5.  **High Human Disagreement Potential:** You predict that at least half of the annotators will disagree on the label.
+
+## 5. COMBINED EVALUATION LOGIC
+1.  **Check for Slurs/Threats:** If present -> **at least "somewhat uncertain"**. If multiple or explicit (slur + threat) -> **"highly uncertain"**.
+2.  **Check for Political/General Discussion:** If pure policy/complaint without hate indicators (Ex 1) -> **"not uncertain"**.
+3.  **Ambiguity Check:** If the text falls into a grey area (e.g., Ex 2, 6, where "pesky foreigners" is assigned non-Hate but implies targeting) -> **"somewhat uncertain"**.
+4.  **Feedback Pattern:** Remember: If the text is clearly benign (Ex 1), do not judge as uncertain. If the text is clearly controversial or offensive but labeled "not hate speech" (Ex 5), judge as **highly uncertain** because the label boundary is unstable.
+
+## 6. FORMATTING
+- Output exactly one of the three levels from Section 2.
+- Do not add explanations or extra text unless requested by the system prompt (this part of the codebook is for internal reasoning).
+- Ensure you have evaluated against Dimension A, B, and C.
+
+End of Codebook.
+---
+Do not write the final output instruction: it is fixed and appended after your text. Give only the new instructions, between the --- lines.

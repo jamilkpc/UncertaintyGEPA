@@ -1,0 +1,6 @@
+An English tweet about Brexit and immigration was labelled for hate speech.
+The annotator could assign only these labels:
+- not hate speech
+- hate speech
+
+Judge how uncertain that label is for this item.

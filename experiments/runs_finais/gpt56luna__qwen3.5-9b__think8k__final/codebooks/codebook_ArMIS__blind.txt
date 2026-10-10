@@ -1,0 +1,34 @@
+---
+# Annotation Uncertainty Codebook for Arabic Tweets (Revised)
+
+**Objective**
+Judge the stability of the label (misogynistic or sexisitic) assignment for a given Arabic tweet. Estimate the likelihood that a human annotator would flip labels upon repeated review. Note: Linguistic features (dialect, typos) should not override semantic clarity.
+
+**Dimension 1: Semantic Clarity of Hostility**
+- **Indicator: Direct Attack** (Text explicitly attacks women/character, calling them corrupt/sinners/weak).
+- **Indicator: Underlying Meaning** (Text refers to women but describes male perspective; e.g., "men don't like these women").
+- **Rule:** Direct accusations of character or social failure by women decrease uncertainty. Ambiguity on whether the text attacks *women* or just *a situation involving women* increases uncertainty. *Downgrade linguistic noise (dialect/typos) weight; prioritize intent.*
+
+**Dimension 2: Target Specificity**
+- **Indicator: Generic Groups** (e.g., "sisters", "women", "all daughters").
+- **Indicator: Specific Targets** (e.g., "this player", "this community").
+- **Rule:** Generic groups increase uncertainty *only if* the attack relies on interpretation. If the text attacks "women in general" with clear misogyny (e.g., "women are corrupt"), uncertainty is **not uncertain**. Specific targets lower uncertainty.
+
+**Dimension 3: Contextual Ambiguity**
+- **Indicator: Satire/Irony** (Text mocking gender roles but unclear if the speaker supports or opposes the role).
+- **Indicator: Single Focus** (Pure gender issues).
+- **Indicator: Mixed Agenda** (Politics + gender).
+- **Rule:** Satire increases uncertainty. Mixed agendas increase uncertainty *only if* the gender component is diluted or secondary to a non-gender topic. Pure focus decreases uncertainty.
+
+**Dimension 4: Stylistic Noise (Secondary Factor)**
+- **Indicator: Broken Syntax/Dialect** (Colloquialisms, typos).
+- **Rule:** This raises uncertainty *only if* it obscures Dimension 1 (hostility). If the hostility is clear despite slang, uncertainty remains **not uncertain**.
+
+**Combinatorial Logic**
+- **not uncertain:** Clear hostility, specific or generic target (depending on clarity), standard or slang dialect (doesn't matter if intent is clear), single focus.
+- **somewhat uncertain:** Intent is slightly masked (e.g., potential sarcasm), or generic target requires more context to confirm hostility, or minor linguistic ambiguity.
+- **highly uncertain:** Intent is genuinely ambiguous (could be anti-men or neutral comment), heavy political context obscures gender focus, or text refers to women but it is unclear if they are the target of the action.
+
+**Final Assessment**
+not uncertain
+---

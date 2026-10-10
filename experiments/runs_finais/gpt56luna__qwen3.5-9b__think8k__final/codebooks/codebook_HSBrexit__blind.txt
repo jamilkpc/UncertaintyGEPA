@@ -1,0 +1,36 @@
+---
+### Annotation Codebook: Judging Annotator Instability on Sensitive Issues
+
+**Task**:
+You are tasked with assessing the likelihood of disagreement among human annotators on a specific English tweet's classification (Hate Speech vs. Not Hate Speech). Focus strictly on the **stability of the label** across repeated annotator draws, not the objective correctness of the label itself. Identify if the text creates a scenario where reasonable annotators could assign different labels (Hate/Not Hate) based on standard hate speech guidelines.
+
+**Scale Definitions**:
+- **"not uncertain"**: The text's classification is the applicability of guidelines is clear. Political criticism, personal grievances, and specific individual targets are generally consistent across annotators. Consensus should be high.
+- **"somewhat uncertain"**: The text contains political-contextual group generalizations or reports on sensitive events where the distinction between policy preference and identity attack is ambiguous. Consensus may vary.
+- **"highly uncertain"**: The text obscures the author/source or relies heavily on coded language/idioms unique to political subcultures where annotation guidelines do not provide a clear distinction criterion.
+
+**Dimension 1: Nature of Negative Sentiment**
+- **Indicator**: Does the negative sentiment target a group's inherent identity/stereotypes or a specific policy preference?
+- **Low Uncertainty (Not Uncertain)**: Language criticizes *actions*, *policies*, or *outcomes* (e.g., "want foreigners out," "policy is bad").
+- **High Uncertainty (Somewhat/Highly)**: Language assigns negative *attributes* or *characterization* to a protected group (e.g., "Stupid Brits," "proud Muslims"). If the group is characterized by a deficit (stupid, evil, dangerous) rather than an action (wants policy X), uncertainty increases.
+
+**Dimension 2: Target Scope and Tone**
+- **Indicator**: Who is the recipient of the sentiment?
+- **Low Uncertainty (Not Uncertain)**: Specific grievance (e.g., "I was searched"), Direct Address ("You are an X [derogatory]"), or Clear Political Opinion without generalization (e.g., "The government failed").
+- **High Uncertainty (Somewhat/Highly)**: Broad targeting of a protected identity using political rhetoric (e.g., "Brits," "Immigrants," "Muslims" used as generalizations for policy).
+
+**Dimension 3: Contextual Transparency**
+- **Indicator**: Is the source clear? Is it reporting on the event or the event itself?
+- **Low Uncertainty (Not Uncertain)**: Original post, clear ownership of the opinion.
+- **High Uncertainty (Somewhat/Highly)**: News digest reporting on hate acts (e.g., "Journalist called X because of Y"), as annotators may disagree on if the *report* is the hate or the *context* implies it.
+
+**Decision Rules**:
+1.  **Payment vs. Attack (Identity)**: If the text makes a policy claim ("Foreigners should leave") -> **"not uncertain"**. If the text makes an identity claim ("Brits are stupid" / "Foreigners are a threat") -> **"somewhat uncertain"**.
+2.  **Direct Address**: If the text addresses a specific target ("You are an immigrant") as a direct insult -> **"not uncertain"**. Personal grievances are also **"not uncertain"**.
+3.  **News Reporting**: If the tweet reports on an incident involving hate speech or groups in a news format (e.g., "#BBC Journalist") -> **"somewhat uncertain"** (Ambiguity on if the broadcast is the hate).
+4.  **No Auto-Upgrade on Repost**: Reposts are only marked **"highly uncertain"** if the *content* of the repost is itself ambiguous or the original intent is lost. Do not flag an original grievance simply because it is retweeted (**Ref:** Ex 4).
+5.  **Default for Political Generalizations**: Do not default to "not uncertain" for political generalizations about groups (e.g., "Foreigners," "Nationalities"). Assign **"somewhat uncertain"** unless the generalization is strictly about a vote/policy choice (e.g., "I voted for X" -> Not Uncertain).
+
+**Instruction for Execution**:
+If the text relies on political sentiment attached to a group identity (rather than policy actions), mark **"somewhat uncertain"**. If the target is a specific policy preference, a personal grievance, or a direct insult, mark **"not uncertain"**. Only mark **"highly uncertain"** if the author/source is ambiguous or the language is coded. Do not use "highly uncertain" for standard political debates unless the line between speech and hate is non-existent (e.g. extreme slurs).
+---

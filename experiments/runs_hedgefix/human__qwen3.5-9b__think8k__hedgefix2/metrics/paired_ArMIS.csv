@@ -1,0 +1,4 @@
+benchmark,kind,condition,method,a,b,delta,ci_lo,ci_hi,n
+ArMIS,method_vs_seed,blind,GEPA,GEPA,single_hedge,0.014699631121647364,-0.23298533837529958,0.25208890328288214,145
+ArMIS,method_vs_seed,blind,pros_cons,pros_cons,single_hedge,-0.18183850862401374,-0.3925882203855821,0.03802903913369584,145
+ArMIS,method_vs_seed,blind,topk_wrong,topk_wrong,single_hedge,-0.09247370516102993,-0.2826555330255993,0.11308439524259498,145

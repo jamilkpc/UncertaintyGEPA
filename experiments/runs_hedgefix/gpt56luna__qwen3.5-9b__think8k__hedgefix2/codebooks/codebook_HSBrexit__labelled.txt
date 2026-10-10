@@ -1,0 +1,32 @@
+---
+
+### INSTRUCTION: HATE SPEECH ANNOTATION UNCERTAINTY CODEBOOK
+
+**Objective:**
+Judge the potential consistency of the label assigned to the item by evaluating the text's clarity regarding the Hate Speech definition (attacks, demeans, or excludes people based on religion, national origin, or migration status). Your final response for each item must end with exactly one of the following three levels: **not uncertain**, **somewhat uncertain**, or **highly uncertain**.
+
+**Dimensions:**
+
+1.  **Label Clarity**
+    *   **not uncertain:** The text features make the assigned label unambiguous. All reasonable interpretations of the text support the assigned label. There is high potential for annotator agreement.
+        *   *Observable Criteria:* The text contains explicit hateful language (e.g., slurs, direct threats against a protected group) OR the text is clearly neutral news/finds without attribution of bias, OR the text targets a specific individual rather than a protected group (e.g., political opinion about a person). Note: General political analysis about policy or migration that explicitly dehumanizes or attacks the group counts as "not uncertain" (Hate Speech). General political theory or complaint that cites the group only as a demographic variable (not object of attack) counts as "not uncertain" (Not Hate Speech).
+    *   **somewhat uncertain:** The text has indicators that lean toward one label, but requires context to resolve. There is moderate potential for disagreement between annotators.
+        *   *Observable Criteria:* The text mentions a group but the intent is mixed (e.g., discussing the group's status in policy vs. attacking the people; political critique of where they live vs. critique of their characteristics). Examples include claims like "protection from foreigners" or "deport X to Y" that border on exclusionary policy debate without clear threats.
+    *   **highly uncertain:** The text contains conflicting signals or ambiguity regarding the definition of Hate Speech. There is low potential for annotator agreement.
+        *   *Observable Criteria:* The text includes elements that could be read as hateful (e.g., reporting on a slur, abstract claims that encourage exclusion) but the context makes it hard to distinguish between political discourse and attack. Annotators are likely to split on whether the target is "attacked/demeaned".
+
+2.  **Targeting Specificity**
+    *   The target group (religion, national origin, migration) must be identified or clearly implied. If the text is vague about the group, this increases uncertainty.
+    *   Direct attacks (e.g., slurs, threats) reduce uncertainty (**not uncertain**).
+
+3.  **Contextual Framing**
+    *   Distinguish between reporting on hate speech versus expressing hate speech. A quote about a hate speech event without endorsing the hate is often clearer (**not uncertain**). A quote combined with commentary implies ambiguity (**highly uncertain**).
+
+**Decision Logic:**
+
+*   If the text clearly triggers the Hate Speech definition (direct attack on a group) OR clearly does not (neutral fact, specific individual, policy discussion without group attack) without room for debate, assign: **not uncertain**.
+*   If the text involves group targeting but relies on interpreting nuance (e.g. policy justification vs. group demeanment), assign: **somewhat uncertain**.
+*   If the text allows two valid interpretations (e.g. political critique vs. xenophobic generalization) where the definition of Hate Speech is met or not met depending on inference, assign: **highly uncertain**.
+
+**Output Requirement:**
+Your final output must be the uncertainty level name only, from the list above.

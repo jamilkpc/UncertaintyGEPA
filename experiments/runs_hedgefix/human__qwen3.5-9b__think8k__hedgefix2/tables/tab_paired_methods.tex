@@ -1,0 +1,27 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lllr}
+\hline
+Benchmark & Condition & Method & $\Delta\rho(h_m,u_m)$ vs single hedge \\
+\hline
+HSBrexit & blind & topk\_wrong & -0.139{\scriptsize\,[-0.31, +0.03]} \\
+HSBrexit & blind & pros\_cons & +0.074{\scriptsize\,[-0.12, +0.26]} \\
+HSBrexit & blind & GEPA & +0.589{\scriptsize\,[+0.38, +0.78]} \\
+ArMIS & blind & topk\_wrong & -0.092{\scriptsize\,[-0.28, +0.11]} \\
+ArMIS & blind & pros\_cons & -0.182{\scriptsize\,[-0.39, +0.04]} \\
+ArMIS & blind & GEPA & +0.015{\scriptsize\,[-0.23, +0.25]} \\
+ConvAbuse & blind & topk\_wrong & +0.121{\scriptsize\,[+0.03, +0.21]} \\
+ConvAbuse & blind & pros\_cons & -0.029{\scriptsize\,[-0.13, +0.08]} \\
+ConvAbuse & blind & GEPA & +0.110{\scriptsize\,[+0.01, +0.21]} \\
+MDAgreement & blind & topk\_wrong & +0.084{\scriptsize\,[+0.04, +0.13]} \\
+MDAgreement & blind & pros\_cons & +0.123{\scriptsize\,[+0.07, +0.17]} \\
+MDAgreement & blind & GEPA & +0.166{\scriptsize\,[+0.12, +0.22]} \\
+AmbiStory & blind & topk\_wrong & -0.002{\scriptsize\,[-0.09, +0.09]} \\
+AmbiStory & blind & pros\_cons & +0.015{\scriptsize\,[-0.06, +0.09]} \\
+AmbiStory & blind & GEPA & -0.024{\scriptsize\,[-0.11, +0.06]} \\
+\hline
+\end{tabular}
+\caption{Each method against the single unoptimised hedge, paired over test items, with 95\% intervals.}
+\label{tab:paired-methods}
+\end{table}

@@ -1,0 +1,14 @@
+benchmark,kind,condition,method,a,b,delta,ci_lo,ci_hi,n
+HSBrexit,method_vs_seed,blind,GEPA,GEPA,single_hedge,0.15323755172599465,-0.022471570896837514,0.32315870722473955,168
+HSBrexit,method_vs_seed,blind,pros_cons,pros_cons,single_hedge,0.07395864665383195,-0.11847630882538432,0.2590057457769121,168
+HSBrexit,method_vs_seed,blind,topk_wrong,topk_wrong,single_hedge,-0.1393338563917813,-0.3062607632363939,0.029761492768051498,168
+HSBrexit,method_vs_seed,labelled,GEPA,GEPA,single_hedge,0.0139872042631779,-0.18176786264164765,0.2100956004932167,168
+HSBrexit,method_vs_seed,labelled,pros_cons,pros_cons,single_hedge,-0.2560013401157142,-0.4197095790792102,-0.08554772246264104,168
+HSBrexit,method_vs_seed,labelled,reclassify,reclassify,single_hedge,-0.011564882213922129,-0.27585967495168867,0.183874904472632,168
+HSBrexit,method_vs_seed,labelled,topk_wrong,topk_wrong,single_hedge,0.09995032942411133,-0.12087095756350438,0.3080295832214488,168
+HSBrexit,label_effect,both,GEPA,GEPA labelled,GEPA blind,0.1420542117783345,-0.03891552658140237,0.3164024981993011,168
+HSBrexit,label_effect,both,pros_cons,pros_cons labelled,pros_cons blind,-0.0486554275283949,-0.2407622558259683,0.13402686369091635,168
+HSBrexit,label_effect,both,single_hedge,single_hedge labelled,single_hedge blind,0.2813045592411513,0.06820344018773625,0.48895778878267265,168
+HSBrexit,label_effect,both,topk_wrong,topk_wrong labelled,topk_wrong blind,0.5205887450570439,0.28286695942463785,0.7488231645208993,168
+HSBrexit,hedge_vs_g,blind,GEPA,hedge,g_m,-0.09956847113746485,-0.299047268072019,0.10423921734483306,168
+HSBrexit,hedge_vs_g,labelled,GEPA,hedge,g_m,0.04248574064086966,-0.15131256374063592,0.23806101677181452,168

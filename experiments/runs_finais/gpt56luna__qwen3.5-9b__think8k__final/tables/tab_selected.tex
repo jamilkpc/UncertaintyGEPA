@@ -1,0 +1,18 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrrr}
+\hline
+ & \multicolumn{2}{c}{HSBrexit} & \multicolumn{2}{c}{ArMIS} \\
+Method & $\rho(h,u)$ & $\rho(h,g)$ & $\rho(h,u)$ & $\rho(h,g)$ \\
+\hline
+single\_hedge & 0.116{\scriptsize\,[-0.05, 0.28]}{\scriptsize\,(L)} & 0.300 & -0.093{\scriptsize\,[-0.24, 0.06]}{\scriptsize\,(B)} & -0.037 \\
+reclassify & 0.084{\scriptsize\,[0.06, 0.18]}$^\dagger${\scriptsize\,(L)} & 0.182 & 0.000$^\dagger${\scriptsize\,(L)} & \textbf{0.000} \\
+topk\_wrong & 0.225{\scriptsize\,[0.05, 0.38]}{\scriptsize\,(B)} & 0.182 & 0.040{\scriptsize\,[-0.11, 0.20]}{\scriptsize\,(B)} & -0.028 \\
+pros\_cons & 0.088{\scriptsize\,[-0.07, 0.22]}$^\dagger${\scriptsize\,(B)} & 0.041 & 0.092{\scriptsize\,[-0.09, 0.25]}$^\dagger${\scriptsize\,(L)} & -0.120 \\
+GEPA & \textbf{0.467}{\scriptsize\,[0.37, 0.56]}$^\dagger${\scriptsize\,(B)} & \textbf{0.363} & \textbf{0.104}{\scriptsize\,[-0.07, 0.27]}{\scriptsize\,(B)} & -0.065 \\
+\hline
+\end{tabular}
+\caption{Spearman correlations on the held-out test split, with the assessor input treated as a hyperparameter: for each method and benchmark, the condition (L: label-conditioned, B: message-only) with the higher $\rho(h_m,u_m)$ on the development split. $\rho(h,u)$ is the association with human disagreement, with 95\% bootstrap intervals; $\rho(h,g)$ is the association with the annotator's instability target, the objective the master optimised. Best per column in bold; $^\dagger$ marks a method that emitted fewer than three hedges.}
+\label{tab:selected}
+\end{table}

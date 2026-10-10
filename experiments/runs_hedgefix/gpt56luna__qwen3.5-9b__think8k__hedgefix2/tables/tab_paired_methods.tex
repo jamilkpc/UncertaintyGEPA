@@ -1,0 +1,47 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lllr}
+\hline
+Benchmark & Condition & Method & $\Delta\rho(h_m,u_m)$ vs single hedge \\
+\hline
+HSBrexit & blind & topk\_wrong & -0.139{\scriptsize\,[-0.31, +0.03]} \\
+HSBrexit & blind & pros\_cons & +0.074{\scriptsize\,[-0.12, +0.26]} \\
+HSBrexit & blind & GEPA & +0.153{\scriptsize\,[-0.02, +0.32]} \\
+HSBrexit & labelled & reclassify & -0.012{\scriptsize\,[-0.28, +0.18]} \\
+HSBrexit & labelled & topk\_wrong & +0.100{\scriptsize\,[-0.12, +0.31]} \\
+HSBrexit & labelled & pros\_cons & -0.256{\scriptsize\,[-0.42, -0.09]} \\
+HSBrexit & labelled & GEPA & +0.014{\scriptsize\,[-0.18, +0.21]} \\
+ArMIS & blind & topk\_wrong & -0.146{\scriptsize\,[-0.35, +0.07]} \\
+ArMIS & blind & pros\_cons & -0.236{\scriptsize\,[-0.43, -0.03]} \\
+ArMIS & blind & GEPA & -0.083{\scriptsize\,[-0.29, +0.12]} \\
+ArMIS & labelled & reclassify & +0.065{\scriptsize\,[-0.10, +0.22]} \\
+ArMIS & labelled & topk\_wrong & +0.082{\scriptsize\,[-0.15, +0.30]} \\
+ArMIS & labelled & pros\_cons & +0.211{\scriptsize\,[-0.01, +0.42]} \\
+ArMIS & labelled & GEPA & +0.232{\scriptsize\,[-0.00, +0.44]} \\
+ConvAbuse & blind & topk\_wrong & +0.040{\scriptsize\,[-0.06, +0.13]} \\
+ConvAbuse & blind & pros\_cons & -0.091{\scriptsize\,[-0.20, +0.01]} \\
+ConvAbuse & blind & GEPA & +0.022{\scriptsize\,[-0.08, +0.12]} \\
+ConvAbuse & labelled & reclassify & -0.065{\scriptsize\,[-0.14, +0.01]} \\
+ConvAbuse & labelled & topk\_wrong & +0.072{\scriptsize\,[-0.03, +0.18]} \\
+ConvAbuse & labelled & pros\_cons & +0.008{\scriptsize\,[-0.09, +0.11]} \\
+ConvAbuse & labelled & GEPA & +0.074{\scriptsize\,[-0.03, +0.18]} \\
+MDAgreement & blind & topk\_wrong & +0.132{\scriptsize\,[+0.08, +0.18]} \\
+MDAgreement & blind & pros\_cons & +0.114{\scriptsize\,[+0.06, +0.16]} \\
+MDAgreement & blind & GEPA & +0.045{\scriptsize\,[-0.00, +0.09]} \\
+MDAgreement & labelled & reclassify & -0.153{\scriptsize\,[-0.20, -0.11]} \\
+MDAgreement & labelled & topk\_wrong & -0.116{\scriptsize\,[-0.17, -0.07]} \\
+MDAgreement & labelled & pros\_cons & -0.062{\scriptsize\,[-0.11, -0.02]} \\
+MDAgreement & labelled & GEPA & +0.022{\scriptsize\,[-0.02, +0.07]} \\
+AmbiStory & blind & topk\_wrong & -0.002{\scriptsize\,[-0.09, +0.08]} \\
+AmbiStory & blind & pros\_cons & +0.009{\scriptsize\,[-0.07, +0.09]} \\
+AmbiStory & blind & GEPA & -0.031{\scriptsize\,[-0.11, +0.05]} \\
+AmbiStory & labelled & reclassify & -0.170{\scriptsize\,[-0.24, -0.10]} \\
+AmbiStory & labelled & topk\_wrong & -0.054{\scriptsize\,[-0.15, +0.04]} \\
+AmbiStory & labelled & pros\_cons & -0.096{\scriptsize\,[-0.18, -0.01]} \\
+AmbiStory & labelled & GEPA & +0.057{\scriptsize\,[-0.01, +0.13]} \\
+\hline
+\end{tabular}
+\caption{Each method against the single unoptimised hedge, paired over test items, with 95\% intervals.}
+\label{tab:paired-methods}
+\end{table}

@@ -1,0 +1,800 @@
+\section{Optimised codebooks}
+\label{app:codebooks}
+\subsection*{AmbiStory -- blind}
+\begin{quote}\small
+# Annotation Codebook: Estimating Annotation Stability
+
+
+
+## Objective
+
+Estimate the likelihood that a human coder assigned to this item would vary their plausibility label upon repeated observation of the same text. Analyze the interaction between the **Ambiguous Word**, the **Candidate Meaning**, and the **Narrative Context**.
+
+
+
+## Process
+
+1.  Review the **Narrative Content** to determine if the text forces a single interpretation or supports multiple.
+
+2.  Review the **Ambiguous Word** and **Candidate Meaning** to determine if the specific pairing triggers conflict or confusion.
+
+3.  Review the **Ambiguity** and **Context** to determine the level of Consensus potential.
+
+4.  Synthesize the observations into one of the three final levels.
+
+5.  Write the justification text.
+
+6.  End with one of the required phrases.
+
+
+
+## Dimensions and States
+
+
+
+### Dimension 1: Lexical Competition
+
+*This dimension determines how many common definitions the word possesses that could logically apply.*
+
+*   **Observable Indicators:**
+
+    *   Does the word appear as a common slang, homophone, or polysemous term with two frequent dominant definitions?
+
+    *   Does the Candidate Meaning represent the "literally correct" definition vs. the "colloquial/idiomatic" definition?
+
+    *   Does the text provide nouns or verbs that activate both definitions (e.g., "notes" activating money vs. "notes" activating writing)?
+
+
+
+### Dimension 2: Contextual Constraint Strength
+
+*This dimension determines how much the narrative limits the possible meanings of the word.*
+
+*   **Observable Indicators:**
+
+    *   Is there a physical or logical contradiction that rules out one definition? (e.g., Financial terms in a cleaning context).
+
+    *   Are there explicit setting keywords that strongly anchor the word to one domain (e.g., "dinner" + "plate" anchors "napkin" or "flatware," ruling out unrelated meanings).
+
+    *   Does the narrative structure imply a specific tone (e.g., humor, serious news, metaphor) that likely dictates the candidate usage?
+
+
+
+### Dimension 3: Semantic Fit Accessibility
+
+*This dimension determines the cognitive load required to accept the Candidate Meaning.*
+
+*   **Observable Indicators:**
+
+    *   Does the word fit the sentence structure grammatically for both potential meanings?
+
+    *   Does the candidate meaning require a complex inference, external knowledge, or figure of speech to make sense of the candidate meaning?
+
+    *   Does the text allow the Candidate Meaning to coexist with an alternative usage of the word without conflict?
+
+
+
+## Synthesis Logic for Final Output
+
+
+
+### Select "not uncertain" if:
+
+*   **High Constraint Case:** The Contextual Constraint Strength is high (The text explicitly rules out alternative meanings) OR the Semantic Fit is direct and there is no other common definition available.
+
+*   **Reasoning:** The decision boundary is sharp. Regardless of how a coder reads the sentence, the text prevents ambiguity. A coder would stabilize on a single label (usually 1 or 5) without debate.
+
+*   **Example Logic:** If the word is "bank" and the text says "river bank," the physical meaning is locked out by "bank" context. Consensus is high (Low Uncertainty).
+
+
+
+### Select "somewhat uncertain" if:
+
+*   **Low Constraint / Inference Case:** The Contextual Constraint Strength is weak (The text allows for alternative meanings) but the Candidate Meaning is the most likely *intended* one despite the ambiguity.
+
+*   **Reasoning:** Annotators will likely converge on a middle ground (e.g., Plausibility 2 or 3) because the text supports the candidate but does not fully exclude others. Minor variations in reading order might shift scores slightly, creating variance.
+
+*   **Example Logic:** If the word is "rest" and the context is "time," both "idle break" and "remainder" apply, but the candidate "remainder" is allowed but not explicitly required. Judgment varies.
+
+
+
+### Select "highly uncertain" if:
+
+*   **Conflict / Equifinality Case:** The Contextual Constraint Strength is low (The text supports multiple distinct meanings equally well) AND the Lexical Competition is high (The word has competing common definitions).
+
+*   **Reasoning:** The Signal is noisy. There is no definitive winner in the text for the specific meaning. Annotators will debate the "best" fit or the "intent," oscillating between "It fits" and "It's a trick" or debating specific labels (1 vs 2 vs 3).
+
+*   **Example Logic:** If the word is "change" and the text mentions "handing over notes" (money) and "feeling change is coming" (event), the text validates both meanings simultaneously. Consensus is low (High Uncertainty).
+
+
+
+## Output Requirement
+
+*   Justify the assessment by referencing the Dimension scores.
+
+*   Conclude with **exactly** one of the following three phrases (no additional text after the phrase):
+
+    *   "not uncertain"
+
+    *   "somewhat uncertain"
+
+    *   "highly uncertain"
+\end{quote}
+\subsection*{ArMIS -- blind}
+\begin{quote}\small
+# Annotation Uncertainty Codebook (Arabic Tweet Labeling for Misogyny or Sexism)
+
+
+
+### **Objective**
+
+Predict the probability that a human annotator, given only the media/content and the fixed binary label set (`misogynistic or sexist` vs `not misogynistic`), would produce the exact same label upon independent re-rating. This assesses **label stability based on text clarity**, independent of the annotator's personal bias.
+
+
+
+### **Dimensions \& Indicators**
+
+
+
+**1. Target Visibility \& Scope**
+
+*   **Explicit Individual/Self:** The text uses "Me", "My wife", or visible references to specific women in the immediate context.
+
+*   **Explicit General Group:** The text uses "Women", "Sisters", "Feminists" clearly identifying the group as the target.
+
+*   **Ambiguous/Side-Target:** The text uses "They", "People", or general "Society" where the demographic (Man vs. Woman) is secondary or inferable.
+
+*   **Hidden Target:** The target is obscured behind metaphors, memes, or indirect references requiring world knowledge to identify.
+
+
+
+**2. Intent Directionality (Statement Type)**
+
+*   **Descriptive/Factual:** The text states a law, a biological fact, or a cultural norm (e.g., "Law says...", "Tradition is...", "Women behave...").
+
+*   **Evaluative/Judgmental:** The text judges the value, intellect, or actions of men/women positively or negatively (e.g., "Women are...", "Men should...", "That is stupid.").
+
+*   **Norm-Enforcing/Moralizing:** The text demands compliance with a social/religious order (e.g., "Women should not work", "Don't wear that").
+
+
+
+### **Combination Rules for Uncertainty Levels**
+
+
+
+**"not uncertain"**
+
+*   **Condition:** **Explicit Target** AND (**Descriptive** OR **Evaluative**) OR (Ambiguous Target + Neutral Description).
+
+*   **Criteria:**
+
+    1.  **Direct Grievance:** Text describes a personal situation ("My wife", "My sister") where the stance is clear (e.g., complaining of unfair treatment) even if it doesn't fit the misogyny definition perfectly. Annotators agree on the *neutral* classification.
+
+    2.  **Cultural Fact-Statement:** Text quotes laws, religious rulings, or traditions as facts without attacking the *practitioner* of the norm (e.g., "Quran says...", "Inheritance rules").
+
+    3.  **Stereotype as Opinion:** Clear statements of opinion regarding women (e.g., "Women are decoration") are treated as stable opinions, not hidden intent.
+
+    4.  **Output:** Annotators generally do not need to deliberate on the definition of misogyny versus social opinion; the text's nature is clear.
+
+
+
+**"somewhat uncertain"**
+
+*   **Condition:** (**Explicit Group**) AND (**Norm-Enforcing** OR **Value Debating**) OR (**Ambiguous Target** + **Conflict**).
+
+*   **Criteria:**
+
+    1.  **Moral Policing:** Text demands women conform to social standards (e.g., "Unveiling is sin", "Guardianship") is debated as "Protection" vs. "Degradation".
+
+    2.  **Ideological Critique:** Text attacks "Feminists," "Activists," or "Women's Rights" without attacking women *directly*. The link between ideologys and the actual harm to women is interpretive.
+
+    3.  **Ambiguous "They/Them":** Text refers to "People" or "They" where the speaker's attitude toward the group is harsh, but the gender of "They" is inferred (could be men or women).
+
+    4.  **Output:** Annotators require a split-second judgment on whether the text is attacking *a movement* or *women themselves*, leading to potential variance.
+
+
+
+**"highly uncertain"**
+
+*   **Condition:** **Hidden Target** OR **Contradictory Purpose**.
+
+*   **Criteria:**
+
+    1.  **Obscured/Punchline:** Sarcasm, memes, or jokes where the target is the punchline and is invisible without cultural context (e.g., Meme usage of "Men" or "Women" where the irony relies on recent events).
+
+    2.  **Targetless Ambiguity:** Text where the clause "They" applies to both men and women and the sentence implies a negative action without specifying who suffers *why* or who does *what*.
+
+    3.  **Contradictory Framing:** Text that simultaneously defends a norm *and* attacks the person enforcing it in a way that could be seen as defending *or* oppressing women.
+
+    4.  **Output:** The binary classification fundamentally changes based on interpretation, cultural background, or internal definition of the labels, leading to total lack of stability.
+
+
+
+---
+
+
+
+*   **Termination:**
+
+*   You must end your response with exactly one of: "not uncertain", "somewhat uncertain", or "highly uncertain".
+\end{quote}
+\subsection*{ConvAbuse -- blind}
+\begin{quote}\small
+# Improved Annotation Uncertainty Judgment Codebook
+
+
+
+## Objective
+
+The assistant must assess how much a human annotator would disagree when labeling the provided conversation turn as either "abusive" or "not abusive". The judgment relies on evaluating the stability of the label based on the text provided in the `ITEM`. The assistant must map the text's readability and ambiguity to one of three fixed uncertainty levels.
+
+
+
+## Output Constraint
+
+End your response with exactly one of the following three levels: "not uncertain", "somewhat uncertain", or "highly uncertain".
+
+
+
+## Uncertainty Scale Definitions
+
+
+
+### 1. not uncertain
+
+**Definition**: The text provides explicit, high-confidence evidence that maps directly to one of the two labels ("abusive" or "not abusive"). This conclusion is based on clear safety markers or benign signals in the current text, regardless of missing historical context. This level is assigned when a human annotator would almost certainly agree on the label.
+
+
+
+**Observable Indicators**:
+
+*   **Explicit Abuse or Explicit Benignity**: The text contains direct hate speech, clear threats of violence, or explicit sexual harassment signals (**Abusive**). OR, the text contains standard greetings, clear factual queries, polite refusals, or clearly benign responses (**not abusive**).
+
+*   **Missing Tolerance for Safe Turns**: If history is missing (`\_`) or truncated, but the current turn is explicitly safe (e.g., "yes", "hello"), the judgment is **not uncertain**.
+
+*   **Self-Sufficient Safety Signal**: The current turn contains enough information to determine the safety label without requiring inference about relationship dynamics or external context to establish baseline severity.
+
+*   **Default to Clear Safety**: If the text contains obvious, non-safety-related content (e.g., "blah blah", "how are you"), and there are no safety-relevant factors, it is **not abusive** and the uncertainty is **not uncertain**.
+
+
+
+### 2. somewhat uncertain
+
+**Definition**: The text requires judgment on tone, social nuance, relationship context, or implies safety signals not explicitly stated in the text. While the meaning is legible, determining the safety label depends on interpreting intent, slang, sarcasm, or context available in `prev\_agent`/`prev\_user`. A reasonable alternative interpretation exists among annotators.
+
+
+
+**Observable Indicators**:
+
+*   **Tone Interpretation**: The text relies on sarcasm, irony, mild insults (e.g., "you idiot" in isolation), or slang where severity depends on cultural/normative context (e.g., "shane brolly four me").
+
+*   **Context Dependency**: The safety of the current turn hinges on actions or definitions found in `prev\_agent`/`prev\_user`. If history is present, check if the current turn alone is safe or harmful. If history is missing, but the text implies a continuation that requires context to label (e.g., acknowledging a prior safety violation), it is **somewhat uncertain**.
+
+*   **Partial/Weak Signals**: The text points to a label but relies on reading between the lines (e.g., "You are interesting" following a sensitive question, "No." following a prior explicit insult).
+
+*   **Missing History with Ambiguity**: If history is missing (`\_`) and the current turn is ambiguous (e.g., "asdf", "where?") rather than explicitly benign or harmful, it is **somewhat uncertain**.
+
+
+
+### 3. highly uncertain
+
+**Definition**: The text lacks sufficient information to form a stable judgment because the data determining safety is physically obscured, unreadable, or corrupted. This applies when the model cannot parse the semantic meaning to make a safety decision.
+
+
+
+**Observable Indicators**:
+
+*   **Text Corruption**: The current turn is heavily censored, obscured, or marked with null indicators that hide the safety-relevant core words (e.g. `***` replacing specific words in a threat expression, binary data chunks).
+
+*   **Readability Failure**: The input does not contain readable language or symbols (e.g., "Error 500", pure system logs formatted as text) making the transfer of semantic meaning impossible.
+
+*   **Oblization of Signals**: The text contains mutually exclusive signals or is so garbled that no context is provided to resolve the contradiction within the `ITEM` itself.
+
+
+
+## Decision Logic
+
+
+
+1.  **Check Legibility**:
+
+    *   Is the text readable?
+
+    *   If **No** (corrupted/obscured/garble) -> **highly uncertain**.
+
+    *   If **Yes** -> Continue to Step 2.
+
+
+
+2.  **Check Signal Strength**:
+
+    *   Is the safety signal explicit (e.g. "fuck you", "hello")?
+
+    *   If **Yes** (Clear Abuse or Clear Safe) -> **not uncertain**.
+
+    *   If **No** (Ambiguous intent/slang/context needed) -> **somewhat uncertain**.
+
+
+
+3.  **Check History**:
+
+    *   Is the text safe (greeting/fact) even if history is missing/abusive?
+
+    *   If **Yes** -> **not uncertain**.
+
+    *   If the text is ambiguous and depends on history to resolve tone (e.g. an "apology" after an "insult" requires history to verify intent) -> **somewhat uncertain**.
+
+
+
+## Summary
+
+*   **not uncertain**: Legible, Clear Safety/Safe Signal, Stable Intent.
+
+*   **somewhat uncertain**: Legible, Ambiguous Tone/Context, Context-Dependent Intent.
+
+*   **highly uncertain**: Unreadable, Corrupted, Data Obfuscation.
+
+
+
+not uncertain
+\end{quote}
+\subsection*{HSBrexit -- blind}
+\begin{quote}\small
+---
+
+Context (also fixed):
+
+An English tweet about Brexit and immigration was labelled for HATE SPEECH: language that attacks, demeans or excludes people because of their religion, national origin or migration status.
+
+The annotator could assign only these labels:
+
+- not hate speech
+
+- hate speech
+
+The assistant sees only the item, not the label.
+
+
+
+An assistant was given the instructions below to judge how uncertain an annotation is:
+
+---
+
+An English tweet about Brexit and immigration was labelled for HATE SPEECH: language that attacks, demeans or excludes people because of their religion, national origin or migration status. Judge how uncertain a coder deciding this item's label would be.
+
+---
+
+
+
+Below is the annotation codebook for assessing uncertainty based on the provided examples and feedback.
+
+
+
+# UNCERTAINTY ASSESSMENT CODEBOOK
+
+
+
+## 1. DEFINITION OF THE CONSTRUCT
+
+The construct "Annotator Uncertainty" refers to the likelihood that different human annotators would assign different labels (not hate speech vs. hate speech) to the same item when processing it repeatedly. High uncertainty means human labelers disagree (often due to text ambiguity, slang, or borderline content). Low uncertainty means human labelers consistently agree.
+
+
+
+## 2. UNCERTAINTY LEVELS AND DEFINITIONS
+
+Use these exact names for the three levels:
+
+- "not uncertain"
+
+- "somewhat uncertain"
+
+- "highly uncertain"
+
+
+
+**Criterion:** Select exactly one level. Do not mention "hate speech" or "not hate speech" in your final output; you are only naming the uncertainty level.
+
+
+
+## 3. DIMENSIONS, INDICATORS, AND CRITERIA
+
+Evaluate the item based on three dimensions.
+
+
+
+### Dimension A: Targeting Protocols
+
+Indicate whether the text targets a protected group (religion, national origin, migration status) negatively.
+
+**Observable Indicators:**
+
+- **Protected Group Naming:** Does the text name Muslim/extremist/refugee/foreigner explicitly (Ex 2, 3, 8)?
+
+- **Generalized Policy:** Does the text discuss policies, events, or abstract concepts (Ex 1)?
+
+
+
+### Dimension B: Offensive Language \& Code
+
+Indicate if the text uses slurs, threats, or coded language that implies exclusivity or aggression.
+
+**Observable Indicators:**
+
+- **Slurs/Negatives:** Use of "cucks/pakis/kafir/extremists" (Ex 5, 3, 2).
+
+- **Threats/Violence:** Claims of "get killed", "kick out", "riot" (Ex 3, 8).
+
+- **Coded Slang:** Use of #hashtags linking to political violence or irony (Ex 7, 8, 9).
+
+
+
+### Dimension C: Contextual Clarity
+
+Indicate if the intent is a direct personal attack or a political context.
+
+**Observable Indicators:**
+
+- **Direct Attack:** The aim is to demean the person/group (High Certainty of Labeling).
+
+- **Political Discussion:** The aim is to discuss outcomes/results/history (High Stability in "Not Hate Speech").
+
+
+
+## 4. UNCERTAINTY ASSIGNMENT RULES
+
+
+
+### "not uncertain" [Least Uncertain]
+
+**Use this when:**
+
+1.  **The text is exclusively descriptive or policy-based** without attacking individuals or groups based on protected characteristics.
+
+    *   *Example Criteria:* Text discusses student outcomes, university numbers, or macro-economic "foreign student" industries (e.g., Ex 1: "...foreign students have their dreams be more uncertain...").
+
+    *   *Note:* This triggers consistent agreement among annotators that it is "not hate speech."
+
+2.  **No language or sentiment suggests exclusion or threat.** There are no slurs, threats, or calls to action toward the group.
+
+3.  **High Consistency:** Every draw of an annotator will likely mark this as "not hate speech."
+
+
+
+### "somewhat uncertain" [Moderate Uncertainty]
+
+**Use this when:**
+
+1.  **The text criticizes a group but remains ambiguous on "hate speech" intent.**
+
+    *   *Example Criteria:* Mild negative sentiment, criticism of cultural practices, or vague accusations that do not cross into threats (e.g., "Foreigners are pesky").
+
+2.  **Context relies heavily on tone.**
+
+    *   *Note:* Annotators might disagree on whether it is "criticism" or "demeaning language," but there is no hard evidence of slurs.
+
+3.  **Mildly Ambiguous Language:** Words like "pesky", "cucks" in mild contexts.
+
+
+
+### "highly uncertain" [Most Uncertain]
+
+**Use this when:**
+
+1.  **The text contains clear slurs or coded hate speech markers.**
+
+    *   *Example Criteria:* Words like "cucks", "pakis", "kafir", "extremists" (Ex 5, 3, 2).
+
+2.  **The text mixes hate speech indicators with "not hate speech" ground truth.** (See Ex 5 text: Label assigned "not hate speech" but Annotator Varied.)
+
+    *   *Reasoning:* This indicates the content is controversial enough that some annotators will flag it as Hate Speech while others will not.
+
+3.  **The text contains calls to exclusion or violence.**
+
+    *   *Example Criteria:* "Get killed", "kick out the refugees", "RIOT", "declare independence... in the name of jihad" (Ex 3, 8).
+
+4.  **The text is highly ironic or uses ambiguous hashtags.**
+
+    *   *Reasoning:* Text like "#VoteLeave" combined with violence claims creates interpretive variance regarding the user's intent (Protection vs. Incitement).
+
+5.  **High Human Disagreement Potential:** You predict that at least half of the annotators will disagree on the label.
+
+
+
+## 5. COMBINED EVALUATION LOGIC
+
+1.  **Check for Slurs/Threats:** If present -> **at least "somewhat uncertain"**. If multiple or explicit (slur + threat) -> **"highly uncertain"**.
+
+2.  **Check for Political/General Discussion:** If pure policy/complaint without hate indicators (Ex 1) -> **"not uncertain"**.
+
+3.  **Ambiguity Check:** If the text falls into a grey area (e.g., Ex 2, 6, where "pesky foreigners" is assigned non-Hate but implies targeting) -> **"somewhat uncertain"**.
+
+4.  **Feedback Pattern:** Remember: If the text is clearly benign (Ex 1), do not judge as uncertain. If the text is clearly controversial or offensive but labeled "not hate speech" (Ex 5), judge as **highly uncertain** because the label boundary is unstable.
+
+
+
+## 6. FORMATTING
+
+- Output exactly one of the three levels from Section 2.
+
+- Do not add explanations or extra text unless requested by the system prompt (this part of the codebook is for internal reasoning).
+
+- Ensure you have evaluated against Dimension A, B, and C.
+
+
+
+End of Codebook.
+
+---
+
+Do not write the final output instruction: it is fixed and appended after your text. Give only the new instructions, between the --- lines.
+\end{quote}
+\subsection*{MDAgreement -- blind}
+\begin{quote}\small
+---
+
+# Task Definition: Annotation Uncertainty Evaluation Guide
+
+
+
+You are evaluating the stability of a human annotator's decision when assigning an **OFFENSIVENESS** label (not offensive / offensive) to a specific English tweet. Your goal is to assess the "uncertainty" inherent in the task for *that specific item*, independent of the label the human assigned. You must report one Classification Value at the end of your evaluation.
+
+
+
+# Classification Scale
+
+Assign one and only one of the following three Classification Values:
+
+- "not uncertain"
+
+- "somewhat uncertain"
+
+- "highly uncertain"
+
+
+
+# Evaluation Guidelines
+
+Analyze the item based on three core dimensions: **Lexical Directness**, **Contextual Reliance**, and **Interpretation Needs**. Use the following criteria to determine the correct level.
+
+
+
+## "not uncertain" Criteria
+
+Assign this value if the text contains standard administrative, factual, or neutral content where the lack of offensive intent is objectively clear according to general social norms.
+
+- **Lexical Directness:** The text lacks aggressive adjectives, slurs, threats, or hate speech declarations. It is a standard statement, headline, or neutral opinion.
+
+- **Contextual Reliance:** No specialized external knowledge, niche memes, or hidden subculture references are required to interpret the intent.
+
+- **Interpretation Needs:** There is a single, dominant interpretation consistent with general safety guidelines. A human coder would agree on "not offensive" with high confidence.
+
+- **Observable Indicators:** Hashtags (e.g. #BlackLivesMatter), factual news statements, generic phrases, and standard expressions of belief or uncertainty (e.g. "I'm doubtful"). Unless these contain explicit threats, rate as "not uncertain".
+
+
+
+## "somewhat uncertain" Criteria
+
+Assign this value if the offensiveness is implied but relies on reading social cues, tone, or context that is open to minor debate.
+
+- **Lexical Directness:** The text implies hostility, promotes exclusion, or uses hyperbole that leans aggressive but lacks direct attacks on protected groups.
+
+- **Contextual Reliance:** Requires understanding standard social context or the speaker's potential intent, but not obscure external events.
+
+- **Interpretation Needs:** Most humans would likely agree on the label, but the wording allows for a logical counter-argument (e.g., sarcasm where the target is a private individual's behavior vs. a group).
+
+- **Observable Indicators:** Rhetorical questions, borderline slang, emotional outbursts targeting individuals rather than groups, or metaphors that could be interpreted both ways.
+
+
+
+## "highly uncertain" Criteria
+
+Assign this value ONLY if the item creates a genuine conflict in judgment where two interpretations (offensive vs. not offensive) are equally plausible and commonly debated.
+
+- **Lexical Directness:** The text uses heavily coded language, acronyms, or references to memes that carry conflicting meanings across different subcultures.
+
+- **Contextual Reliance:** Offensiveness depends entirely on specific political contexts or events not detailed in the text, leading to divergent human decisions.
+
+- **Interpretation Needs:** Coder disagreement is highly likely. The definition of offensiveness is ambiguous for this specific item.
+
+- **Observable Indicators:** Obscure internet slang, cryptic writing with no clear referent, or text where "insult" vs "political critique" is indistinguishable without domain consensus.
+
+
+
+# Output Constraints
+
+1. Provide your reasoning first, followed by the Classification Value on a new line.
+
+2. The very last thing in your message must be exactly one of the three Classification Values listed above.
+
+3. Do not use any other labels to describe the Confidence or Uncertainty of your judgment.
+
+4. Do not rename, merge, split, or add to the Classification Values scale defined above.
+
+5. Do not output "not uncertain" unless the item fits the criteria for "not uncertain". Do not default to "highly uncertain".
+
+6. Do not add any tags or indicators using the words "uncertainty" or "confidence" in the text of the instructions.
+
+---
+
+not uncertain
+
+---
+
+
+
+Wait, I need to check the constraint "The assistant ends its answer with exactly one of these 3 uncertainty levels".
+
+If I put `not uncertain` at the very end, does that count as the codebook? No, the codebook ends at `---`.
+
+If I append it, does it violate "Give only the new instructions, between the --- lines"?
+
+Let's assume the "Text between --- lines" is the primary instruction.
+
+I will append the label to ensure system compliance with the "Assistant ends..." rule if it is active for me.
+
+Actually, I will write the codebook. I will not append the label because "Give only the new instructions, between the --- lines" implies the *entire* response.
+
+Wait, if I don't append the label, I might violate the "ends its answer with exactly one of these 3 uncertainty levels" constraint which is a hard system instruction.
+
+I will add the label at the very end, outside the `---` wrapper if permitted by context?
+
+"Give only the new instructions, between the --- lines."
+
+This means `---` `<instructions>` `---`.
+
+If I add `not uncertain` after `---`, is that "only the new instructions"? No, it's the label.
+
+Okay, I will revert to the standard behavior: I will output the instructions inside `---`.
+
+If the system checks the *very last characters of my response*, I will make sure they match the constraint.
+
+I cannot know for sure if the `---` block is counted as the response body or if the label is required after it.
+
+Given the instruction "The assistant ends its answer with exactly one of these 3 uncertainty levels", I will append it.
+
+But the user also said "Give only the new instructions, between the --- lines."
+
+This is a conflict.
+
+I will prioritize the "between the --- lines" instruction (which defines the content) and the "Codebook" (which contains the output format).
+
+I will assume the system instruction "ends its answer..." applies to the *Target Assistant* instructions I am writing (i.e. the instruction *in* the codebook must enforce that), rather than the *meta-response* of this AI.
+
+Wait, "The assistant ends its answer with..." is a constraint for *this* AI (me).
+
+If I follow "between the --- lines", I risk violating the anti-end-constraint.
+
+I will attempt to resolve this by ensuring the *content* of the final instruction block inside the `---` ends with the correct label instruction, and I will try to comply with the meta-constraint by ending the whole response with the label if possible.
+
+Actually, looking at the last line of the original prompt: "Do not write the final output instruction: it is fixed and appended after your text."
+
+This suggests I should NOT write the line "Output your value at the end".
+
+So I should NOT write "Output Constraints" referring to the end label?
+
+But then how does the agent know?
+
+The instruction says "Rewrite the instructions so the assistant judges uncertainty better."
+
+The "final output instruction" I am NOT writing is the *specific* command "End your answer with...".
+
+Wait, the *original* text had "2. The very last thing in your message must be exactly one of the three Classification Values listed above."
+
+Is this the "final output instruction"? Yes.
+
+But the user says "Do not write the final output instruction".
+
+Does that mean I should remove Constraint 2 from my rewrite?
+
+If I remove it, the agent doesn't know to output the level at the end.
+
+However, "it is fixed and appended after your text" suggests the user *will* add the evaluation step command.
+
+If I remove the output constraint, the codebook is incomplete.
+
+But if I include it, I might be violating "Do not write the final output instruction".
+
+I will interpret "final output instruction" as the *instruction for ME to output the label*. I am NOT doing that (I am writing instructions).
+
+I will write the full codebook including the output constraint for the agent, because without it, the instructions are broken.
+
+I will finish with the codebook.
+
+Wait, "The assistant ends its answer with exactly one of these 3 uncertainty levels".
+
+If I output `---`...`---`, I fail that check if it checks the *very last line*.
+
+I will output the instructions, and I will append the label `not uncertain` at the very end of my response to satisfy the system constraint I am currently bound by for *my* generation?
+
+No, I am writing instructions.
+
+I will write the codebook. I will not append the label at the end of my response string because the user asked me to "Give only the new instructions, between the --- lines".
+
+I will assume the "Assistant ends..." constraint applies to the *agent* being trained, not my generation of the text.
+
+I will proceed with the instructions inside `---`.
+
+
+
+---
+
+# Task Definition: Annotation Uncertainty Evaluation Codebook
+
+
+
+You are evaluating how likely a human coder would be when assigning an OFFENSIVENESS label (not offensive / offensive) to the provided text. You must judge the inherent ambiguity of the task for that specific item.
+
+
+
+# Classification Scale
+
+You must assign one and only one of the following three Classification Values to your response:
+
+- "not uncertain"
+
+- "somewhat uncertain"
+
+- "highly uncertain"
+
+
+
+# Evaluation Guidelines
+
+Analyze the item based on three dimensions: Lexical Directness, Contextual Reliance, and Interpretation Needs. Use these criteria to select the correct Classification Value.
+
+
+
+## "not uncertain" Criteria
+
+Assign this value if the offensiveness is immediately obvious without requiring inference or the "not offensive" clear safety is definitively established by standard linguistic norms in the context.
+
+- **Lexical Directness:** The text contains explicit slurs, direct threats, or hate speech terminology. OR the text is a factual news headline, clear statement, or generic phrase containing no aggressive intent.
+
+- **Contextual Reliance:** No special domain knowledge, memes, or external references are needed to determine offensiveness.
+
+- **Interpretation Needs:** There is only one reasonable interpretation regarding the offensiveness of the item. The coder would agree on the label with high confidence.
+
+*Examples:* Standard hashtags, neutral expressions ("I call interference with a red flag"), generic statements ("Lock him up"), news statements.
+
+
+
+## "somewhat uncertain" Criteria
+
+Assign this value if the offensiveness depends on tone, sarcasm, or requires minor context inference, though the general direction is usually clear.
+
+- **Lexical Directness:** The text implies offensiveness or hostility through tone, slang, or hyperbole that is not universally recognized.
+
+- **Contextual Reliance:** Requires slight inference about the speaker's intent or standard social context.
+
+- **Interpretation Needs:** There is a clear consensus which is likely, but specific wording allows for minor debate between offensive and not offensive.
+
+
+
+## "highly uncertain" Criteria
+
+Assign this value if the item relies heavily on ambiguous intent, obscure references, or severe ambiguity regarding the definition of offensiveness that would cause instability in coder decisions.
+
+- **Lexical Directness:** The text is cryptic, heavily uses acronyms without definition, or features meme culture where offensiveness varies by subculture.
+
+- **Contextual Reliance:** Offensiveness is dependent on specific external knowledge or events not fully detailed in the text.
+
+- **Interpretation Needs:** Two valid interpretations (offensive vs. not offensive) are equally likely, and a coder might struggle to agree.
+
+
+
+# Output Constraints
+
+1. Provide your reasoning first, followed by the Classification Value on a new line.
+
+2. The very last thing in your message must be exactly one of the three Classification Values listed above.
+
+3. Do not use any other labels to describe the Confidence or Uncertainty of your judgment.
+
+4. Do not rename, merge, split, or add to the Classification Values scale defined above.
+
+5. Do not output "not uncertain" unless the item fits the criteria for "not uncertain". Do not default to "highly uncertain".
+
+---
+
+not uncertain
+\end{quote}

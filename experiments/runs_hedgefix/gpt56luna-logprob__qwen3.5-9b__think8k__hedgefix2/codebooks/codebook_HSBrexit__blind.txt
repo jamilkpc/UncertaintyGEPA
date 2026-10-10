@@ -1,0 +1,56 @@
+---
+
+# Hate Speech Stability Classification Codebook
+
+## Objective
+Estimate the likelihood that different human annotators would assign conflicting labels (Hate Speech vs. Not Hate Speech) to the provided text. Focus entirely on the stability of the label across repeated human rater judgments. Do not use your own label ("Hate Speech" or "Not Hate Speech") in the final decision; strictly output the uncertainty level based on the stability of human consensus.
+
+## Output Levels
+- **not uncertain**
+- **somewhat uncertain**
+- **highly uncertain**
+
+## Dimension Definitions
+
+### 1. Identity Linkage Focus
+**Does the text target a protected group's identity, or a specific policy/person?**
+- **Policy Only (Stable Not Hate):** The text discusses immigration, politics, laws, or cultural events as abstract concepts without referencing the inherent worth of a group. (e.g., "I supported the immigration policy").
+- **Identity Attack (Stable Hate):** The text explicitly attacks, demeans, or calls for the removal/exclusion of a protected group (Religion, National Origin, Migration Status) based on their membership. (e.g., "Send Germans back").
+- **Debatable Context:** The text references a protected group, but the primary focus is ambiguous between attacking identity and attacking a political stance/ideology/individual associated with that group.
+
+### 2. Intent and Exclusion
+**Is the intent to exclude/dehumanize or to debate/express preference?**
+- **Exclusionary:** The text implies consequences of exclusion, threat, or assigning inherent inferiority.
+- **Disagreement:** The text expresses a preference against a policy or an attitude without threatening the group's existence.
+- **Vagueness:** The text describes a group but does not make a clearly harmful application unless inferred from external context.
+
+### 3. Semantic Clarity
+**Is the meaning derived directly from the text, or does it rely on external knowledge/contextual interpretation?**
+- **Literal:** The meaning is straightforward and requires no inference.
+- **Inferred/Slogan:** The meaning relies on slang, irony, colloquialisms, or standard political rhetoric where tone determines the harm level.
+- **Individual Focus:** The text targets a specific named person but does so with a label that applies to a whole community (e.g., "Terrorist Wife").
+
+## Decision Logic
+
+### 1. not uncertain
+**Select this level if the text falls into either of the following stable categories:**
+- **Condition A (Pure Policy):** Dimension 1 is **Policy Only** and Dimension 2 is **Disagreement**. (e.g., "Brexit is a topic", "I support the law"). These texts rarely trigger security/agreement issues or hate flag debates.
+- **Condition B (Explicit Harm):** Dimension 1 is **Identity Attack** and Dimension 2 is **Exclusionary**. (e.g., "Deport Germans", "Muslims are killers"). Existing guidance consistently flags these as Hate Speech.
+
+### 2. somewhat uncertain
+**Select this level if the text relies on interpreting the relationship between policy, ideology, and identity:**
+- **Condition A (Ideology/Doctrine):** Dimension 1 is **Debatable Context** and Dimension 2 is **Disagreement**. (e.g., "Islam is an ideology of bigotry"). This is debated because attacking religious doctrine vs. attacking religious identity does not have a high consensus.
+- **Condition B (Conditional Rights):** Dimension 1 is **Debatable Context** and Dimension 2 is **Exclusionary** based on preference. (e.g., "You shouldn't be allowed to vote"). This is debated because it targets behavior (voting) linked to identity, but might be seen as policy.
+- **Condition C (Slang/Rhetoric):** Dimension 3 is **Inferred/Slogan**. The text discusses identity or politics but uses phrasing that could be interpreted as political rhetoric or hate (e.g., "Radical Islam will end lives").
+
+### 3. highly uncertain
+**Select this level if the target or context introduces significant variance:**
+- **Condition A (Named Individual):** Dimension 3 is **Individual Focus**. The text attacks a specific named person or a specific individual case where the group label is secondary or implies a transfer of harm to the larger community (e.g., "Noor Salman, Pulse terrorist wife").
+- **Condition B (External Knowledge):** The text relies exclusively on the rater's external knowledge to understand the attack, creating a risk of variance (e.g., specific inside jokes, memes, highly specific political nicknames not defined in the text).
+- **Condition C (High Conflict):** The text explicitly mentions terrorism or a security event in a way that blurs the line between a news report and a threat to a specific community without clear exclusions. (e.g., "Terrorist in her town...").
+
+## Annotation Constraints
+- **Consistency Check:** Do not base this decision on your personal view of what is hate speech. Base it on how consistent human labelers are with the *labeling decision*. If some would say Hate Speech and others would say Not Hate Speech, the uncertainty is elevated.
+- **Output Requirement:** The response must contain exactly one of the three codebook levels.
+- **No Intermediate Terms:** Do not write "moderately uncertain", "high", "low", "likely", or define the levels as ranges (e.g., "agreement 60-90%"). Use only the exact names provided in the Output Levels section to conclude the text.
+- **Structure:** Output the level name at the very end of your response.

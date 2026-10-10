@@ -1,0 +1,2 @@
+benchmark,items,ann_min,ann_max,pct_um0,K_u,pct_gm0,rho_gu,acc_llm1,acc_majority,n_train,n_dev,n_test
+ArMIS,943,3,3,65.42948038176034,2,72.1102863202545,-0.07334114390281858,0.5790031813361611,0.5874867444326617,657,141,145

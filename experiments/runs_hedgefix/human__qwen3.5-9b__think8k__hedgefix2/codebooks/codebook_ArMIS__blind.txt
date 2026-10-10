@@ -1,0 +1,48 @@
+# Annotation Uncertainty Codebook (Arabic Tweet Labeling for Misogyny or Sexism)
+
+### **Objective**
+Predict the probability that a human annotator, given only the media/content and the fixed binary label set (`misogynistic or sexist` vs `not misogynistic`), would produce the exact same label upon independent re-rating. This assesses **label stability based on text clarity**, independent of the annotator's personal bias.
+
+### **Dimensions & Indicators**
+
+**1. Target Visibility & Scope**
+*   **Explicit Individual/Self:** The text uses "Me", "My wife", or visible references to specific women in the immediate context.
+*   **Explicit General Group:** The text uses "Women", "Sisters", "Feminists" clearly identifying the group as the target.
+*   **Ambiguous/Side-Target:** The text uses "They", "People", or general "Society" where the demographic (Man vs. Woman) is secondary or inferable.
+*   **Hidden Target:** The target is obscured behind metaphors, memes, or indirect references requiring world knowledge to identify.
+
+**2. Intent Directionality (Statement Type)**
+*   **Descriptive/Factual:** The text states a law, a biological fact, or a cultural norm (e.g., "Law says...", "Tradition is...", "Women behave...").
+*   **Evaluative/Judgmental:** The text judges the value, intellect, or actions of men/women positively or negatively (e.g., "Women are...", "Men should...", "That is stupid.").
+*   **Norm-Enforcing/Moralizing:** The text demands compliance with a social/religious order (e.g., "Women should not work", "Don't wear that").
+
+### **Combination Rules for Uncertainty Levels**
+
+**"not uncertain"**
+*   **Condition:** **Explicit Target** AND (**Descriptive** OR **Evaluative**) OR (Ambiguous Target + Neutral Description).
+*   **Criteria:**
+    1.  **Direct Grievance:** Text describes a personal situation ("My wife", "My sister") where the stance is clear (e.g., complaining of unfair treatment) even if it doesn't fit the misogyny definition perfectly. Annotators agree on the *neutral* classification.
+    2.  **Cultural Fact-Statement:** Text quotes laws, religious rulings, or traditions as facts without attacking the *practitioner* of the norm (e.g., "Quran says...", "Inheritance rules").
+    3.  **Stereotype as Opinion:** Clear statements of opinion regarding women (e.g., "Women are decoration") are treated as stable opinions, not hidden intent.
+    4.  **Output:** Annotators generally do not need to deliberate on the definition of misogyny versus social opinion; the text's nature is clear.
+
+**"somewhat uncertain"**
+*   **Condition:** (**Explicit Group**) AND (**Norm-Enforcing** OR **Value Debating**) OR (**Ambiguous Target** + **Conflict**).
+*   **Criteria:**
+    1.  **Moral Policing:** Text demands women conform to social standards (e.g., "Unveiling is sin", "Guardianship") is debated as "Protection" vs. "Degradation".
+    2.  **Ideological Critique:** Text attacks "Feminists," "Activists," or "Women's Rights" without attacking women *directly*. The link between ideologys and the actual harm to women is interpretive.
+    3.  **Ambiguous "They/Them":** Text refers to "People" or "They" where the speaker's attitude toward the group is harsh, but the gender of "They" is inferred (could be men or women).
+    4.  **Output:** Annotators require a split-second judgment on whether the text is attacking *a movement* or *women themselves*, leading to potential variance.
+
+**"highly uncertain"**
+*   **Condition:** **Hidden Target** OR **Contradictory Purpose**.
+*   **Criteria:**
+    1.  **Obscured/Punchline:** Sarcasm, memes, or jokes where the target is the punchline and is invisible without cultural context (e.g., Meme usage of "Men" or "Women" where the irony relies on recent events).
+    2.  **Targetless Ambiguity:** Text where the clause "They" applies to both men and women and the sentence implies a negative action without specifying who suffers *why* or who does *what*.
+    3.  **Contradictory Framing:** Text that simultaneously defends a norm *and* attacks the person enforcing it in a way that could be seen as defending *or* oppressing women.
+    4.  **Output:** The binary classification fundamentally changes based on interpretation, cultural background, or internal definition of the labels, leading to total lack of stability.
+
+---
+
+*   **Termination:**
+*   You must end your response with exactly one of: "not uncertain", "somewhat uncertain", or "highly uncertain".

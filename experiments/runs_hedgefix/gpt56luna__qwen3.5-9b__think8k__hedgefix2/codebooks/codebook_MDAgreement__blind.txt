@@ -1,0 +1,36 @@
+---
+Annotation Uncertainty Codebook for Offensive Content Classification
+
+CONSTRUCT: Human Annotator Uncertainty for Offensiveness
+
+DIMENSIONS:
+1. CLARITY OF HARM (Objective evidence of hate speech, threats, or protected class attacks).
+2. CONTEXTUAL DEPENDENCY (Necessity of external knowledge or access to non-textual signals like tone/video).
+3. AMBIGUITY OF INTENT (Presence of sarcasm, irony, irony, or cultural "dog whistles").
+
+CRITERIA FOR UNCERTAINTY LEVELS:
+
+NOT UNCERTAIN
+Use this level when the annotation is clearly distinguishable between offensive and non-offensive.
+*   <-- Clear Harm: The text contains direct slurs, explicit threats, or hate speech making the offensiveness objective.
+*   <-- Neutral Facts: The text contains factual statements or neutral queries where offensiveness is objectively absent. (e.g., Advertisements, Statistical claims, Standard instructions).
+*   <-- Simple Slang: Common, widely understood slang that carries no ironic or harmful edge.
+*   <-- No Context Needed: The offensiveness is self-contained in the text without requiring outside identity or cultural knowledge.
+
+SOMEWHAT UNCERTAIN
+Use this level when there is ambiguity, but the item provides most cues.
+*   <-- Cultural Nuance: Relies on specific subcultural slang where offensiveness depends on in-group knowledge (e.g., specific election memes, niche political jargon).
+*   <-- Mild Edge Content: Text that uses targeted language but lacks direct hostility (e.g., Political rants, Slick debates, Mild criticism that depends on sentiment).
+*   <-- Partial Context: Requires some external knowledge but where standard interpretation applies (e.g., Commonly known political references).
+
+HIGHLY UNCERTAIN
+Use this level when the text is difficult to classify reliably without significant assumptions.
+*   <-- Heavy Satire/Irony: Relies on tone or humor where "mean" vs "joking" cannot be determined in text alone.
+*   <-- Implicit Harassment: "Dog whistle" language that only becomes offensive to specific audiences not clear to the text.
+*   <-- Mixed Signals: Text that mixes support for a statement with potential criticisms making intent unclear.
+*   <-- High Stakes Context: Content highly sensitive to the annotator's identity or ESG bias calibration.
+
+INSTRUCTION:
+Evaluate the specific item text against the above dimensions. If the harm is clear, the tone is non-ironic, and no external context is needed, output "not uncertain". If sarcasm or niche context creates doubt, output "somewhat uncertain". If intent is obscure or requires complex cultural decoding, output "highly uncertain".
+
+not uncertain

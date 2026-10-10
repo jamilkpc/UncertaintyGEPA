@@ -1,0 +1,38 @@
+# Annotation Codebook: Coder Uncertainty Assessor
+The goal is to estimate the stability of a coder's label assignment for the binary task: MISOGYNY OR SEXISM vs. NOT MISOGYNISTIC. Use the following dimensions to determine the appropriate uncertainty level.
+
+## Dimensions
+
+1.  **Alignment with Definition:** Does the text explicitly fit the definition criteria (demeans, stereotypes, polices, dismisses, treats women as inferior) or does it require inference?
+2.  **Interpretive Clarity:** Is the intent of the speaker (e.g., ironic, sarcastic, serious, political) obvious from the text provided, or does it rely on context not visible to an annotator?
+3.  **Target Ambiguity:** Is the gender target of the statement (e.g., all women vs. a specific group vs. a general political stance) clearly identifiable?
+
+## Observable Indicators per Dimension
+
+*   **High Alignment (Clear):** Direct insults, explicit stereotypes, clear policing of female behavior or appearance, or undeniable dismissal.
+*   **Low Alignment (Implicit):** Text requires knowledge of outside events or implies meaning through allusion that is not in the text.
+*   **High Clarity (Straightforward):** No irony, no double meaning, tone is consistent.
+*   **Low Clarity (Ambiguous):** Presence of sarcasm, rhetorical questions, mixed intent (e.g., criticizing patriarchy while attacking women), or conflicting statements.
+*   **High Clarity (Target):** It is clear "women" are the subject or object of the claim.
+*   **Low Clarity (Target):** Subject is "society," "men," or specific subgroups where generalization to women is debatable.
+
+## Level Definitions and Combination Rules
+
+You must assign exactly one of the following three uncertainty labels to the item based on the combination of dimensions above. Use these exact terms: "not uncertain", "somewhat uncertain", "highly uncertain".
+
+*   **not uncertain:**
+    *   **Criteria:** The text meets all conditions of "High Alignment," "High Clarity," and "High Target" clarity.
+    *   **Description:** The definition is met directly. There is no need to infer intent. The coder would likely agree on the label.
+    *   **Indicators:** Direct insults ("women are..."), clear stereotypes ("women only know..."), explicit policing of appearance/behavior without irony.
+
+*   **somewhat uncertain:**
+    *   **Criteria:** The text meets at least one condition of "Low Alignment," "Low Clarity," or "Low Target" clarity, but not severe conflict.
+    *   **Description:** The text fits the definition generally but requires the coder to weigh conflicting evidence (e.g., context, tone) or infer intent. Moderate variance between coders is expected.
+    *   **Indicators:** Subtle sarcasm ("haha these women..."), political arguments using gendered language, mixed valence (both respectful and critical), or ambiguity between personal opinion and systemic statement.
+
+*   **highly uncertain:**
+    *   **Criteria:** The text has "Low Alignment," "Low Clarity," and/or "Low Target" to a degree that makes the label indistinguishable from a different label upon close inspection.
+    *   **Description:** Requires deep contextual analysis to make a decision. High variance in coder assignment is likely due to conflicting interpretations of tone or target.
+    *   **Indicators:** Heavy irony where the surface meaning is opposite (e.g., praising women to mock them), abstract philosophical debates where misogyny is hidden, or specific cultural references requiring outside knowledge to identify the misogyny.
+
+not uncertain

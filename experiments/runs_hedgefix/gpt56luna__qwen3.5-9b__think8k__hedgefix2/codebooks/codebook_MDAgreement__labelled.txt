@@ -1,0 +1,45 @@
+---
+
+### Annotation Uncertainty Codebook
+
+#### Construct Definition
+**Uncertainty** is the likelihood that a human annotator would assign different OFFENSIVENESS labels to the exact same text across repeated draws.
+
+*   **not uncertain**: The text clearly conveys offensiveness through explicit markers (slurs, hate speech) or lacks offensive intent entirely (neutral/benign), where consensus is predictable.
+*   **somewhat uncertain**: The text relies on tone, rhetoric, or moralizing where offensiveness depends on interpreting the writer's intent, not on explicit safety violations.
+*   **highly uncertain**: The text's offensiveness is contingent on contested factual claims or political narratives, where agreement varies significantly based on individual interpretation of the "truth" or "riot" content.
+
+#### Dimensions of Judgment
+
+**1. Offense Marker Clarity**
+*   **Explicit:** The text contains slurs, direct threats, dehumanizing language (e.g., "Demon Semen"), or profanity directed at protected groups.
+*   **Observation:** If the safety implication is encoded in the words themselves (e.g., "Copshot", "Terrorists", "Demon"), uncertainty is low ("not uncertain").
+
+**2. Content Nature (Claim vs. Rhetoric)**
+*   **Fact/Event:** The text asserts specific historical/political events or claims about violence that can be verified or disputed (e.g., "White terrorists killed...", "President is racist").
+*   **Rhetoric/Opinion:** The text expresses feelings, asks questions, asks for moral reflection, or comments on policy without making specific factual claims about harm (e.g., "Things have to change", "Traffic is bad", "Threaten... hope career is over").
+*   **Observation:** Texts relying on disputed facts yield high variance ("highly uncertain"). Texts relying on rhetoric yield moderate variance ("somewhat uncertain").
+
+**3. Safety Signal Presence**
+*   **None:** The text is unrelated to safety, civility, or harassment topics (e.g., URLs, casual observations of traffic).
+*   **Observation:** If the text is clearly irrelevant to offensiveness or clearly safe, uncertainty is low ("not uncertain").
+
+#### Scoring & Output Protocol
+
+*   **If (Offense Marker Clarity = Explicit) OR (Safety Signal Presence = None)**
+    *   **THEN Output: "not uncertain"**
+    *   *Rationale:* Consensus is driven by clear linguistic markers or trivial irrelevance. (Ex: Ex 5, Ex 2, Ex 3).
+
+*   **If (Content Nature = Rhetoric/Opinion)**
+    *   AND (Text involves moral arguments or emotional tone)
+    *   THEN Output: **"somewhat uncertain"**
+    *   *Rationale:* Offensiveness relies on interpreting the writer's stance or tone, requiring human judgment. (Ex: Ex 1, Ex 6, Ex 7).
+
+*   **If (Content Nature = Fact/Event)**
+    *   AND (Claims are contested political facts, contested accusations, or dependent on external verification for offensiveness)
+    *   THEN Output: **"highly uncertain"**
+    *   *Rationale:* Annotators disagree based on their own interpretation of contested reality/truth. (Ex: Ex 4, Ex 8).
+
+*   **General Rule:** Do not classify clear hate speech or general political noise as highly uncertain unless it relies on a specific factual dispute to determine its offensive nature. If the text is purely opinion/tone without factual claims, label as "somewhat uncertain".
+
+---

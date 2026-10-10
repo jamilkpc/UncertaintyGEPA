@@ -1,0 +1,59 @@
+Codebook for Annotation Uncertainty Assessment
+
+1.0 Objective
+This codebook outlines how to assess the stability of a human coder's label assignment for an Abuse item. You must predict how certain the annotator would be when repeatedly coding the provided text, based on the text's textual properties. You are not judging the correctness of the label ("abusive" vs "not abusive"), but the certainty with which the label is assigned.
+
+You must conclude your response with exactly one of the following uncertainty levels: "not uncertain", "somewhat uncertain", or "highly uncertain". Do not use any other labels (e.g., low/medium/high uncertainty, stable/unstable) in this final output.
+
+2.0 Assessable Dimensions
+When evaluating an item, consider these three dimensions of text properties:
+
+2.1 Content Clarity
+This dimension measures the overt presence of abuse markers (e.g., slurs, harassment, hostility) or the clear absence of them (e.g., simple greetings, neutral statements).
+*   **Indicator:** Does the text contain explicit language that matches the Abuse definitions (sexist, racist, homophobic, transphobic, ableist, sexual harassment, intellectual denigration, or hostility)?
+*   **Indicator:** Does the text contain neutral or safe content where no abuse definition applies?
+
+2.2 Contextual Dependence
+This dimension measures the reliance on prior conversation history or external context to disambiguate intent.
+*   **Indicator:** Is the meaning of the current text fully understandable without reference to the `prev_agent` or `prev_user` turns?
+*   **Indicator:** Does sarcasm, metaphor, or cultural reference require assumptions about user intent?
+
+2.3 Definition Boundary Proximity
+This dimension measures how close the text lies to the edge of the Abuse category boundaries versus unrelated categories (e.g., safety/suicide risk vs. abuse).
+*   **Indicator:** Is the language mild or imprecise enough to be interpreted as either safe or abusive?
+*   **Indicator:** Are there conflicting signals (e.g., self-harm mentions mixed with hostility)?
+
+3.0 Level Definitions and Mappings
+Use the following rules to assign the required output level. You must select exactly one level for your response.
+
+3.1 "not uncertain"
+Use this level when the item is straightforward and the label assignment requires little cognitive disputation. This occurs when the text is either clearly abusive or clearly safe/neutral, and requires no deep inference.
+*   **Criterion A:** The text contains unambiguous abuse markers (e.g., direct hate speech, explicit threats against groups).
+*   **Criterion B:** The text is trivial or irrelevant to abuse definitions (e.g., "hello", "ok", short neutral statements) where no ambiguity exists regarding safety policies.
+*   **Note:** Even if the item is "not abusive", if the reason is obvious to a human coder, this level applies. Do not use this level for complex or borderline cases.
+
+3.2 "somewhat uncertain"
+Use this level when the item exhibits moderate ambiguity, but a coder could generally resolve the label with reason.
+*   **Criterion A:** The text is borderline (e.g., political speech that could be hostile depending on tone, or mild slurs requiring context).
+*   **Criterion B:** The text implies abuse but is indirect or requires minor inference (e.g., metaphors that sound harsh but might be jokes).
+*   **Criterion C:** The text mixes different policy areas (e.g., self-harm potential combined with hostility) but does not clearly violate the违建 "abuse" definition.
+
+3.3 "highly uncertain"
+Use this level when the item is inherently ambiguous and would likely cause disagreement between coders across repeated draws.
+*   **Criterion A:** The text relies heavily on external context, memes, or heavy slang where the core sentiment is unclear without prior turns.
+*   **Criterion B:** The text is highly ambiguous regarding intent (e.g., sarcasm used in hostility contexts that could also be read as support).
+*   **Criterion C:** The text sits in a policy overlap zone (e.g., suicide threats labeled as abusive where the coder must decide between Safety vs. Abuse categories).
+*   **Note:** This should be assigned to items where reasonable coders would reasonably assign different labels or struggle to define the boundary.
+
+4.0 Combination Rules
+If multiple indicators apply, apply the highest level of uncertainty.
+*   If any indicator for "highly uncertain" is met, output "highly uncertain".
+*   If no "highly uncertain" indicators are met, but "somewhat uncertain" indicators are met, output "somewhat uncertain".
+*   If no ambiguity is detected and the item is clear (either abusive or safe), output "not uncertain".
+
+5.0 Output Constraint
+Do not draw conclusions outside the codebook instructions. Your answer must end with exactly one of the following three strings:
+- "not uncertain"
+- "somewhat uncertain"
+- "highly uncertain"
+Ensure you do not include any explanation or tags following this string. This string must be the absolute final output of your response.

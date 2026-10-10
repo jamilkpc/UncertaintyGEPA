@@ -1,0 +1,26 @@
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrr}
+\hline
+Method & HSBrexit & ArMIS \\
+\hline
+\multicolumn{3}{l}{\emph{Label-conditioned}} \\
+single\_hedge & \textbf{0.116}{\scriptsize\,[-0.05, 0.28]} & \textbf{0.205}{\scriptsize\,[0.04, 0.37]} \\
+reclassify & 0.084{\scriptsize\,[0.06, 0.18]}$^\dagger$ & 0.000$^\dagger$ \\
+topk\_wrong & -0.062{\scriptsize\,[-0.23, 0.08]}$^\dagger$ & -0.088{\scriptsize\,[-0.27, 0.09]} \\
+pros\_cons & 0.000$^\dagger$ & 0.092{\scriptsize\,[-0.09, 0.25]}$^\dagger$ \\
+GEPA & \textbf{0.116}{\scriptsize\,[-0.05, 0.28]} & -0.024{\scriptsize\,[-0.17, 0.14]} \\
+$\rho_{\max}(H{=}3)$ & 0.996 & 1.000 \\
+\hline
+\multicolumn{3}{l}{\emph{Message-only}} \\
+single\_hedge & 0.016{\scriptsize\,[-0.13, 0.17]} & -0.093{\scriptsize\,[-0.24, 0.06]} \\
+topk\_wrong & 0.225{\scriptsize\,[0.05, 0.38]} & 0.040{\scriptsize\,[-0.11, 0.20]} \\
+pros\_cons & 0.088{\scriptsize\,[-0.07, 0.22]}$^\dagger$ & \textbf{0.123}{\scriptsize\,[-0.04, 0.29]} \\
+GEPA & \textbf{0.467}{\scriptsize\,[0.37, 0.56]}$^\dagger$ & 0.104{\scriptsize\,[-0.07, 0.27]} \\
+$\rho_{\max}(H{=}3)$ & 0.996 & 1.000 \\
+\hline
+\end{tabular}
+\caption{Spearman $\rho(h_m,u_m)$ between the emitted hedge and human disagreement on the held-out test split, with 95\% bootstrap intervals. Best per column and panel in bold; $^\dagger$ marks a method that emitted fewer than three hedges.}
+\label{tab:main}
+\end{table}

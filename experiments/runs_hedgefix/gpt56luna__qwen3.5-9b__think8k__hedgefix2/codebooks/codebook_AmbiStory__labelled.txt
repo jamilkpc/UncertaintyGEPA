@@ -1,0 +1,52 @@
+# Annotation Uncertainty Codebook
+
+**Objective:** Evaluate the stability of the assigned plausibility label (how likely an annotator was to choose the same rating across repeated assessments) based on the narrative context and candidate meaning.
+
+**Output String:** End response with exactly one of: "not uncertain", "somewhat uncertain", "highly uncertain".
+
+### Construct Dimensions
+
+1.  **Narrative Constraint Strength (NCS)**
+    *   *Definition:* The extent to which the text explicitly restricts the ambiguous word to a single interpretation.
+    *   *Criteria:*
+        *   **Strong:** Multiple explicit textual cues (e.g., specific objects, actions, legal terms, or defined systems) point exclusively to the candidate meaning.
+        *   **Moderate:** The text implies the meaning but allows for potential alternative interpretations (e.g., abstract terms or partial context).
+        *   **Weak:** The text is neutral, abstract, or contains cues that are equally applicable to competing meanings.
+
+2.  **Candidate Sense Specificity (CSS)**
+    *   *Definition:* The precision and commonality of the specific candidate definition within the context.
+    *   *Criteria:*
+        *   **Precise:** The candidate meaning is a standard, unambiguous sense of the word in the given context (e.g., "ice cream" + "sprinkles").
+        *   **Standardly Plausible:** The candidate meaning is a common usage but requires some contextual alignment (e.g., "grass" + "legalized").
+        *   **Vague/Ambiguous:** The candidate meaning is a rare, metaphorical, or conflicting sense not clearly supported by common usage.
+
+3.  **Rating Context Consistency (RCC)**
+    *   *Definition:* Alignment between the assigned rating (1-5) and the objective textual support for that meaning, ignoring whether the rating is "correct" or "incorrect".
+    *   *Criteria:*
+        *   **Aligned:** The rating reflects the strength of the constraints present (e.g., Strong Constraints + Score 5, or Strong Constraints on a Mismatch + Score 1).
+        *   **Partially Aligned:** The rating is within a reasonable range of the constraints but leaves room for debate (e.g., Moderate Constraints + Score 3 or 4).
+        *   **Inconsistent:** The rating sharply contradicts the textual evidence (e.g., Strong Constraints implying high plausibility, but label assigned 1; or ambiguous text, but label assigned 5).
+
+### Decision Logic
+
+1.  **"not uncertain" (Stable)**:
+    *   NCS is **Strong** (constraints clearly lock the meaning).
+    *   CSS is **Precise** (meaning is clearly defined).
+    *   **AND** RCC is **Aligned** (the label matches the strength of the constraint, regardless of numerical accuracy).
+    *   *Criteria Check:* If the text forces the meaning so hard that annotators would not disagree, assign "not uncertain".
+
+2.  **"somewhat uncertain" (Moderate)**:
+    *   NCS is **Moderate** OR CSS is **Standardly Plausible**.
+    *   **AND** RCC is **Partially Aligned**.
+    *   *Criteria Check:* If the meaning is clear but requires interpretation, or the label rating is somewhat debatable against the text, assign "somewhat uncertain".
+
+3.  **"highly uncertain" (Unstable)**:
+    *   NCS is **Weak** (vague or conflicting context).
+    *   **OR** NCS is **Strong** but RCC is **Inconsistent** (label contradicts textual evidence in a way that implies annotator disagreement, e.g., High Complexity Low Plausibility match where logic is confused).
+    *   **OR** CSS is **Vague/Ambiguous**.
+    *   *Criteria Check:* If the text leaves the word open to multiple meanings, or the label provides a rating that suggests annotator disagreement (e.g., assigning 5 to context that could be 1), assign "highly uncertain".
+
+**Output Constraint:** Terminate your response with exactly one of the following strings: "not uncertain", "somewhat uncertain", "highly uncertain". Do not add sentences after the string.
+
+**Final Output Instruction:**
+You will now generate the output for a new Item based on these updated instructions.

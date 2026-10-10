@@ -1,0 +1,49 @@
+Codebook for Evaluating Annotation Uncertainty
+
+**Definition of Construct**
+The instrument is the **stability of the plausibility rating** (the 1-5 label) across repeated annotation attempts. A coder's uncertainty is high if the text allows room for deviation in the rating (e.g., 3, then 5) and low if the text dictates a consensus (e.g., 5, then 5).
+
+**Dimensions of Evaluation**
+1.  **Contextual Specificity:** Evaluates how explicitly the surrounding text narrows the possible interpretations of the target word.
+2.  **Competing Meanings:** Evaluates whether the target word carries multiple standard meanings that are both activated or relevant to the text context.
+3.  **Logical Fit Strength:** Evaluates the degree to which the candidate meaning is required to resolve the narrative logic.
+
+**Operational Levels**
+Assign the following levels based on the combination of dimensions. Use the exact names provided.
+
+**1. not uncertain**
+**Conditions:**
+*   **Contextual Specificity:** High. The narrative provides explicit, non-reversible clues that force a single specific interpretation (e.g., a "lake" forces "overboard" to mean "into water," not "slack").
+*   **Competing Meanings:** None. There is only one standard interpretation of the word that fits the text; others are strictly impossible or nonsensical in this context.
+*   **Logical Fit Strength:** Critical. The meaning is the only logical element that makes the sentence or scene coherent.
+**Observable Indicators:**
+*   The text explicitly names the setting or reference that leaves no room for metaphor or ambiguity (e.g., "plunge into the depths").
+*   The candidate meaning is the *only* way the text makes sense or is entirely locked out (e.g., clearly impossible meanings).
+*   There is no competing standard definition of the word that remains viable in the sentence.
+
+**2. somewhat uncertain**
+**Conditions:**
+*   **Contextual Specificity:** Medium. The text supports the candidate meaning but allows for some minor ambiguity or requires slight inference.
+*   **Competing Meanings:** Moderate. A second, standard meaning of the word is possibly activated but weaker than the primary choice, or the text relies more on common knowledge than text cues.
+*   **Logical Fit Strength:** Strong but not absolute. The meaning fits well, but an annotator might slightly vary the rating (e.g., 4 vs 5) due to nuances in the narrative tone.
+**Observable Indicators:**
+*   The candidate meaning fits, but the narrative could function with a slight alternative interpretation (e.g., "save" in a financial context vs. "keep in storage").
+*   The context implies the meaning strongly, but lacks a hard constraint (e.g., "it was getting hot" supports temperature, but "hot" could theoretically trigger a metaphor for emotional heat in a different narrative sentence).
+*   The text relies on inference rather than explicit definition.
+
+**3. highly uncertain**
+**Conditions:**
+*   **Contextual Specificity:** Low. The text is open-ended or vague regarding the specific word usage.
+*   **Competing Meanings:** High. Two or more distinct standard meanings are equally plausible within the text.
+*   **Logical Fit Strength:** Variable/Weak. The meaning is compatible but not definitively required; the rating might shift based on the annotator's preference for literal vs. figurative reading or personal perception of the narrative mood.
+**Observable Indicators:**
+*   The ambiguous word has a primary meaning that conflicts with a literal interpretation in the text (e.g., "story" in "first story" vs. "fiction").
+*   The text provides clues for multiple interpretations that are plausible and roughly equal (e.g., "hot" in a tense room acting as a physical cue for metaphorical heat).
+*   There is no single "correct" reading that overrides others; a reasonable coder could plausibly assign different plausibility scores (e.g., 3, 4, or 5) without error.
+
+**Final Decision Rule**
+Textual Consensus (No Ambiguity) -> **not uncertain**.
+Textual Ambiguity (Ambiguous Signals) -> **highly uncertain**.
+Textual nuance (Support is present but inferential) -> **somewhat uncertain**.
+
+Assess the specific item provided using the indicators above. Do not rely on the assigned label provided in the item; rely solely on the text cues. Ensure the final line of your response is exactly one of the following: "not uncertain", "somewhat uncertain", or "highly uncertain".

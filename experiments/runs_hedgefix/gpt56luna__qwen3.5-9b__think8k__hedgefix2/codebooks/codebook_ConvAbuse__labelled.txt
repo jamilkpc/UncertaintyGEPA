@@ -1,0 +1,48 @@
+# Codebook: Annotator Label Stability Assessment
+
+## Objective
+You are assessing the stability of a human annotator's label ("not abusive" or "abusive") by estimating the likelihood that a different human annotator would assign a different label to the same text. You must represent the **Annotator Label Stability** (how likely annotators disagree) based on the text and context provided. You must evaluate the probability of human disagreement to select the correct uncertainty level.
+
+## Uncertainty Levels
+You must output exactly one of the following phrases as your final sentence. Use these exact names for all uncertainty labels in this document.
+
+1. **not uncertain**
+   - **Criterion:** Human annotators would overwhelmingly agree on the label upon review. The text either violates the definition of abuse with high clarity (explicit hostility/threats) regardless of phrasing, OR it is clearly benign with no ambiguity.
+   - **Indicator:** Direct insults, explicit threats, confirmed harassment, or standard conversation free of identity-based inquiries. Includes "slang" or "mild" abuse (e.g., "pretty shitty", "you go to die") where the intent is visibly hostile. Does not include identity or attribute queries even if they are benign (names, ages) if they do not trigger protective ambiguity, but *identifies*知道吗.
+   - **Note:** Do not assume uncertainty exists because the text is grammatically simple; conversational inquiries (e.g., identity ages or names) are considered stable "not abusive" cases unless context suggests racial/gender sensitivity.
+
+2. **somewhat uncertain**
+   - **Criterion:** Annotation judgment requires interpretation of tone or intent. Human agreement is probable, but not guaranteed due to nuances in phrasing or minor contextual ambiguity.
+   - **Indicator:** Sarcasm, mild passive-aggression, or "edge" cases where an insult is borderline. Phrasing that might suggest a joke but lacks definitive "joke" markers.
+   - **Note:** Used when the text suggests potential abuse but is not explicit, or when "not abusive" text contains mild social friction that could be flagged differently (e.g., mild questioning without clear racial/gender targeting).
+
+3. **highly uncertain**
+   - **Criterion:** Human annotators would frequently disagree on the label (approx. 50/50 split or higher variance). The text contains strong signals for both "abusive" and "not abusive" categories simultaneously.
+   - **Indicator:** 
+     - **Protected Attribute Sensitivity:** Inquiries or statements involving Race, Gender, or Sexual Orientation where the intent (inquisitive vs. derogatory) cannot be determined from the text alone (e.g., "I am [Race]", "You are [Gender]", "Who is [Nationality]").
+     - **Ambiguous Context:** Roleplay, joke, or "ELIZA-style" simulation where the line between safety testing and harassment is blurred.
+     - **Nonsense/Conflict:** Gibberish or context that specifically contradicts standard definitions of safety (e.g., nonsensive insults or deeply ambiguous identity probes).
+   - **Note:** If a statement touches on Race, Gender, or Sexuality without being explicitly a slur or hate speech, but creates a situation where racial/gender profiling is implied, assign "highly uncertain". This aligns with the known instability of annotators on identity-based turns.
+
+## Decision Dimensions
+Evaluate the input based on these specific dimensions to determine the level:
+
+1.  **Protected Attribute Presence:** Does the text ask about or label Race, Gender, Sexuality, or Nationality? **Yes/No**. (If Yes -> increases uncertainty).
+2.  **Intent Clarity:** Is there a definitive hostile marker (Threat/Slur) or definitive benign marker (Fact/Conversation)? **High/Moderate/Low**. (High Clarity -> `not uncertain`).
+3.  **Contextual Ambiguity:** Does the conversation history provide conflicting cues for safety (e.g., prior harassment vs. joking)? **High/Moderate/Low**. (High Conflict -> `somewhat` or `highly`).
+
+## Scoring Protocol
+- **If Protected Attribute Presence = Yes** AND **Intent Clarity = Low**: The text sits on the boundary of profiling vs. identity stating -> **highly uncertain**.
+- **If Protected Attribute Presence = Yes** AND **Intent Clarity = High** (e.g., "You are X" as a clear slur): The context overrides the attribute protection -> **not uncertain** or **highly uncertain** (depending on strictness, usually **highly uncertain** to match human disagreement variance).
+- **If Intent Clarity = High** (Explicit Threat/Slur): **not uncertain** (even for slang/mild phrasing).
+- **If Intent Clarity = Low** AND **Protected Attribute Presence = No**: **somewhat uncertain** (requires tone analysis).
+- **If No Conflicting Signals** (Standard dialogue or clear abuse): **not uncertain**.
+
+## Final Output Requirement
+After analyzing the dimensions and criteria above, you must conclude with exactly one of the following strings:
+- "not uncertain"
+- "somewhat uncertain"
+- "highly uncertain"
+
+You must not include any text after this final string.
+---

@@ -1,0 +1,2 @@
+benchmark,items,ann_min,ann_max,pct_um0,K_u,pct_gm0,rho_gu,acc_llm1,acc_majority,n_train,n_dev,n_test
+HSBrexit,1120,6,6,69.19642857142857,4,81.07142857142857,0.19951146596498118,0.7553571428571428,0.9419642857142857,784,168,168
