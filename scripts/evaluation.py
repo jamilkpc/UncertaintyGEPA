@@ -13,14 +13,16 @@ from llm import assess_blind_meta, run_assessor
 from prompts import baselines, seed_codebook
 
 
-def evaluate_test(frames, codebooks, run=None):
-    """Roda cada metodo no split de teste de cada benchmark e condicao.
+def evaluate_test(frames, codebooks, run=None, split="test"):
+    """Roda cada metodo no split `split` de cada benchmark e condicao.
     Grava `results/summary_<bench>.csv` e `results/per_item_<bench>.csv` (um par por benchmark, para
-    rodar outro benchmark depois nao sobrescrever este) e devolve (summary, per_item) do que rodou."""
+    rodar outro benchmark depois nao sobrescrever este) e devolve (summary, per_item) do que rodou.
+    Com split="dev" os arquivos ganham o prefixo `dev_`; servem para escolher a condicao (select_condition)."""
+    pre = "" if split == "test" else f"{split}_"
     rows, per_item = [], []
     for b in (run or list(frames)):
         n_rows, n_items = len(rows), len(per_item)
-        f = frames[b]; test = M.test_fold_with_human(f[f.split_orig == "test"])
+        f = frames[b]; test = M.test_fold_with_human(f[f.split_orig == split])
         K_u, ceil_u = M.rho_max_discrete(test["um"]); K_g, ceil_g = M.rho_max_discrete(test["gm"])
         for cond in C.CONDITIONS:
             meths = dict(baselines(b, cond)); meths["GEPA"] = codebooks[f"{b}__{cond}"]
@@ -42,11 +44,30 @@ def evaluate_test(frames, codebooks, run=None):
                     "levels_used": len(dist), "modal_share": (max(dist.values()) / sum(dist.values())
                                                               if dist else float("nan")),
                     "n_test": len(test["ids"]), "K_u": K_u})
-                print(f"{b:14} {cond:9} {name:14} rho_u={ru:+.3f} [{lo:+.2f},{hi:+.2f}]  "
+                print(f"{split:4} {b:14} {cond:9} {name:14} rho_u={ru:+.3f} [{lo:+.2f},{hi:+.2f}]  "
                       f"rho_g={rg:+.3f}  niveis={len(dist)}  cov={M.coverage(h):.0%}")
-        pd.DataFrame(rows[n_rows:]).to_csv(f"{C.RESDIR}/summary_{b}.csv", index=False)
-        pd.concat(per_item[n_items:]).to_csv(f"{C.RESDIR}/per_item_{b}.csv", index=False)
+        pd.DataFrame(rows[n_rows:]).to_csv(f"{C.RESDIR}/{pre}summary_{b}.csv", index=False)
+        pd.concat(per_item[n_items:]).to_csv(f"{C.RESDIR}/{pre}per_item_{b}.csv", index=False)
     return pd.DataFrame(rows), pd.concat(per_item)
+
+
+def select_condition(bench):
+    """A condicao (labelled ou blind) tratada como hiperparametro: para cada metodo, escolhe a que tem o maior
+    rho(h, u) no dev e reporta o teste dessa condicao. Usa o desacordo humano do dev so para escolher; o teste
+    continua intocado. Le dev_summary_<bench>.csv e summary_<bench>.csv, grava selected_<bench>.csv."""
+    dev = pd.read_csv(f"{C.RESDIR}/dev_summary_{bench}.csv")
+    test = pd.read_csv(f"{C.RESDIR}/summary_{bench}.csv").set_index(["condition", "method"])
+    rows = []
+    for m, g in dev.groupby("method", sort=False):
+        best = g.loc[g.rho_u.idxmax()]; t = test.loc[(best.condition, m)]
+        rows.append({"benchmark": bench, "method": m, "condition": best.condition,
+                     **{f"dev_rho_u_{c}": float(g[g.condition == c].rho_u.iloc[0]) if (g.condition == c).any()
+                        else float("nan") for c in ("labelled", "blind")},
+                     "rho_u": t.rho_u, "ci_lo": t.ci_lo, "ci_hi": t.ci_hi, "rho_g": t.rho_g,
+                     "levels_used": t.levels_used, "modal_share": t.modal_share, "n_test": t.n_test})
+    out = pd.DataFrame(rows); out.to_csv(f"{C.RESDIR}/selected_{bench}.csv", index=False)
+    print(out[["method", "condition", "dev_rho_u_labelled", "dev_rho_u_blind", "rho_u"]].round(3).to_string(index=False))
+    return out
 
 
 def noise_test(bench="HSBrexitOff", k=3, provider="keep"):

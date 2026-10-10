@@ -110,7 +110,8 @@ def derive_experiment_name(llm1_tag, backend, target="resampling"):
     else:
         think = "think-free"
     src = f"{llm1_tag or 'llm1-gerada'}" + ("-logprob" if target == "logprob" else "")
-    return f"{src}__{model}__{think}"
+    suffix = os.environ.get("EXP_SUFFIX")      # ex.: hedgefix -> pasta nova, sem reaproveitar cache de runs anteriores
+    return f"{src}__{model}__{think}" + (f"__{suffix}" if suffix else "")
 
 
 def configure(backend=None):

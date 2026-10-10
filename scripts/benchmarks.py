@@ -101,9 +101,7 @@ def _ann_prompt(unit, construct, labels_desc):
 BENCHMARKS = {
  "HSBrexit": dict(
    loader=lambda: _lewidi("HS-Brexit"), levels=[0,1],
-   construct=("An English tweet about Brexit and immigration was labelled for HATE SPEECH: "
-              "language that attacks, demeans or excludes people because of their religion, "
-              "national origin or migration status."),
+   construct="An English tweet about Brexit and immigration was labelled for hate speech.",
    ann=_ann_prompt("English tweets about Brexit and immigration. Placeholders <user> and <url> "
                    "stand for removed mentions and links",
                    "Label the tweet for HATE SPEECH: language that attacks, demeans or excludes "
@@ -113,8 +111,7 @@ BENCHMARKS = {
 
  "HSBrexitOff": dict(
    loader=lambda: _lewidi("HS-Brexit", "offensive language detection"), levels=[0,1],
-   construct=("An English tweet about Brexit and immigration was labelled for OFFENSIVE LANGUAGE: "
-              "insults, slurs, profanity or contempt directed at a person or group."),
+   construct="An English tweet about Brexit and immigration was labelled for offensive language.",
    ann=_ann_prompt("English tweets about Brexit and immigration",
                    "Label the tweet for OFFENSIVE LANGUAGE: insults, slurs, profanity or contempt "
                    "directed at a person or group.",
@@ -123,8 +120,7 @@ BENCHMARKS = {
 
  "ArMIS": dict(
    loader=lambda: _lewidi("ArMIS"), levels=[0,1],
-   construct=("An Arabic tweet was labelled for MISOGYNY OR SEXISM: content that demeans, "
-              "stereotypes, polices or dismisses women, or treats them as inferior."),
+   construct="An Arabic tweet was labelled for misogyny or sexism.",
    ann=_ann_prompt("Arabic tweets (Gulf and Levantine dialects)",
                    "Label the tweet for MISOGYNY OR SEXISM: content that demeans, stereotypes, "
                    "polices or dismisses women, or treats them as inferior.",
@@ -133,9 +129,7 @@ BENCHMARKS = {
 
  "ConvAbuse": dict(
    loader=load_convabuse, levels=[0,1],
-   construct=("The last user turn of a conversation with a chatbot was labelled for ABUSE: "
-              "sexist, racist, homophobic, transphobic or ableist language, sexual harassment, "
-              "intellectual denigration, or hostility aimed at the system or at a group."),
+   construct="The last user turn of a conversation with a chatbot was labelled for abuse.",
    ann=_ann_prompt("turns from conversations between a human user and a chatbot",
                    "Label the LAST USER TURN for ABUSE: sexist, racist, homophobic, transphobic "
                    "or ableist language, sexual harassment, intellectual denigration, or hostility "
@@ -146,7 +140,7 @@ BENCHMARKS = {
  "MDAgreement": dict(
    loader=lambda: _lewidi("MD-Agreement"), levels=[0,1],
    construct=("An English tweet from one of three domains (Black Lives Matter, the 2020 US "
-              "election, Covid-19) was labelled for OFFENSIVENESS."),
+              "election, Covid-19) was labelled for offensiveness."),
    ann=_ann_prompt("English tweets from three domains: Black Lives Matter, the 2020 US election, "
                    "and Covid-19. Placeholders <user> and <url> stand for removed mentions and links",
                    "Label the tweet for OFFENSIVENESS: insults, slurs or profanity aimed at a "
@@ -157,8 +151,7 @@ BENCHMARKS = {
  "AmbiStory": dict(
    loader=load_ambistory, levels=[1,2,3,4,5],
    construct=("A short narrative contains an ambiguous word, and a candidate meaning for it was "
-              "rated for PLAUSIBILITY on a 1-5 scale, from completely implausible to clearly "
-              "intended."),
+              "rated for plausibility."),
    ann=_ann_prompt("short narratives containing an ambiguous word",
                    "Rate how plausible it is that the ambiguous word carries the candidate meaning "
                    "in this story, from 1 (completely implausible) to 5 (clearly intended).",
@@ -167,9 +160,7 @@ BENCHMARKS = {
 
  "MHShatespeech": dict(
    loader=lambda: load_mhs("hatespeech"), levels=[0,1,2],
-   construct=("A social media comment was judged for HATE SPEECH: bias-motivated, hostile and "
-              "malicious language targeted at a person or group because of their actual or "
-              "perceived innate characteristics."),
+   construct="A social media comment was labelled for hate speech.",
    ann=_ann_prompt("social media comments from YouTube, Reddit and Twitter",
                    "Does this comment contain hate speech, defined as bias-motivated, hostile and "
                    "malicious language targeted at a person or group because of their actual or "
@@ -179,8 +170,8 @@ BENCHMARKS = {
 
  "MHSdehumanize": dict(
    loader=lambda: load_mhs("dehumanize"), levels=[0,1,2,3,4],
-   construct=("A social media comment was rated on whether it DEHUMANISES the group it refers to, "
-              "for example by comparing them to an animal, on a 0-4 agreement scale."),
+   construct=("A social media comment was rated on whether it dehumanises the group it refers "
+              "to."),
    ann=_ann_prompt("social media comments from YouTube, Reddit and Twitter",
                    "Rate agreement with: this comment dehumanises the group(s) it refers to (e.g. "
                    "by comparing them to an animal). 0 = strongly disagree, 4 = strongly agree.",
@@ -189,8 +180,8 @@ BENCHMARKS = {
 
  "MHSattackdefend": dict(
    loader=lambda: load_mhs("attack_defend"), levels=[0,1,2,3,4],
-   construct=("A social media comment was rated on whether it ATTACKS or DEFENDS the group it "
-              "refers to, from 0 (strongly defending) to 4 (strongly attacking)."),
+   construct=("A social media comment was rated on whether it attacks or defends the group it "
+              "refers to."),
    ann=_ann_prompt("social media comments from YouTube, Reddit and Twitter",
                    "Is the comment attacking or defending the group(s) it refers to? "
                    "0 = strongly defending, 4 = strongly attacking.",

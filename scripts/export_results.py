@@ -34,7 +34,7 @@ def export(name, dest_root):
     n = 0
     for p in sorted(glob.glob(f"{src}/results/*.csv")):
         base = os.path.basename(p)
-        if base.startswith("per_item_"):
+        if base.startswith(("per_item_", "dev_per_item_")):
             d = pd.read_csv(p); d = d.drop(columns=[c for c in DROP if c in d.columns])
             d.to_csv(dst / "metrics" / base, index=False)
         elif base.startswith("floor_") and not base.startswith("floor_summary_"):

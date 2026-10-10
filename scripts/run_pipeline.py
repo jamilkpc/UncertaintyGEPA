@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Roda o pipeline de ponta a ponta, sem notebook: GEPA, avaliacao no teste e .tex do paper.
+"""Roda o pipeline de ponta a ponta, sem notebook: GEPA, avaliacao no teste e no dev (escolha da
+condicao) e .tex do paper.
 
 Feito para rodar direto numa maquina com GPU, dentro de tmux. Tudo e retomavel: codebooks do GEPA
 e o summary de cada benchmark ficam em disco, e uma segunda execucao pula o que ja existe.
@@ -164,7 +165,7 @@ def main(argv=None):
         codebooks = gepa_search.optimize_codebooks(frames, run, C.CONDITIONS)
 
     if "eval" in args.stages:
-        stage("avaliacao no teste")
+        stage("avaliacao no teste e no dev")
         codebooks = codebooks or paper.load_codebooks()
         missing = [f"{b}__{c}" for b in run for c in C.CONDITIONS if f"{b}__{c}" not in codebooks]
         if missing:
@@ -172,10 +173,18 @@ def main(argv=None):
         for b in run:
             if os.path.exists(f"{C.RESDIR}/summary_{b}.csv") and not args.force_eval:
                 print(f"{b}: summary_{b}.csv ja existe, pulando (use --force-eval para refazer)")
+            else:
+                evaluation.evaluate_test(frames, codebooks, [b])
+                evaluation.data_stats(frames, b)
+                evaluation.paired_comparisons(b)
+            if len(C.CONDITIONS) < 2:      # uma condicao so (ex.: human e logprob, so blind): nada a escolher
                 continue
-            evaluation.evaluate_test(frames, codebooks, [b])
-            evaluation.data_stats(frames, b)
-            evaluation.paired_comparisons(b)
+            if os.path.exists(f"{C.RESDIR}/dev_summary_{b}.csv") and not args.force_eval:
+                print(f"{b}: dev_summary_{b}.csv ja existe, pulando")
+            else:
+                stage(f"avaliacao no dev (escolha da condicao): {b}")
+                evaluation.evaluate_test(frames, codebooks, [b], split="dev")
+            evaluation.select_condition(b)
 
     if "floor" in args.stages:
         stage("piso de ruido: mesma avaliacao repetida no teste")

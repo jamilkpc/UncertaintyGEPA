@@ -278,6 +278,41 @@ def results_skeleton(run):
     _write("results_skeleton.tex", sk)
 
 
+def load_selected():
+    parts = sorted(glob.glob(f"{C.RESDIR}/selected_*.csv"))
+    return pd.concat([pd.read_csv(p) for p in parts], ignore_index=True) if parts else None
+
+
+def table_selected(sel, run):
+    """A condicao como hiperparametro: por metodo, a condicao com maior rho(h, u) no dev, e no teste dessa condicao
+    rho(h, u) (com intervalo) e rho(h, g), o objetivo do GEPA (L = com rotulo, B = so a mensagem). Melhor por
+    coluna em negrito."""
+    cols = [b for b in run if b in set(sel.benchmark)]
+    L = [r"\begin{table}[t]", r"\centering", r"\small", r"\begin{tabular}{l" + "rr" * len(cols) + "}", r"\hline",
+         " & " + " & ".join(r"\multicolumn{2}{c}{" + esc(c) + "}" for c in cols) + r" \\",
+         "Method & " + " & ".join([r"$\rho(h,u)$ & $\rho(h,g)$"] * len(cols)) + r" \\", r"\hline"]
+    for m in [m for m in METHOD_ORDER if m in set(sel.method)]:
+        cells = []
+        for b in cols:
+            r = sel[(sel.benchmark == b) & (sel.method == m)]
+            if r.empty: cells += ["--", "--"]; continue
+            r = r.iloc[0]; sb = sel[sel.benchmark == b]
+            cells.append(_cell(r, r.rho_u == sb.rho_u.max())
+                         + r"{\scriptsize\,(" + ("L" if r.condition == "labelled" else "B") + ")}")
+            g = fmt(r.rho_g)
+            cells.append(r"\textbf{" + g + "}" if r.rho_g == sb.rho_g.max() else g)
+        L.append(esc(m) + " & " + " & ".join(cells) + r" \\")
+    L += [r"\hline", r"\end{tabular}",
+          r"\caption{Spearman correlations on the held-out test split, with the assessor input treated as a "
+          r"hyperparameter: for each method and benchmark, the condition (L: label-conditioned, B: message-only) "
+          r"with the higher $\rho(h_m,u_m)$ on the development split. $\rho(h,u)$ is the association with human "
+          r"disagreement, with 95\% bootstrap intervals; $\rho(h,g)$ is the association with the annotator's "
+          r"instability target, the objective the master optimised. Best per column in bold; $^\dagger$ marks a "
+          r"method that emitted fewer than three hedges.}",
+          r"\label{tab:selected}", r"\end{table}"]
+    _write("tab_selected.tex", L)
+
+
 def write_all(frames=None, summary=None, codebooks=None, run=None):
     """Escreve todos os .tex a partir do que existe em disco para o experimento (todos os benchmarks).
     `frames` so e usado para gerar estatisticas de dados que ainda nao estejam em results/data_<bench>.csv."""
@@ -288,6 +323,9 @@ def write_all(frames=None, summary=None, codebooks=None, run=None):
     paired = load_paired(run)
     table_data(stats)
     table_main(summary, run)
+    sel = load_selected()
+    if sel is not None:
+        table_selected(sel, run)
     if {"blind", "labelled"} <= set(summary.condition):      # a ablacao precisa das duas condicoes
         table_ablation(summary, run)
     table_stability(summary, run)

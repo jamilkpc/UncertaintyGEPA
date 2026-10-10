@@ -11,6 +11,7 @@ import config as C
 import metrics as M
 import llm
 from llm import master_lm, run_assessor
+from benchmarks import BENCHMARKS
 from prompts import REFLECTION_TEMPLATE, seed_codebook
 
 
@@ -41,7 +42,7 @@ class AssessorAdapter:
                                trajectories=trajs if capture_traces else None)
 
     def make_reflective_dataset(self, candidate, eval_batch, components_to_update):
-        data = {}
+        data, verb = {}, BENCHMARKS[self.bench]["verb"]
         for comp in components_to_update:
             rows = []
             for tr in eval_batch.trajectories:
@@ -52,7 +53,7 @@ class AssessorAdapter:
                     said = C.HEDGES[h] if isinstance(h, int) else "NO VALID HEDGE"
                     truth = ("the annotator varied across draws" if g > 0
                              else "the annotator returned the same label on every draw")
-                    rows.append({"Inputs": f"ITEM: {t[:400]}\nASSIGNED LABEL: {lab}",
+                    rows.append({"Inputs": f"ITEM: {t[:400]}\nASSIGNED LABEL: {verb.get(lab, lab)}",
                                  "Generated Outputs": said,
                                  "Feedback": head + f"On this item {truth}, but the assessor said '{said}'."})
             data[comp] = rows
