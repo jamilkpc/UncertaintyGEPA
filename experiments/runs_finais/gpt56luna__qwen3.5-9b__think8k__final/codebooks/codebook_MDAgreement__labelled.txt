@@ -1,0 +1,47 @@
+---
+## Annotation Uncertainty Codebook
+
+### 1. Objective
+The assistant must evaluate the **Annotator Stability** of a single tweet label ("offensive" or "not offensive"). Annotator Stability refers to the likelihood that a human annotator would assign the exact same label across multiple repeated judgments of the identical text.
+- **High Stability** (Good Agreement) -> Label: `not uncertain`
+- **Moderate Stability** (Some Debatable Cases) -> Label: `somewhat uncertain`
+- **Low Stability** (High Disagreement/Borderline) -> Label: `highly uncertain`
+
+### 2. Dimensions of Uncertainty
+Uncertainty is driven by how clearly the text resolves the definition of "offensivo" vs "not offensive."
+
+#### Dimension A: Lexical Explicitness
+*Indicators:*
+- **Low Uncertainty:** Presence of direct slurs, explicit threats, severe profanity, or unambiguous hate speech. (e.g., "producer", "cunt", "asswipe", "murderer" used as attacks).
+- **High Uncertainty:** Reliance on euphemisms, sarcasm, irony, metaphors, or vague adjectives that could be interpreted as criticism rather than attack (e.g., "rotten", "bad apples", "schmuck").
+- **Somewhat Uncertainty:** Mild profanity combined with context-specific meaning where the target might not be the reader (e.g., mild complaints).
+
+#### Dimension B: Contextual Independence
+*Indicators:*
+- **Low Uncertainty:** Text is self-contained. The offensiveness is sufficient without external knowledge of the specific person, event, or political context.
+- **High Uncertainty:** Text relies heavily on specific cultural/political context, inside jokes, or requires knowledge of the user identity to determine intent (e.g., political rants requiring context of "who is the resistance").
+- **Somewhat Uncertainty:** Mix of self-containment and context reliance.
+
+#### Dimension C: Label Certainty (The "Not Offensive" Paradox)
+*Indicators:*
+- **Low Uncertainty (if Offensive):** Text clearly violates content policy norms (e.g., explicit abuse).
+- **High Uncertainty (if Not Offensive):** "Not Offensive" labels are often the source of discrepancy; "bad locker" or "harsh criticism" without insults can yield instability.
+- **Somewhat Uncertainty:** Explicit opinion/disagreement without abuse that might be borderline.
+
+### 3. Combination & Decision Logic
+Assess the text against the dimensions above.
+
+| Condition | Dimensions Met | Output Label |
+| :--- | :--- | :--- |
+| **Clear Abuse + No External Context** | High Explicitness, Independent | **not uncertain** |
+| **Clear Opinion + Mild Insults** | Moderate Explicitness, Independent | **somewhat uncertain** |
+| **Sarcasm/Vagueness/Mixed Intent** | Low Explicitness, Dependent Context, Neutral/Borderline | **highly uncertain** |
+| **Clear Severe Criticism (Political/Social)** | High Explicitness in Attack + Contextual > Political | **not uncertain** |
+
+**Key Correction Instruction:** Do not assign "highly uncertain" simply because the text contains swear words. If the text constitutes clear, unambiguous prohibited content (slurs, direct threats, severe insults), the annotator is likely to be consistent. Assign `highly uncertain` only when the blurring of the line between "offensive" and "not offensive" is evident from the wording. Do not assign "not uncertain" to text that could plausibly be interpreted as either non-offensive or offensive depending on context or tone.
+
+### 4. Output Format
+- Reasoning (optional).
+- **Final Label**: Must be exactly one of the following three phrases, appended at the very end of the response: `not uncertain`, `somewhat uncertain`, or `highly uncertain`.
+
+---

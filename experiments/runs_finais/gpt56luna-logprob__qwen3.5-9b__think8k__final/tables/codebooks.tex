@@ -76,3 +76,221 @@ Predict the stability of the original annotator's plausibility score (1-5) acros
 
 not uncertain
 \end{quote}
+\subsection*{ArMIS -- blind}
+\begin{quote}\small
+An Arabic tweet was labelled for misogyny or sexism.
+
+The annotator could assign only these labels:
+
+- not misogynistic
+
+- misogynistic or sexist
+
+
+
+Judge how uncertain a coder deciding this item's label would be.
+\end{quote}
+\subsection*{HSBrexit -- blind}
+\begin{quote}\small
+# Codebook: Annotation Stability Assessment for Political Discourse
+
+
+
+## Construct Definition
+
+This assessment predicts the likely stability of human annotator labels across repeated evaluations of a specific text. "Uncertainty" refers to the variance in whether annotators will agree on the safety classification (e.g., Hate Speech vs. Non-Hate Speech). High uncertainty indicates high variability in human judgment.
+
+
+
+## Dimensions and Indicators
+
+
+
+### 1. Policy Boundary Clarity
+
+*   **Indicator:** Is the violation of safety guidelines (specifically Hate Speech) evident or arguable?
+
+*   **Observation:** Clear violations or clear non-violations (political opinion) = **Not Uncertain**. Borderline cases (metaphors for harm, incitement ambiguity) = **Highly Uncertain**.
+
+*   **Reasoning:** Standard political debates (e.g., Brexit, EU policy) generally yield stable "Non-Hate Speech" labels unless they cross into ambiguity regarding protected groups.
+
+
+
+### 2. Linguistic Tone (Sarcasm/Irony)
+
+*   **Indicator:** Does the text rely on sarcasm, irony, or double meanings where the intent is not literal?
+
+*   **Observation:** Direct statements = **Not Uncertain**. Sarcasm/Irony requiring interpretation = **Highly Uncertain**.
+
+*   **Reasoning:** Sarcasm is a primary driver of annotator disagreement; direct claims allow for faster consensus.
+
+
+
+### 3. Targeting Directness
+
+*   **Indicator:** Is the target group explicitly named or referenced through coded language/innuendo?
+
+*   **Observation:** Explicit naming (e.g., "Muslims", "Refugees" in context) = **Somewhat Uncertain**. Innuendo/Code ("The Boss", "Foreigner") = **Highly Uncertain**.
+
+*   **Reasoning:** Explicit targets allow annotators to check policy definitions against clear groups. Implicit targets rely on social context causing higher variance.
+
+
+
+### 4. Attribution of Views
+
+*   **Indicator:** Does the author quote others or express personal views?
+
+*   **Observation:** Attributed views ("He says") = **Somewhat Uncertain**. Direct claims ("I say") = **Not Uncertain**.
+
+*   **Reasoning:** Attributing hate speech to someone else (reported speech) creates ambiguity regarding whether the annotator should label the content as hate speech or just a report.
+
+
+
+## Combination Rules for Uncertainty Levels
+
+
+
+### Not Uncertain
+
+*   **Condition:** The text allows for a confident, stable classification based on safety guidelines.
+
+*   **Indicator:** At least 2 of the above dimensions indicate "Clear Policy Boundary" or "Direct Statement".
+
+*   **Outcome:** Annotators will likely agree (e.g., Standard political debate, explicit non-violation).
+
+
+
+### Somewhat Uncertain
+
+*   **Condition:** The text contains mild ambiguity but is resolvable by standard guidelines.
+
+*   **Indicator:** Mixed signals (e.g., one instance of implicit targeting, or introductory context that requires minor interpretation but resolves clearly).
+
+*   **Outcome:** Partial divergence possible (e.g., Explicit targeting in a comparative statement that is not abusive).
+
+
+
+### Highly Uncertain
+
+*   **Condition:** The text relies on humor/sarcasm, coded language, or contested political attribution regarding protected groups.
+
+*   **Indicator:** At least 2 of the dimensions are "Borderline", "Innuendo", or "Irony".
+
+*   **Outcome:** Annotators will vary significantly (e.g., Sarcasm implying harm where harm isn't literal).
+\end{quote}
+\subsection*{MDAgreement -- blind}
+\begin{quote}\small
+---
+
+
+
+### Annotation Codebook: Judge Annotation Uncertainty
+
+
+
+**Objective**
+
+Calibrate your uncertainty estimate based on the stability of human annotator labor on this specific item. Your output must reflect how likely a coder is to disagree in the future, not just whether you personally find the content offensive.
+
+
+
+**Uncertainty Scale**
+
+- **"not uncertain"**: 95\%+ consensus expectation.
+
+- **"somewhat uncertain"**: 70-95\% consensus expectation.
+
+- **"highly uncertain"**: <70\% consensus expectation or impossible to label.
+
+
+
+**Dimensions \& Indicators**
+
+
+
+**Dimension 1: Semantic Certainty (SC)**
+
+*Indicates if the offensiveness is linguistically obvious.*
+
+- **Indicators for High Certainty ("not uncertain"):**
+
+    - Explicit use of slurs or hate speech vocabulary.
+
+    - Direct insults or accusations of harm involving clear slur equivalents.
+
+    - Clear profanity used as direct attack (e.g., "f***ing idiot", "WTF", "ffs").
+
+    - Clearly benign conversational text that lacks intent to harm (e.g., "He did say it", "Genuinely embarrassing").
+
+- **Indicators for Lower Certainty ("somewhat uncertain" / "highly uncertain"):**
+
+    - Slang, sarcasm, or irony where tone is critical.
+
+    - Metaphorical language not explicitly derogatory but open to multiple interpretations.
+
+
+
+**Dimension 2: Contextual Volatility (CV)**
+
+*Indicates if the specific topic creates known disagreement among annotators.*
+
+- **Low Volatility Domains:** BLM safe-harbor rules, standard privacy/copyright violations, clear medical misinformation.
+
+- **High Volatility Domains:** 2020 Election political rhetoric, social justice debates, soft language involving identity politics.
+
+*Note: High volatility implies that even if the text appears clearly "offensive" (Dimension 1), human consensus on whether it crosses the line is lower.*
+
+
+
+**Dimension 3: Text Integrity (TI)**
+
+*Indicates if the input is sufficient to make a judgment.*
+
+- **Text Integrity:** The item must be readable and complete.
+
+    - If text is heavily redacted (`<user>>`), censored to the point of obscurity, or contains garbled characters -> **"highly uncertain"**.
+
+    - If memos are clear but context is missing -> **"somewhat uncertain"**.
+
+
+
+**Decision Logic \& Calibration Rules**
+
+
+
+1.  **Assess Dimension 1 (Semantic Certainty) First.**
+
+    - If the text is clearly benign OR clearly offensive (general slurs/profanity): Default to **"not uncertain"**.
+
+    - *Feedback Correction:* Do not mark as "highly uncertain" just because the label is "offensive" or "not offensive" unless the *intent* itself is ambiguous. (Example: "Oh ffs!", "My God!!", "He did say it" are "not uncertain").
+
+
+
+2.  **Assess Dimension 2 (Contextual Volatility).**
+
+    - If the text involves political invective or contested social theories (e.g., "brain damage from your shots" type rhetoric): Downgrade confidence from "not uncertain" to **"somewhat uncertain"**.
+
+    - *Feedback Correction:* Political accusations and contested political narratives frequently yield varied human labels. Do not treat them as "not uncertain" if they rely on specific ideological framing.
+
+
+
+3.  **Assess Dimension 3 (Text Integrity).**
+
+    - Only use **"highly uncertain"** if the text is unintelligible or if the offensiveness is fundamentally impossible to infer due to heavy censorship or ambiguity.
+
+    - *Critical Error Prevention:* Avoid "highly uncertain" for coherent sentences where "offensiveness" is the main debate. "not uncertain" is the default for unambiguous items; "somewhat uncertain" is for borderline/context-dependent items; use "highly uncertain" for anomalous inputs.
+
+
+
+4.  **Final Calibration:**
+
+    - When in doubt between "not uncertain" and "somewhat uncertain", choose **"somewhat uncertain"** for political/identity texts.
+
+    - Only choose **"not uncertain"** if Semantic Certainty is high (clearly insulting OR clearly harmless) AND Contextual Volatility is low (or ignored for direct profanity).
+
+    - Reserve **"highly uncertain"** strictly for broken tokenization, severe censorship, or content that is too vague to decide "offensive" vs "not offensive".
+
+
+
+---
+\end{quote}

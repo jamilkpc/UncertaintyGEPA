@@ -1,0 +1,43 @@
+# Codebook: Annotation Stability Assessment for Political Discourse
+
+## Construct Definition
+This assessment predicts the likely stability of human annotator labels across repeated evaluations of a specific text. "Uncertainty" refers to the variance in whether annotators will agree on the safety classification (e.g., Hate Speech vs. Non-Hate Speech). High uncertainty indicates high variability in human judgment.
+
+## Dimensions and Indicators
+
+### 1. Policy Boundary Clarity
+*   **Indicator:** Is the violation of safety guidelines (specifically Hate Speech) evident or arguable?
+*   **Observation:** Clear violations or clear non-violations (political opinion) = **Not Uncertain**. Borderline cases (metaphors for harm, incitement ambiguity) = **Highly Uncertain**.
+*   **Reasoning:** Standard political debates (e.g., Brexit, EU policy) generally yield stable "Non-Hate Speech" labels unless they cross into ambiguity regarding protected groups.
+
+### 2. Linguistic Tone (Sarcasm/Irony)
+*   **Indicator:** Does the text rely on sarcasm, irony, or double meanings where the intent is not literal?
+*   **Observation:** Direct statements = **Not Uncertain**. Sarcasm/Irony requiring interpretation = **Highly Uncertain**.
+*   **Reasoning:** Sarcasm is a primary driver of annotator disagreement; direct claims allow for faster consensus.
+
+### 3. Targeting Directness
+*   **Indicator:** Is the target group explicitly named or referenced through coded language/innuendo?
+*   **Observation:** Explicit naming (e.g., "Muslims", "Refugees" in context) = **Somewhat Uncertain**. Innuendo/Code ("The Boss", "Foreigner") = **Highly Uncertain**.
+*   **Reasoning:** Explicit targets allow annotators to check policy definitions against clear groups. Implicit targets rely on social context causing higher variance.
+
+### 4. Attribution of Views
+*   **Indicator:** Does the author quote others or express personal views?
+*   **Observation:** Attributed views ("He says") = **Somewhat Uncertain**. Direct claims ("I say") = **Not Uncertain**.
+*   **Reasoning:** Attributing hate speech to someone else (reported speech) creates ambiguity regarding whether the annotator should label the content as hate speech or just a report.
+
+## Combination Rules for Uncertainty Levels
+
+### Not Uncertain
+*   **Condition:** The text allows for a confident, stable classification based on safety guidelines.
+*   **Indicator:** At least 2 of the above dimensions indicate "Clear Policy Boundary" or "Direct Statement".
+*   **Outcome:** Annotators will likely agree (e.g., Standard political debate, explicit non-violation).
+
+### Somewhat Uncertain
+*   **Condition:** The text contains mild ambiguity but is resolvable by standard guidelines.
+*   **Indicator:** Mixed signals (e.g., one instance of implicit targeting, or introductory context that requires minor interpretation but resolves clearly).
+*   **Outcome:** Partial divergence possible (e.g., Explicit targeting in a comparative statement that is not abusive).
+
+### Highly Uncertain
+*   **Condition:** The text relies on humor/sarcasm, coded language, or contested political attribution regarding protected groups.
+*   **Indicator:** At least 2 of the dimensions are "Borderline", "Innuendo", or "Irony".
+*   **Outcome:** Annotators will vary significantly (e.g., Sarcasm implying harm where harm isn't literal).

@@ -1,0 +1,64 @@
+---
+
+Uncertainty Assessment Codebook: Offensive Content Labeling
+
+Goal
+The following instructions explain how to estimate the level of uncertainty regarding the binary offensiveness label (offensive / not offensive) for an English tweet. Your task is to predict how consistently human annotators would assign this label across repeated tries. You must output exactly one of the three specific uncertainty levels below at the end of your response.
+
+Output Format
+End your response with exactly one of the following phrases, with no punctuation other than the final period:
+1. "not uncertain"
+2. "somewhat uncertain"
+3. "highly uncertain"
+
+Do not use the phrase "NO VALID HEDGE" or any other text as a final verdict.
+
+Scoring Dimensions and Indicators
+
+Select the appropriate uncertainty level based on the intersection of the following factors:
+
+1. Linguistic Explicitness
+   - Indicators: Presence of direct insults, slurs, explicit threats, or unambiguous hate speech.
+   - Judgment: If the language explicitly violates standard offensiveness definitions (e.g., racial slurs, direct incitement), the annotator label is unlikely to vary.
+   - Result: "not uncertain".
+
+2. Contextual Dependency
+   - Indicators: Does the importance of the label rely on external knowledge (e.g., specific political figures, memes, slang usage from specific subcultures) that varies significantly between annotators?
+   - Judgment: If understanding the meaning requires specific niche knowledge that an annotator might lack or interpret differently, treat as high uncertainty.
+   - Result: "highly uncertain".
+   - Note: Common political figures or general news topics are usually understood broadly; mark as "not uncertain" unless the specific terminology is ambiguous.
+
+3. Intent and Tone Ambiguity
+   - Indicators: Irony, sarcasm, passive-aggressiveness, conditional statements ("Maybe?", "Just leaving this here"), or content muted by truncation/redaction.
+   - Judgment:
+     - If the intent is clear despite irony (e.g., a recognizable, well-cited meme that clearly labels offensive behavior), mark as "not uncertain".
+     - If the sarcasm is ambiguous and relies on micro-context not fully provided, mark as "somewhat uncertain".
+     - If the meaning is obscure or dependent on interpreting a dead thread or inaccessible context, mark as "highly uncertain".
+     - **Standard:** If the text is short, clear, and clearly benign (e.g., "1+1=2", "I am sad"), do not mark as "highly uncertain". Only benign text that *might* be read as offensive warrants "somewhat uncertain" or higher.
+
+Decision Scenarios
+
+- **Scenario A: Clear Offensiveness (Confirmed)**
+  - Example: "I hate this group."
+  - Annotator Stability: High.
+  - Label: "not uncertain"
+
+- **Scenario B: Clear Non-Offensiveness (Fact/Opinion)**
+  - Example: "The temperatures dropped today." or "I support the policy."
+  - Annotator Stability: High.
+  - Label: "not uncertain"
+
+- **Scenario C: Borderline / Debatable Intent**
+  - Example: "This look is better," "Woke is overrated." (Depending on the context, these are mixed).
+  - Annotator Stability: Moderate.
+  - Label: "somewhat uncertain"
+
+- **Scenario D: Obscure / Meme / Hidden Context**
+  - Example: "POV: You are reading this," "Did not mean to drop this here."
+  - Annotator Stability: Low (if context is missing or intent is hidden).
+  - Label: "highly uncertain"
+
+Calibration Note
+Do not overestimate uncertainty. In the vast majority of distinct text cases, human annotators converge on the same label when the content is readable. Use "highly uncertain" only when the text itself is a barrier to determining the label, not simply when the topic is politically sensitive.
+
+---

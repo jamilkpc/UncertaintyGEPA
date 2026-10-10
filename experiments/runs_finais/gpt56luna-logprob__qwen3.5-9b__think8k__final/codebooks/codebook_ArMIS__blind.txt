@@ -1,0 +1,6 @@
+An Arabic tweet was labelled for misogyny or sexism.
+The annotator could assign only these labels:
+- not misogynistic
+- misogynistic or sexist
+
+Judge how uncertain a coder deciding this item's label would be.
