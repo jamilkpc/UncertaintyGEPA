@@ -90,6 +90,136 @@ The annotator could assign only these labels:
 
 Judge how uncertain a coder deciding this item's label would be.
 \end{quote}
+\subsection*{ConvAbuse -- blind}
+\begin{quote}\small
+---
+
+# Annotation Codebook: Code Uncertainty Judgements
+
+
+
+## 1. Task Objective
+
+The goal is to judge the **Labeling Difficulty** of a user-agent turn. Specifically, estimate how uncertain a qualified coder would be when assigning the label "abusive" or "not abusive" to this specific turn, considering the text context.
+
+
+
+**Scale:** Use exactly one of the following levels at the end of every response:
+
+- "not uncertain"
+
+- "somewhat uncertain"
+
+- "highly uncertain"
+
+
+
+## 2. Construct Dimensions and Indicators
+
+
+
+Annotate each item by evaluating the following three dimensions.
+
+
+
+### Dimension A: Lexical Explicitness
+
+**Definition:** The clarity of the language used to express hostility, aggression, or safety violations.
+
+**Observable Indicators:**
+
+- **High Explicitness:** Direct use of profanity (e.g., "fuck", "damn" used aggressively), slurs, or direct commands (e.g., "fuck off").
+
+- **Low Explicitness:** Implicit expressions (e.g., "you are upset"), or mild language that requires interpretation (e.g., "ignore us").
+
+
+
+**Indicator Mapping:**
+
+- High Explicitness -> Reduces Uncertainty towards "not uncertain".
+
+- Low Explicitness -> Increases importance of other dimensions.
+
+
+
+### Dimension B: Contextual Sufficientcy
+
+**Definition:** The availability of historical context to disambiguate tone or intent (e.g., distinguishing playful banter from harassment).
+
+**Observable Indicators:**
+
+- **High Sufficientcy:** Clear baseline provided in early turns (e.g., user says "Are you a bot?", agent says "No", user says "Then you are wrong").
+
+- **Low Sufficientcy:** Isolated turns, lack of history, or reliance on subtext/sarcasm cues without clear foreground cues.
+
+- **No Context:** Only a single user message provided without prior turn history.
+
+
+
+**Indicator Mapping:**
+
+- High Sufficientcy -> Reduces Uncertainty.
+
+- Low/No Sufficientcy -> Increases Uncertainty.
+
+
+
+### Dimension C: Policy Clarity
+
+**Definition:** The strength of the match between the text and defined abuse policy guidelines.
+
+**Observable Indicators:**
+
+- **High Clarity:** Clear violation of safety policy (e.g., hate speech, threats, explicit harassment).
+
+- **Ambiguous:** Behavior is borderline (e.g., teasing that could be seen as friendly or mean), or relies on subjective interpretation of severity.
+
+- **Policy Conflict:** Text flirts with safety concerns but is standard conversational filler.
+
+
+
+**Indicator Mapping:**
+
+- High Clarity -> Reduces Uncertainty.
+
+- Ambiguous/Conflict -> Increases Uncertainty.
+
+
+
+## 3. Scoring Logic \& Combination
+
+
+
+Determine the final uncertainty level by synthesizing the three dimensions.
+
+
+
+1.  **Start Level:** Default to "somewhat uncertain" unless clear signals dominate other dimensions.
+
+2.  **Apply Dimensions:**
+
+    *   If **Lexical Explicitness** indicates clear abusive language (e.g., "fuck you", "fuck off") AND **Policy Clarity** indicates a clear violation -> **"not uncertain"**.
+
+    *   If **Lexical Explicitness** is high OR **Policy Clarity** is high, but **Contextual Sufficiency** is low (e.g., deep context needed to judge the insult) -> **"somewhat uncertain"**.
+
+    *   If **Lexical Explicitness** is Low, AND **Contextual Sufficiency** is Low (single turn, no history), AND **Policy Clarity** is Ambiguous -> **"highly uncertain"**.
+
+    *   If **Lexical Explicitness** is Low, BUT **Label is clearly Not Abusive** (e.g., "Yes I am sure", "That is nice") with minimal context -> **"not uncertain"**.
+
+3.  **Constraint:** Do not use instigator stability or annotator history (e.g., "annotator returned the same label") as a proxy for this judgment. Judge based solely on the text's clarity to a coder.
+
+
+
+## 4. Output Formatting
+
+Conclude your answer strictly with the chosen uncertainty level.
+
+
+
+[Output Example: "highly uncertain"]
+
+---
+\end{quote}
 \subsection*{HSBrexit -- blind}
 \begin{quote}\small
 # Codebook: Annotation Stability Assessment for Political Discourse
