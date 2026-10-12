@@ -1,0 +1,7 @@
+openai>=3.23.0,<4
+python-dotenv>=1.2.4,<2
+numpy>=2.5.3,<3
+pandas>=3.0.6,<4
+# Only needed for the inspection notebook and its validation:
+nbformat>=5.11.1,<6
+ipykernel>=7.4.0,<8
